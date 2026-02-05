@@ -1,0 +1,86 @@
+{
+  "title": "Software Developer",
+  "nav": {
+    "cv": "CV",
+    "projects": "Projects"
+  },
+  "sections": {
+    "profile": "Profile",
+    "education": "Education",
+    "featuredProjects": "Featured Projects",
+    "skills": "Skills",
+    "experience": "Work Experience",
+    "certifications": "Certifications"
+  },
+  "education": {
+    "institution": "Hong Kong College of Technology (HKCT)",
+    "institutionZh": "香港專業進修學校 (港專)",
+    "programme": "Higher Diploma in Computer Studies (Mobile Applications and Game Development)",
+    "code": "Programme Code: HDCS-MAGD",
+    "level": "Qualification Level: Hong Kong Qualifications Framework (QF) Level 4",
+    "duration": "Duration: 2 Years Full-Time",
+    "graduation": "Expected Graduation: June 2026",
+    "gpa": "GPA: 3.7 (Year 1)",
+    "term_2024_2025_t1": "2024–2025 Term 1",
+    "term_2024_2025_t2": "2024–2025 Term 2",
+    "term_2025_2026_t1": "2025–2026 Term 1",
+    "term_2025_2026_t2": "2025–2026 Term 2 (Current)",
+    "awards": "Academic Awards & Memberships",
+    "awardsPlaceholder": "Awards information to be added.",
+    "courseCode": "Code",
+    "courseName": "Course"
+  },
+  "experience": {
+    "hotelIcon": "Hotel ICON (唯港薈)",
+    "position": "Part-time Waiter",
+    "duration": "February 2024 – Present",
+    "description": "Part-time food and beverage service at Hotel ICON Banquet Department, a Forbes Four-Star rated, MICHELIN Key-awarded 5-star luxury hotel owned by Hong Kong Polytechnic University."
+  },
+  "skills": {
+    "languages": "Programming Languages",
+    "frameworks": "Frameworks & Libraries",
+    "frontend": "Frontend Technologies",
+    "backendDb": "Backend & Database",
+    "cloud": "Cloud & Deployment",
+    "integrations": "Third-Party Integrations",
+    "tools": "Development Tools"
+  },
+  "projects": {
+    "allProjects": "All Projects",
+    "viewAll": "View All Projects",
+    "viewRepo": "Repository",
+    "noRepo": "No Public Repository",
+    "presentation": "Presentation",
+    "operation": "Operation",
+    "demo": "Demo",
+    "techStack": "Tech Stack",
+    "courses": "Courses",
+    "filterAll": "All",
+    "filterMobile": "Mobile",
+    "filterWeb": "Web",
+    "filterGame": "Game",
+    "filterBackend": "Backend",
+    "pourRicePlatforms": "Platform Components",
+    "projectCount": "{count} {count, plural, one {project} other {projects}}",
+    "inProgress": "In Progress",
+    "complete": "Complete",
+    "pending": "Pending"
+  },
+  "footer": {
+    "contact": "Contact",
+    "sourceCode": "CV Source Code",
+    "copyright": "© {year} Software Developer. Built with Next.js"
+  },
+  "certifications": {
+    "placeholder": "Certifications will be listed here.",
+    "memberships": "Professional Memberships",
+    "hkcs": "Hong Kong Computer Society (HKCS) — Student / Associate Member",
+    "hkdea": "Hong Kong Digital Entertainment Association — Member"
+  },
+  "placeholders": {
+    "name": "Enter Full Name",
+    "photoLabel": "Photo",
+    "personalStatement": "Enter personal statement (2–3 sentences).",
+    "nationality": "Nationality: Hong Kong"
+  }
+}
