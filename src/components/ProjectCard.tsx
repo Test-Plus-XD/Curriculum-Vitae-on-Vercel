@@ -1,7 +1,8 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Github, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Github, Clock, ArrowRight } from 'lucide-react';
 import type { Project } from '@/lib/projects';
 import VideoEmbed from './VideoEmbed';
 
@@ -40,9 +41,12 @@ export default function ProjectCard({ project }: Props) {
       {/* ---- title + badges ---- */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+          <Link
+            href={`/${locale}/projects/${project.id}`}
+            className="text-base font-semibold text-slate-800 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
             {project.title[lang]}
-          </h3>
+          </Link>
           {project.status === 'in-progress' && (
             <span className="inline-flex items-center gap-1 mt-0.5 text-xs text-amber-600 dark:text-amber-400">
               <Clock size={10} />
@@ -132,6 +136,14 @@ export default function ProjectCard({ project }: Props) {
 
       {/* ---- actions row ---- */}
       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+        <Link
+          href={`/${locale}/projects/${project.id}`}
+          className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+        >
+          {t('viewProject')}
+          <ArrowRight size={12} />
+        </Link>
+
         {project.repo && (
           <a
             href={project.repo}
@@ -147,9 +159,14 @@ export default function ProjectCard({ project }: Props) {
           <span className="text-xs text-slate-400 dark:text-slate-500 italic">{t('noRepo')}</span>
         )}
 
-        {project.videos.map((v, i) => (
+        {project.videos.slice(0, 2).map((v, i) => (
           <VideoEmbed key={i} embedUrl={v.embedUrl} url={v.url} title={v.title[lang]} />
         ))}
+        {project.videos.length > 2 && (
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            +{project.videos.length - 2} {locale === 'zh-hk' ? '更多' : 'more'}
+          </span>
+        )}
       </div>
     </div>
   );

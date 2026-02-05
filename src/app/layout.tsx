@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: 'Software Developer | CV',
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className="bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
