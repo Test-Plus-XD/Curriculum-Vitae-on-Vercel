@@ -1,0 +1,86 @@
+{
+  "title": "軟件開發員",
+  "nav": {
+    "cv": "履歷",
+    "projects": "項目"
+  },
+  "sections": {
+    "profile": "個人介紹",
+    "education": "教育經歷",
+    "featuredProjects": "精選項目",
+    "skills": "技術能力",
+    "experience": "工作經歷",
+    "certifications": "認證與成就"
+  },
+  "education": {
+    "institution": "香港專業進修學校 (港專)",
+    "institutionZh": "Hong Kong College of Technology (HKCT)",
+    "programme": "電腦學高級文憑（流動應用程式及遊戲開發）",
+    "code": "課程代號：HDCS-MAGD",
+    "level": "資格等級：香港學術及職業資格框架第四級",
+    "duration": "學程：兩年全日制",
+    "graduation": "預計畢業：二〇二六年六月",
+    "gpa": "GPA：3.7（大一）",
+    "term_2024_2025_t1": "2024–2025 學期一",
+    "term_2024_2025_t2": "2024–2025 學期二",
+    "term_2025_2026_t1": "2025–2026 學期一",
+    "term_2025_2026_t2": "2025–2026 學期二（進行中）",
+    "awards": "學術獎項與學術組織",
+    "awardsPlaceholder": "獎項資訊即將添加。",
+    "courseCode": "課程代號",
+    "courseName": "課程名稱"
+  },
+  "experience": {
+    "hotelIcon": "唯港薈 (Hotel ICON)",
+    "position": "兼職侍應生",
+    "duration": "二〇二四年二月 – 至今",
+    "description": "於唯港薈宴會部擔任兼職餐飲服務員，唯港薈為香港理工大學全資擁有之五星級豪華酒店，榮獲福布斯旅遊指南四星評級及米芝蓮鑰匙殊榮。"
+  },
+  "skills": {
+    "languages": "程序設計語言",
+    "frameworks": "框架與程式庫",
+    "frontend": "前端技術",
+    "backendDb": "後端與數據庫",
+    "cloud": "雲計算與部署",
+    "integrations": "第三方整合",
+    "tools": "開發工具"
+  },
+  "projects": {
+    "allProjects": "所有項目",
+    "viewAll": "查看全部項目",
+    "viewRepo": "代碼庫",
+    "noRepo": "無公開代碼庫",
+    "presentation": "簡報",
+    "operation": "操作演示",
+    "demo": "演示",
+    "techStack": "技術堆疊",
+    "courses": "課程",
+    "filterAll": "全部",
+    "filterMobile": "手機應用",
+    "filterWeb": "網絡",
+    "filterGame": "遊戲",
+    "filterBackend": "後端",
+    "pourRicePlatforms": "平台組成",
+    "projectCount": "{count} 個項目",
+    "inProgress": "進行中",
+    "complete": "已完成",
+    "pending": "待開始"
+  },
+  "footer": {
+    "contact": "聯絡",
+    "sourceCode": "履歷原碼",
+    "copyright": "© {year} 軟件開發員。使用 Next.js 開發"
+  },
+  "certifications": {
+    "placeholder": "認證資訊即將添加。",
+    "memberships": "專業學術組織",
+    "hkcs": "香港電腦學會（HKCS）— 學生 / Associate 會員",
+    "hkdea": "香港數碼娛樂協會 — 會員"
+  },
+  "placeholders": {
+    "name": "請填入姓名",
+    "photoLabel": "照片",
+    "personalStatement": "請填入個人介紹（2–3句）。",
+    "nationality": "國籍：香港"
+  }
+}
