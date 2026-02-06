@@ -41,7 +41,7 @@ export default async function LandingPage({
   const lang: Lang = locale === 'zh-hk' ? 'zh' : 'en';
 
   return (
-    <div className="max-w-[850px] mx-auto px-6 py-8 print:py-4 print:px-4">
+    <div className="cv-page max-w-[850px] mx-auto px-6 py-8 print:py-4 print:px-4">
       {/* ═══════════════════════════════ HEADER ═══════════════════════ */}
       <header className="border-b-2 border-slate-800 dark:border-slate-200 pb-4 mb-6 print:pb-3 print:mb-4">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
@@ -76,9 +76,9 @@ export default async function LandingPage({
 
         {/* Personal Statement */}
         {/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}
-        <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed print:text-xs">
+        {/* <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed print:text-xs">
           {t('placeholders.personalStatement')}
-        </p>
+        </p> */}
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:gap-4">

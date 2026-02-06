@@ -12,6 +12,7 @@
     --soviet-orange: #db5b00;
     --soviet-gold: #ffa500;
     --soviet-beige: #e3d5c1;
+    --soviet-warm-bg: #f5efe6;
   }
 
   /* ── Locale-aware body fonts ──────────────────────── */
@@ -27,7 +28,7 @@
    Soviet Retro-Futuristic Atmosphere — 1960s Space Age Constructivism
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* Brutalist grid + diagonal constructivist lines — dark mode only */
+/* Brutalist grid + diagonal constructivist lines — dark mode body background */
 .dark body {
   background-color: #1a1a1a;
   background-image:
@@ -56,6 +57,10 @@
   background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Vignette & Scanline overlays
+   ══════════════════════════════════════════════════════════════════════════ */
+
 /* Vignette overlay — dark mode only */
 .dark .scanlines::before {
   content: '';
@@ -83,7 +88,31 @@
   animation: flicker 8s step-end infinite;
 }
 
-/* ── Soviet-style glow – headings (breathing animation) ──────────────── */
+/* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Subtle scanline & vignette overlays (non-CV pages only)
+   Controlled by SovietBackground component; CSS provides base styling.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Light mode scanlines — very subtle, applied via component z-index management */
+:not(.dark) .scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(143, 0, 0, 0.015) 3px,
+    rgba(143, 0, 0, 0.015) 6px
+  );
+  pointer-events: none;
+  z-index: 999;
+  animation: flicker 12s step-end infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Soviet-style heading glow (breathing animation)
+   ══════════════════════════════════════════════════════════════════════════ */
 .dark .glow-heading {
   text-shadow:
     0 0 20px rgba(143, 0, 0, 0.7),
@@ -95,7 +124,20 @@
   animation: glow-breathe 4s ease-in-out infinite;
 }
 
-/* ── Constructivist card — angular corners + reactive hover ──────────── */
+/* ── LIGHT MODE heading glow — subtler warm shadow (non-CV pages) ───── */
+:not(.dark) :not(.cv-page) .glow-heading {
+  text-shadow:
+    0 0 8px rgba(143, 0, 0, 0.15),
+    0 0 20px rgba(219, 91, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  animation: glow-breathe-light 6s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Constructivist card (angular corners + reactive hover)
+   ══════════════════════════════════════════════════════════════════════════ */
 .dark .glow-card {
   position: relative;
   border-color: rgba(143, 0, 0, 0.3);
@@ -150,7 +192,7 @@
   border-color: rgba(143, 0, 0, 0.8);
 }
 
-/* Shimmer sweep on card hover */
+/* Shimmer sweep on card hover — dark mode */
 .dark .glow-card .soviet-shimmer {
   position: absolute;
   top: 0;
@@ -176,6 +218,89 @@
   animation: shimmer 2s linear infinite;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Constructivist card (warm, aged-paper feel, non-CV pages)
+   ══════════════════════════════════════════════════════════════════════════ */
+:not(.dark) :not(.cv-page) .glow-card {
+  position: relative;
+  border-color: rgba(143, 0, 0, 0.15);
+  box-shadow:
+    0 0 6px rgba(143, 0, 0, 0.04),
+    inset 0 0 4px rgba(219, 91, 0, 0.02),
+    3px 3px 0 rgba(143, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Corner brackets — light mode */
+:not(.dark) :not(.cv-page) .glow-card::before,
+:not(.dark) :not(.cv-page) .glow-card::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+:not(.dark) :not(.cv-page) .glow-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid rgba(143, 0, 0, 0.2);
+  border-left: 2px solid rgba(143, 0, 0, 0.2);
+}
+:not(.dark) :not(.cv-page) .glow-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid rgba(219, 91, 0, 0.15);
+  border-right: 2px solid rgba(219, 91, 0, 0.15);
+}
+
+:not(.dark) :not(.cv-page) .glow-card:hover {
+  border-color: rgba(219, 91, 0, 0.3);
+  box-shadow:
+    0 0 12px rgba(143, 0, 0, 0.08),
+    0 0 24px rgba(219, 91, 0, 0.04),
+    inset 0 0 8px rgba(219, 91, 0, 0.03),
+    4px 4px 0 rgba(143, 0, 0, 0.08);
+}
+:not(.dark) :not(.cv-page) .glow-card:hover::before {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(219, 91, 0, 0.4);
+}
+:not(.dark) :not(.cv-page) .glow-card:hover::after {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(143, 0, 0, 0.35);
+}
+
+/* Shimmer sweep on card hover — light mode */
+:not(.dark) :not(.cv-page) .glow-card .soviet-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(219, 91, 0, 0.03) 45%,
+    rgba(143, 0, 0, 0.04) 50%,
+    rgba(219, 91, 0, 0.03) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+:not(.dark) :not(.cv-page) .glow-card:hover .soviet-shimmer {
+  opacity: 1;
+  animation: shimmer 2.5s linear infinite;
+}
+
 /* ── Soviet accent line (red-to-orange gradient) ─────────────────────── */
 .soviet-line {
   background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
@@ -197,6 +322,10 @@
   background: linear-gradient(90deg, transparent, #db5b00, #ffa500, transparent);
   animation: slide-accent 4s linear infinite;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Section headers, badges, filters, stats, timeline
+   ══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Soviet section header — bold divider with angular accent ────────── */
 .dark .soviet-section-header {
@@ -273,7 +402,7 @@
   text-shadow: 0 0 4px rgba(219, 91, 0, 0.3);
 }
 
-/* ── Soviet stat card ────────────────────────────────────────────────── */
+/* ── Soviet stat card — dark mode ────────────────────────────────────── */
 .dark .soviet-stat {
   background: linear-gradient(135deg, rgba(143, 0, 0, 0.1), rgba(26, 26, 26, 0.9));
   border: 1px solid rgba(143, 0, 0, 0.3);
@@ -297,7 +426,7 @@
   transform: translate(-1px, -1px);
 }
 
-/* ── Soviet timeline line ────────────────────────────────────────────── */
+/* ── Soviet timeline line — dark mode ────────────────────────────────── */
 .dark .soviet-timeline-line {
   background: linear-gradient(180deg, #8f0000, #db5b00, transparent);
 }
@@ -328,7 +457,7 @@
   transition: width 0s, height 0s, opacity 0s;
 }
 
-/* ── Tech tag hover — Soviet style ───────────────────────────────────── */
+/* ── Tech tag hover — Soviet style (dark mode) ───────────────────────── */
 .dark .soviet-tech-tag {
   transition: all 0.2s ease;
   cursor: default;
@@ -342,12 +471,141 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Soviet effects for non-CV pages
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Light mode section header ───────────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-section-header {
+  position: relative;
+  padding-left: 1rem;
+}
+:not(.dark) :not(.cv-page) .soviet-section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(143, 0, 0, 0.5), rgba(219, 91, 0, 0.4));
+}
+
+/* ── Light mode Soviet badge ─────────────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-badge {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.08), rgba(219, 91, 0, 0.05));
+  border: 1px solid rgba(143, 0, 0, 0.2);
+  color: #8f0000;
+  box-shadow: 0 0 4px rgba(143, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+:not(.dark) :not(.cv-page) .soviet-badge:hover {
+  box-shadow: 0 0 8px rgba(219, 91, 0, 0.12);
+  border-color: rgba(219, 91, 0, 0.35);
+}
+
+/* ── Light mode Soviet stat card ─────────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-stat {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.03), rgba(245, 239, 230, 0.8));
+  border: 1px solid rgba(143, 0, 0, 0.12);
+  box-shadow: 2px 2px 0 rgba(143, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+:not(.dark) :not(.cv-page) .soviet-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.35), transparent);
+}
+:not(.dark) :not(.cv-page) .soviet-stat:hover {
+  border-color: rgba(219, 91, 0, 0.25);
+  box-shadow: 3px 3px 0 rgba(143, 0, 0, 0.08), 0 0 10px rgba(143, 0, 0, 0.05);
+  transform: translate(-1px, -1px);
+}
+
+/* ── Light mode Soviet timeline line ─────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-timeline-line {
+  background: linear-gradient(180deg, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.3), transparent);
+}
+
+/* ── Light mode tech tag hover ───────────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-tech-tag {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+:not(.dark) :not(.cv-page) .soviet-tech-tag:hover {
+  background: rgba(143, 0, 0, 0.06) !important;
+  border-color: rgba(219, 91, 0, 0.2);
+  color: #8f0000 !important;
+  box-shadow: 0 0 4px rgba(143, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ── Light mode Soviet filter buttons ────────────────────────────────── */
+:not(.dark) .soviet-filter-active {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.85), rgba(219, 91, 0, 0.9)) !important;
+  color: #faf5ef !important;
+  border: 1px solid rgba(219, 91, 0, 0.5);
+  box-shadow: 0 0 8px rgba(143, 0, 0, 0.15), 0 0 16px rgba(219, 91, 0, 0.08);
+  transition: all 0.25s ease;
+}
+:not(.dark) .soviet-filter:hover {
+  border-color: rgba(219, 91, 0, 0.3);
+  color: #8f0000;
+  background: rgba(143, 0, 0, 0.04);
+  box-shadow: 0 0 6px rgba(143, 0, 0, 0.06);
+}
+
+/* ── Light mode Soviet star ──────────────────────────────────────────── */
+:not(.dark) :not(.cv-page) .soviet-star::before {
+  content: '\2605';
+  color: #8f0000;
+  opacity: 0.3;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Header & Footer accent lines (visible in light mode too)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Show header accent line in light mode too (subtler) */
+:not(.dark) .soviet-line-animated {
+  opacity: 0.25 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CRT / GLITCH — Interactive text effects
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* CRT text glitch on hover — dark mode */
+.dark .soviet-glitch:hover {
+  animation: crt-glitch 0.3s steps(2) 1;
+}
+
+/* CRT flicker on interactive elements */
+.soviet-crt-hover {
+  transition: all 0.15s ease;
+}
+.soviet-crt-hover:hover {
+  animation: crt-flicker 0.15s steps(3) 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Animation keyframes (referenced by Tailwind + direct CSS)
    ══════════════════════════════════════════════════════════════════════════ */
 
 @keyframes glow-breathe {
   0%, 100% { text-shadow: 0 0 20px rgba(143,0,0,0.7), 0 0 40px rgba(219,91,0,0.35), 0 2px 4px rgba(0,0,0,0.5); }
   50% { text-shadow: 0 0 30px rgba(143,0,0,0.9), 0 0 60px rgba(219,91,0,0.5), 0 0 100px rgba(143,0,0,0.2), 0 2px 4px rgba(0,0,0,0.5); }
+}
+
+@keyframes glow-breathe-light {
+  0%, 100% { text-shadow: 0 0 8px rgba(143,0,0,0.15), 0 0 20px rgba(219,91,0,0.08), 0 1px 2px rgba(0,0,0,0.1); }
+  50% { text-shadow: 0 0 12px rgba(143,0,0,0.22), 0 0 30px rgba(219,91,0,0.12), 0 1px 2px rgba(0,0,0,0.1); }
 }
 
 @keyframes flicker {
@@ -367,6 +625,58 @@
 @keyframes slide-accent {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@keyframes crt-glitch {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  25% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+  50% { transform: translate(2px, -1px); filter: hue-rotate(180deg); }
+  75% { transform: translate(-1px, -1px); filter: hue-rotate(270deg); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 1; }
+  33% { opacity: 0.8; }
+  66% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes shooting-star {
+  0% { opacity: 0; stroke-dashoffset: 100%; }
+  5% { opacity: 0.6; }
+  15% { opacity: 0; stroke-dashoffset: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes morse-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes morse-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slow-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes telemetry-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes aurora {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

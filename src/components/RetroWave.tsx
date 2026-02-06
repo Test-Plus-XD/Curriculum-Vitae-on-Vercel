@@ -1,15 +1,19 @@
 'use client';
 
 import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 /**
  * SovietGeometric — Angular constructivist pattern for Soviet retro-futuristic aesthetic
- * Enhanced with glowing horizon line, radar sweep, and taller mountain range
- * Only visible in dark mode, hidden on print
+ * Enhanced with glowing horizon line, radar sweep, and taller mountain range.
+ * Works in both light and dark modes on non-CV pages.
+ * In dark mode, also visible on the CV page.
+ * Hidden on print.
  */
 export default function RetroWave() {
   const { resolvedTheme } = useTheme();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [offset, setOffset] = useState(0);
 
@@ -24,8 +28,16 @@ export default function RetroWave() {
     return () => clearInterval(interval);
   }, []);
 
-  // Avoid hydration mismatch + only show in dark mode
-  if (!mounted || resolvedTheme !== 'dark') return null;
+  if (!mounted) return null;
+
+  // Check if on CV landing page
+  const segments = pathname.split('/').filter(Boolean);
+  const isCvPage = segments.length <= 1;
+
+  // Only show on CV page in dark mode; show on all other pages in both modes
+  if (isCvPage && resolvedTheme !== 'dark') return null;
+
+  const isDark = resolvedTheme === 'dark';
 
   return (
     <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-0 overflow-hidden">
@@ -33,8 +45,12 @@ export default function RetroWave() {
       <div
         className="absolute bottom-[280px] left-0 right-0 h-[2px]"
         style={{
-          background: 'linear-gradient(90deg, transparent 5%, rgba(143,0,0,0.4) 30%, rgba(219,91,0,0.6) 50%, rgba(143,0,0,0.4) 70%, transparent 95%)',
-          boxShadow: '0 0 20px rgba(219,91,0,0.3), 0 0 60px rgba(143,0,0,0.15)',
+          background: isDark
+            ? 'linear-gradient(90deg, transparent 5%, rgba(143,0,0,0.4) 30%, rgba(219,91,0,0.6) 50%, rgba(143,0,0,0.4) 70%, transparent 95%)'
+            : 'linear-gradient(90deg, transparent 5%, rgba(143,0,0,0.15) 30%, rgba(219,91,0,0.25) 50%, rgba(143,0,0,0.15) 70%, transparent 95%)',
+          boxShadow: isDark
+            ? '0 0 20px rgba(219,91,0,0.3), 0 0 60px rgba(143,0,0,0.15)'
+            : '0 0 10px rgba(219,91,0,0.1)',
         }}
       />
 
@@ -45,14 +61,14 @@ export default function RetroWave() {
         viewBox="0 0 1200 300"
         preserveAspectRatio="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="opacity-20"
+        className={isDark ? 'opacity-20' : 'opacity-10'}
       >
         <defs>
           {/* Soviet red-to-orange gradient */}
           <linearGradient id="soviet-gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#8f0000" stopOpacity="0.5" />
-            <stop offset="50%" stopColor="#db5b00" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#ffa500" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="#8f0000" stopOpacity={isDark ? 0.5 : 0.3} />
+            <stop offset="50%" stopColor="#db5b00" stopOpacity={isDark ? 0.4 : 0.25} />
+            <stop offset="100%" stopColor="#ffa500" stopOpacity={isDark ? 0.25 : 0.15} />
           </linearGradient>
 
           {/* Glow filter for mountains */}
@@ -62,8 +78,8 @@ export default function RetroWave() {
 
           {/* Radar sweep gradient */}
           <radialGradient id="radar-sweep" cx="50%" cy="100%" r="100%">
-            <stop offset="0%" stopColor="#8f0000" stopOpacity="0.15" />
-            <stop offset="30%" stopColor="#db5b00" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="#8f0000" stopOpacity={isDark ? 0.15 : 0.06} />
+            <stop offset="30%" stopColor="#db5b00" stopOpacity={isDark ? 0.08 : 0.03} />
             <stop offset="100%" stopColor="transparent" stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -83,7 +99,7 @@ export default function RetroWave() {
             y2={y}
             stroke="#8f0000"
             strokeWidth={0.5 + i * 0.3}
-            opacity={0.05 + i * 0.04}
+            opacity={(isDark ? 0.05 : 0.03) + i * (isDark ? 0.04 : 0.02)}
           />
         ))}
 
@@ -99,12 +115,12 @@ export default function RetroWave() {
           <polygon points="940,300 1060,90 1180,300" fill="url(#soviet-gradient)" opacity="0.75" />
 
           {/* Secondary row (foreground, darker) */}
-          <polygon points="60,300 130,180 200,300" fill="#8f0000" opacity="0.25" />
-          <polygon points="220,300 330,160 440,300" fill="#db5b00" opacity="0.18" />
-          <polygon points="400,300 490,190 580,300" fill="#8f0000" opacity="0.22" />
-          <polygon points="560,300 680,150 800,300" fill="#db5b00" opacity="0.18" />
-          <polygon points="760,300 860,175 960,300" fill="#8f0000" opacity="0.2" />
-          <polygon points="960,300 1040,170 1120,300" fill="#db5b00" opacity="0.16" />
+          <polygon points="60,300 130,180 200,300" fill="#8f0000" opacity={isDark ? 0.25 : 0.15} />
+          <polygon points="220,300 330,160 440,300" fill="#db5b00" opacity={isDark ? 0.18 : 0.1} />
+          <polygon points="400,300 490,190 580,300" fill="#8f0000" opacity={isDark ? 0.22 : 0.12} />
+          <polygon points="560,300 680,150 800,300" fill="#db5b00" opacity={isDark ? 0.18 : 0.1} />
+          <polygon points="760,300 860,175 960,300" fill="#8f0000" opacity={isDark ? 0.2 : 0.1} />
+          <polygon points="960,300 1040,170 1120,300" fill="#db5b00" opacity={isDark ? 0.16 : 0.08} />
 
           {/* Repeating pattern for seamless loop */}
           <polygon points="1140,300 1260,100 1380,300" fill="url(#soviet-gradient)" />
@@ -117,7 +133,7 @@ export default function RetroWave() {
             fill="none"
             stroke="#db5b00"
             strokeWidth="1"
-            opacity="0.4"
+            opacity={isDark ? 0.4 : 0.2}
           />
         </g>
       </svg>

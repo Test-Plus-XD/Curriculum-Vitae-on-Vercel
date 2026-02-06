@@ -6,6 +6,11 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import RetroWave from '@/components/RetroWave';
 import SovietParticles from '@/components/SovietParticles';
+import SovietBackground from '@/components/SovietBackground';
+import CosmicStarfield from '@/components/CosmicStarfield';
+import MorseCodeTicker from '@/components/MorseCodeTicker';
+import SovietTelemetry from '@/components/SovietTelemetry';
+import SovietPropagandaPoster from '@/components/SovietPropagandaPoster';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -37,6 +42,13 @@ export default async function LocaleLayout({
           </main>
 
           <Footer />
+
+          {/* Soviet retro-futuristic atmosphere layers */}
+          <SovietBackground />
+          <CosmicStarfield />
+          <MorseCodeTicker />
+          <SovietTelemetry />
+          <SovietPropagandaPoster />
           <RetroWave />
           <SovietParticles />
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
 
 interface Particle {
@@ -9,15 +10,19 @@ interface Particle {
   size: number;
   delay: number;
   duration: number;
-  type: 'star' | 'dot' | 'diamond';
+  type: 'star' | 'dot' | 'diamond' | 'sickle' | 'gear';
 }
 
 /**
- * SovietParticles — Floating red/orange particles for ambient atmosphere
- * Only visible in dark mode, hidden on print
+ * SovietParticles — Floating red/orange particles for ambient atmosphere.
+ * Now includes additional Soviet-themed shapes (sickle, gear).
+ * Works in both light and dark modes on non-CV pages.
+ * In dark mode, also visible on the CV page.
+ * Hidden on print.
  */
 export default function SovietParticles() {
   const { resolvedTheme } = useTheme();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,17 +30,24 @@ export default function SovietParticles() {
   }, []);
 
   const particles = useMemo<Particle[]>(() => {
-    return Array.from({ length: 20 }, (_, i) => ({
+    return Array.from({ length: 25 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       size: 2 + Math.random() * 4,
       delay: Math.random() * 15,
       duration: 12 + Math.random() * 10,
-      type: (['star', 'dot', 'diamond'] as const)[i % 3],
+      type: (['star', 'dot', 'diamond', 'sickle', 'gear'] as const)[i % 5],
     }));
   }, []);
 
-  if (!mounted || resolvedTheme !== 'dark') return null;
+  if (!mounted) return null;
+
+  // Check if on CV landing page
+  const segments = pathname.split('/').filter(Boolean);
+  const isCvPage = segments.length <= 1;
+  if (isCvPage && resolvedTheme !== 'dark') return null;
+
+  const isDark = resolvedTheme === 'dark';
 
   return (
     <div className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden">
@@ -56,7 +68,7 @@ export default function SovietParticles() {
               <polygon
                 points="5,0 6,3.5 10,4 7,6.5 8,10 5,8 2,10 3,6.5 0,4 4,3.5"
                 fill="#8f0000"
-                opacity="0.4"
+                opacity={isDark ? 0.4 : 0.2}
               />
             </svg>
           )}
@@ -64,7 +76,9 @@ export default function SovietParticles() {
             <div
               className="w-full h-full rounded-full"
               style={{
-                background: 'radial-gradient(circle, rgba(219,91,0,0.5) 0%, transparent 70%)',
+                background: isDark
+                  ? 'radial-gradient(circle, rgba(219,91,0,0.5) 0%, transparent 70%)'
+                  : 'radial-gradient(circle, rgba(219,91,0,0.25) 0%, transparent 70%)',
               }}
             />
           )}
@@ -73,8 +87,34 @@ export default function SovietParticles() {
               <polygon
                 points="5,0 10,5 5,10 0,5"
                 fill="#db5b00"
-                opacity="0.35"
+                opacity={isDark ? 0.35 : 0.18}
               />
+            </svg>
+          )}
+          {p.type === 'sickle' && (
+            <svg viewBox="0 0 10 10" className="w-full h-full">
+              <path
+                d="M5,1 A4,4 0 1,1 1,5 A2.5,2.5 0 0,0 5,1"
+                fill="#8f0000"
+                opacity={isDark ? 0.35 : 0.15}
+              />
+            </svg>
+          )}
+          {p.type === 'gear' && (
+            <svg viewBox="0 0 10 10" className="w-full h-full" style={{ animation: `slow-rotate ${p.duration * 2}s linear infinite` }}>
+              <circle cx="5" cy="5" r="2" fill="none" stroke="#db5b00" strokeWidth="1" opacity={isDark ? 0.35 : 0.18} />
+              {[0, 60, 120, 180, 240, 300].map((angle) => (
+                <line
+                  key={angle}
+                  x1="5"
+                  y1="5"
+                  x2={5 + 4 * Math.cos((angle * Math.PI) / 180)}
+                  y2={5 + 4 * Math.sin((angle * Math.PI) / 180)}
+                  stroke="#db5b00"
+                  strokeWidth="0.5"
+                  opacity={isDark ? 0.3 : 0.15}
+                />
+              ))}
             </svg>
           )}
         </div>
