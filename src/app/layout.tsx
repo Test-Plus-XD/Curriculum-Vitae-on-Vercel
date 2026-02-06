@@ -6,7 +6,7 @@ import { Iansui } from 'next/font/google';
 import { Noto_Serif_Display } from 'next/font/google';
 
 const iansui = Iansui({
-  subsets: ['chinese-traditional'],
+  subsets: ['latin'],
   weight: '400',
   variable: '--font-zh',
   display: 'swap',
