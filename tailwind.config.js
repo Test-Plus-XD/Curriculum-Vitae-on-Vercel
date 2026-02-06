@@ -96,6 +96,15 @@ module.exports = {
           '0%, 100%': { backgroundPosition: '0% 0' },
           '50%': { backgroundPosition: '100% 0' },
         },
+        'radar-ping': {
+          '0%': { transform: 'scale(1)', opacity: '0.6' },
+          '50%': { transform: 'scale(1.8)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '0' },
+        },
+        'holo-stripe': {
+          '0%': { backgroundPosition: '0 0' },
+          '100%': { backgroundPosition: '0 40px' },
+        },
       },
       animation: {
         'soviet-pulse': 'soviet-pulse 6s ease-in-out infinite',
@@ -114,6 +123,8 @@ module.exports = {
         'slow-rotate': 'slow-rotate 60s linear infinite',
         'telemetry-blink': 'telemetry-blink 2s ease-in-out infinite',
         'aurora': 'aurora 15s ease-in-out infinite',
+        'radar-ping': 'radar-ping 3s ease-in-out infinite',
+        'holo-stripe': 'holo-stripe 2s linear infinite',
       },
     },
   },
