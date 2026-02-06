@@ -3,7 +3,7 @@
 **Owner**: NG Yu Ham Baldwin | 吳宇涵
 
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV website built with Next.js 16+ (App Router) for Vercel deployment. Retro-futuristic aesthetic in dark mode with print-friendly CV landing page. Formal academic tone required.
+Bilingual (Traditional Chinese / British English) CV website built with Next.js 16+ (App Router) for Vercel deployment. Soviet retro-futuristic aesthetic in both light and dark modes (except the landing CV page in light mode) with print-friendly CV landing page. Formal academic tone required.
 
 ## Critical Requirements
 1. **Bilingual Support**: All content in EN and ZH-HK with language toggle
@@ -21,7 +21,8 @@ Bilingual (Traditional Chinese / British English) CV website built with Next.js 
 - next-intl 4.0.0 (i18n)
 - next-themes 0.4.0 (dark mode)
 - lucide-react 0.460.0 (icons)
-- react-wavify (retro wave animation)
+- framer-motion 12.33.0 (animation library — installed)
+- react-wavify (retro wave animation — installed)
 - @vercel/speed-insights + @vercel/analytics
 - Vercel deployment
 
@@ -48,8 +49,14 @@ src/
 │   ├── LanguageToggle.tsx        # EN/繁體中文
 │   ├── ThemeProvider.tsx         # next-themes wrapper
 │   ├── VideoEmbed.tsx            # Legacy YouTube modal
-│   ├── InlineVideo.tsx           # 🆕 YouTube embed (thumbnail → fullscreen iframe)
-│   └── RetroWave.tsx             # 🆕 Animated SVG wave (react-wavify)
+│   ├── InlineVideo.tsx           # YouTube embed (thumbnail → fullscreen iframe)
+│   ├── RetroWave.tsx             # Animated SVG mountain range + radar sweep
+│   ├── SovietParticles.tsx       # Floating Soviet-themed particles (stars, gears, sickles)
+│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain background overlay
+│   ├── CosmicStarfield.tsx       # Interactive parallax star field (mouse-responsive)
+│   ├── MorseCodeTicker.tsx       # Animated Morse code strip (Soviet space comms)
+│   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (mission control)
+│   └── SovietPropagandaPoster.tsx # Constructivist geometric decorations
 ├── messages/
 │   ├── en.json                   # English translations
 │   └── zh-hk.json                # Traditional Chinese translations
@@ -64,7 +71,7 @@ Add JSX comments for missing information that the user must provide:
 ```jsx
 {/* PLACEHOLDER: Enter full English name */}
 {/* PLACEHOLDER: Enter Chinese name */}
-{/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}
+{/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}  {/* Rendered <p> is commented out in page.tsx */}
 {/* PLACEHOLDER: Add profile photo URL */}
 {/* PLACEHOLDER: Enter date of birth */}
 ```
@@ -150,33 +157,58 @@ Three Google Fonts are used with locale-aware switching:
 
 ## Styling Guidelines
 
-### Soviet Retro-Futuristic Aesthetic (Dark Mode Only)
-Inspired by 1960s Soviet space age graphics and Russian constructivism
+### Soviet Retro-Futuristic Aesthetic (Both Light & Dark Modes)
+Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofuturistic games (Atomic Heart, Reverse:1999 Cosmic Overture, Arknights Lone Trail).
 
+**Mode Behaviour**:
+- **Dark mode**: Full intensity Soviet effects on ALL pages (including CV)
+- **Light mode**: Subtler aged-paper Soviet effects on education/projects pages ONLY
+- **CV page**: Excluded from light-mode effects via `.cv-page` CSS class
+- **Print**: All effects disabled
+
+**Background & Overlay Effects** (via `SovietBackground` component):
 - **Grid Background**: Brutalist architectural grid (red `#8f0000`, 40px × 40px)
 - **Diagonal Lines**: Constructivist 45° orange diagonal lines (repeating every 80px)
-- **Film Grain**: Subtle texture overlay for aged aesthetic
+- **Film Grain**: Subtle SVG noise texture overlay for aged aesthetic
 - **Scanlines**: Industrial horizontal scanlines (`.scanlines::after`)
-- **Glow Effects**:
-  - `.glow-heading` — Soviet red/orange text shadow with hard drop shadows
-  - `.glow-card` — Angular geometric borders with constructivist box-shadow offsets
-  - `.soviet-line` — Red-to-orange gradient accent lines
-- **Geometric Pattern**: Angular triangular mountain pattern at bottom (RetroWave component)
-- **Colour Palette**:
+- **Vignette**: Warm radial gradient edge darkening
+
+**Component-level Effects**:
+- `.glow-heading` — Soviet red/orange text shadow with breathing animation
+- `.glow-card` — Angular geometric borders with constructivist corner brackets + shimmer
+- `.soviet-line` / `.soviet-line-animated` — Red-to-orange gradient accent lines
+- `.soviet-stat` / `.soviet-badge` / `.soviet-filter` — Themed UI elements
+- `.soviet-tech-tag` — Hover effects on tech stack tags
+- `.soviet-ripple` — Click ripple effect on interactive elements
+- `.soviet-glitch` / `.soviet-crt-hover` — CRT glitch effects on hover
+
+**Atmospheric Components** (hidden on CV page in light mode):
+- `RetroWave` — Animated SVG mountain range with drifting peaks, radar sweep, horizon glow
+- `SovietParticles` — 25 floating particles (stars, dots, diamonds, sickles, gears)
+- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay
+- `CosmicStarfield` — 60 interactive stars with mouse parallax (3 depth layers)
+- `MorseCodeTicker` — Scrolling Morse code strip with Soviet space messages
+- `SovietTelemetry` — Side-panel mission control readout with fluctuating values (xl+ only)
+- `SovietPropagandaPoster` — Corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
+
+**Colour Palette**:
   - Soviet red: `#8f0000` (deep crimson)
   - Soviet orange: `#db5b00` (warm orange-red)
   - Aged beige: `#e3d5c1` (paper texture)
   - Industrial gray: `#8c8670` (concrete)
   - Space age gold: `#ffa500` (accents)
-  - Background: `#1a1a1a` (dark with warm undertone)
-  - Text: `slate-100`
+  - Warm background (light): `#f5efe6` (aged paper)
+  - Background (dark): `#1a1a1a` (dark with warm undertone)
+  - Text: `slate-100` (dark) / `slate-800` (light)
 
 **Design Philosophy**:
 - Geometric & angular (NOT smooth/organic)
-- Warm colors (red/orange/gold, NOT cool cyan/purple)
+- Warm colours (red/orange/gold, NOT cool cyan/purple)
 - Brutalist architecture influence
 - 1960s Soviet space race imagery
 - Constructivist typography principles
+- Analog tech aesthetic (CRT, Morse code, telemetry, radar)
+- Interactive elements respond to mouse/hover/click
 
 ### General Styling
 - Tailwind CSS utility classes throughout
@@ -204,7 +236,9 @@ npm run build
 - System preference auto-detection
 - Manual toggle with sun/moon icon
 - Theme persisted in localStorage
-- Retro effects only active in dark mode
+- Soviet retro effects active in BOTH modes (subtler in light mode)
+- CV page excluded from light-mode effects (`.cv-page` class)
+- All atmospheric components use `usePathname()` to detect CV page
 - Print mode forces light theme with clean output
 
 ## Notes

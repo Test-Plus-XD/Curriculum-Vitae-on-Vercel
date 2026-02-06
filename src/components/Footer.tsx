@@ -29,8 +29,8 @@ export default function Footer() {
 
   return (
     <footer className="relative border-t border-slate-200 dark:border-soviet-red/40 mt-16 print:mt-8">
-      {/* Soviet accent line at the very top — dark mode */}
-      <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-0 dark:opacity-40" />
+      {/* Soviet accent line at the very top — visible in both modes */}
+      <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-15 dark:opacity-40" />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 font-title italic dark:text-soviet-beige/60">
