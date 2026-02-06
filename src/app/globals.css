@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* ── LINE Seed JP loaded via @import (not yet in next/font/google data) ── */
+  :root {
+    --font-en: 'LINE Seed JP';
+  }
+
   /* ── Locale-aware body fonts ──────────────────────── */
   .locale-en {
     font-family: var(--font-en), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
