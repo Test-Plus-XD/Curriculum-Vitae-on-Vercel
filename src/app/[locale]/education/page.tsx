@@ -130,7 +130,7 @@ export default async function EducationPage({
         </div>
       </div>
 
-      <RetroWave height={40} />
+      <RetroWave />
 
       {/* Course Timeline */}
       <div className="space-y-8">
