@@ -18,7 +18,7 @@ const contacts: ContactEntry[] = [
   { key: 'github',   icon: Github,        href: 'https://github.com/Test-Plus-XD',                                                     display: 'GitHub' },
   { key: 'linkedin', icon: Linkedin,      href: 'https://www.linkedin.com/in/test-plus-004601285/',                                    display: 'LinkedIn' },
   { key: 'youtube',  icon: Youtube,       href: 'https://youtube.com/playlist?list=PLkzUf67y42SM-JlZk4eJEDIYPdb7VKbVo',              display: 'YouTube' },
-  { key: 'discord',  icon: MessageCircle, href: null,                                                                                  display: 'test_plus' },
+  { key: 'discord',  icon: MessageCircle, href: 'https://discord.com/users/589711219162873857',                                          display: 'test_plus' },
   { key: 'source',   icon: Code,          href: 'https://github.com/Test-Plus-XD/Curriculum-Vitae-on-Vercel',                          display: null },
 ];
 
@@ -33,7 +33,7 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-0 dark:opacity-40" />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
+        <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 font-title italic dark:text-soviet-beige/60">
           {t('contact')}
         </h3>
 
@@ -42,13 +42,19 @@ export default function Footer() {
             const Icon  = c.icon;
             const label = c.key === 'source' ? t('sourceCode') : c.display;
 
-            /* Discord — no link, just text */
+            /* Discord — clickable DM link */
             if (c.key === 'discord') {
               return (
-                <span key={c.key} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                <a
+                  key={c.key}
+                  href={c.href!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-soviet-orange transition-colors"
+                >
                   <Icon size={15} className="text-slate-400 dark:text-slate-500" />
                   Discord: {c.display}
-                </span>
+                </a>
               );
             }
 

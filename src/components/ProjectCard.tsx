@@ -36,14 +36,17 @@ export default function ProjectCard({ project }: Props) {
   const t      = useTranslations('projects');
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card">
+    <div className="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer">
+      {/* Soviet shimmer sweep on hover */}
+      <div className="soviet-shimmer" />
 
       {/* ---- title + badges ---- */}
       <div className="flex items-start justify-between gap-2">
         <div>
+          {/* Stretched link — covers entire card */}
           <Link
             href={`/${locale}/projects/${project.id}`}
-            className="text-base font-semibold text-slate-800 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-['']"
           >
             {project.title[lang]}
           </Link>
@@ -92,7 +95,7 @@ export default function ProjectCard({ project }: Props) {
                     {statusLabel[plat.status][lang]}
                   </span>
                   {plat.repo && (
-                    <a href={plat.repo} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    <a href={plat.repo} target="_blank" rel="noopener noreferrer" className="relative z-10 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                       <Github size={13} />
                     </a>
                   )}
@@ -118,7 +121,7 @@ export default function ProjectCard({ project }: Props) {
       {/* ---- tech stack ---- */}
       <div className="mt-4 flex flex-wrap gap-1.5">
         {project.techStack.map((tech, i) => (
-          <span key={i} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">
+          <span key={i} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded soviet-tech-tag">
             {tech}
           </span>
         ))}
@@ -134,15 +137,12 @@ export default function ProjectCard({ project }: Props) {
         ))}
       </p>
 
-      {/* ---- actions row ---- */}
-      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
-        <Link
-          href={`/${locale}/projects/${project.id}`}
-          className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-        >
+      {/* ---- actions row (interactive elements above stretched link) ---- */}
+      <div className="relative z-10 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
           {t('viewProject')}
-          <ArrowRight size={12} />
-        </Link>
+          <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
 
         {project.repo && (
           <a

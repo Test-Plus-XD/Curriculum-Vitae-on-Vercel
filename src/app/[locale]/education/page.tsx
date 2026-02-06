@@ -94,9 +94,10 @@ export default async function EducationPage({
 
       {/* Institution Card */}
       <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-soviet-red/40 glow-card">
+        <div className="soviet-shimmer" />
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            <h2 className="text-xl text-slate-900 dark:text-white font-title font-light italic">
               {t('education.institution')}
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
@@ -119,7 +120,7 @@ export default async function EducationPage({
             </div>
           </div>
           <div className="text-right">
-            <div className="inline-flex items-center gap-2 bg-blue-600 dark:bg-cyan-700 text-white px-4 py-2 rounded-lg">
+            <div className="inline-flex items-center gap-2 bg-blue-600 dark:bg-soviet-red text-white px-4 py-2 rounded-lg">
               <Calendar size={16} />
               <span className="font-semibold">{t('education.graduation')}</span>
             </div>
@@ -130,7 +131,7 @@ export default async function EducationPage({
         </div>
       </div>
 
-      <RetroWave height={40} />
+      <RetroWave />
 
       {/* Course Timeline */}
       <div className="space-y-8">
@@ -138,26 +139,26 @@ export default async function EducationPage({
           <div key={sem.translationKey} className="relative">
             {/* Timeline connector */}
             {semIndex < SEMESTERS.length - 1 && (
-              <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800" />
+              <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 soviet-timeline-line" />
             )}
 
             {/* Semester header */}
             <div className="flex items-center gap-3 mb-4">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
                 semIndex === 0
-                  ? 'bg-blue-600 dark:bg-cyan-600'
+                  ? 'bg-blue-600 dark:bg-soviet-red'
                   : 'bg-slate-300 dark:bg-slate-700'
               }`}>
                 <span className="text-white text-xs font-bold">{SEMESTERS.length - semIndex}</span>
               </div>
-              <h3 className={`font-semibold ${
+              <h3 className={`font-title italic ${
                 semIndex === 0
-                  ? 'text-blue-600 dark:text-blue-400'
+                  ? 'text-blue-600 dark:text-soviet-orange'
                   : 'text-slate-700 dark:text-slate-300'
               }`}>
                 {t(sem.translationKey)}
                 {semIndex === 0 && (
-                  <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                  <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
                     {locale === 'zh-hk' ? '進行中' : 'Current'}
                   </span>
                 )}
@@ -171,6 +172,7 @@ export default async function EducationPage({
                   key={course.code}
                   className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
                 >
+                  <div className="soviet-shimmer" />
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
                     {course.code}
                   </span>
@@ -196,26 +198,26 @@ export default async function EducationPage({
 
       {/* Summary stats */}
       <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalCourses}</p>
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+          <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '總課程數' : 'Total Courses'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">{SEMESTERS.length}</p>
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+          <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{SEMESTERS.length}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '學期' : 'Semesters'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">3.7</p>
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+          <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.7</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '大一 GPA' : 'Year 1 GPA'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center">
-          <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">2026</p>
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+          <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
           </p>

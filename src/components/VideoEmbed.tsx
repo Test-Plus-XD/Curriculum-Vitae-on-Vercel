@@ -26,7 +26,7 @@ export default function VideoEmbed({ embedUrl, url, title }: Props) {
       {/* Modal */}
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/60 p-4"
           onClick={() => setOpen(false)}
         >
           <div

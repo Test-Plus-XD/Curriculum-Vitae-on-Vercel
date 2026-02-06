@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl text-slate-900 dark:text-white font-title font-light italic glow-heading">
           {project.title[lang]}
         </h1>
 
@@ -110,15 +110,15 @@ export default async function ProjectDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left: Timeline */}
         <div className="lg:col-span-2">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
-            <Calendar className="text-blue-600 dark:text-blue-400" size={20} />
+          <h2 className="text-lg text-slate-900 dark:text-white flex items-center gap-2 mb-6 font-title font-light italic glow-heading">
+            <Calendar className="text-blue-600 dark:text-soviet-orange" size={20} />
             {t('timeline')}
           </h2>
 
           {timeline.length > 0 ? (
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800" />
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 soviet-timeline-line" />
 
               <div className="space-y-6">
                 {timeline.map((event, idx) => (
@@ -145,15 +145,14 @@ export default async function ProjectDetailPage({
                     {/* Content */}
                     <div className="flex-1 pb-6">
                       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-slate-900/50 transition-shadow glow-card">
+                        <div className="soviet-shimmer" />
                         {/* YouTube Embed */}
                         {event.videoId && event.embedUrl && (
-                          <div className="p-2">
-                            <InlineVideo
-                              embedUrl={event.embedUrl}
-                              title={event.title[lang]}
-                              videoId={event.videoId}
-                            />
-                          </div>
+                          <InlineVideo
+                            embedUrl={event.embedUrl}
+                            title={event.title[lang]}
+                            videoId={event.videoId}
+                          />
                         )}
 
                         <div className="p-4">
@@ -202,15 +201,16 @@ export default async function ProjectDetailPage({
         {/* Right: Info sidebar */}
         <div className="space-y-6">
           {/* Tech Stack */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+            <div className="soviet-shimmer" />
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
               {t('techStack')}
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech, i) => (
                 <span
                   key={i}
-                  className="text-sm px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg"
+                  className="text-sm px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg soviet-tech-tag"
                 >
                   {tech}
                 </span>
@@ -220,8 +220,9 @@ export default async function ProjectDetailPage({
 
           {/* Repositories */}
           {(project.repo || project.platforms?.some((p) => p.repo)) && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('viewRepo')}
               </h3>
               <div className="space-y-2">
@@ -256,8 +257,9 @@ export default async function ProjectDetailPage({
 
           {/* Platform Components (PourRice only) */}
           {project.platforms && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('pourRicePlatforms')}
               </h3>
               <div className="space-y-3">
@@ -284,7 +286,7 @@ export default async function ProjectDetailPage({
           {/* Highlights (PourRice only) */}
           {project.highlights && (
             <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 border border-blue-100 dark:border-blue-900/50 rounded-xl p-5">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('highlights')}
               </h3>
               <ul className="space-y-2">
@@ -300,8 +302,9 @@ export default async function ProjectDetailPage({
 
           {/* All Videos */}
           {project.videos.length > 0 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('videos')} ({project.videos.length})
               </h3>
               <div className="space-y-2">

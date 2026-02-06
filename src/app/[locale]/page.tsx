@@ -18,7 +18,7 @@ const SKILL_GROUPS: { key: string; items: string[] }[] = [
   { key: 'frameworks', items: ['Flutter', 'Ionic/Angular', 'Express.js', 'Unity'] },
   { key: 'backendDb', items: ['Firebase', 'MySQL', 'Socket.IO', 'REST APIs'] },
   { key: 'cloud', items: ['Vercel', 'Railway', 'Google Cloud'] },
-  { key: 'tools', items: ['Git', 'Android Studio', 'Xcode', 'VS Code'] },
+  { key: 'tools', items: ['Git', 'Android Studio', 'Xcode', 'Visual Studio'] },
 ];
 
 const CONTACTS = [
@@ -87,7 +87,7 @@ export default async function LandingPage({
 
           {/* ─────────────────────── EDUCATION ─────────────────────── */}
           <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3 print:text-xs">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
               {t('sections.education')}
             </h2>
 
@@ -143,7 +143,7 @@ export default async function LandingPage({
           {/* ─────────────────────── FEATURED PROJECTS ─────────────────────── */}
           <section>
             <div className="flex items-center justify-between border-b border-slate-300 dark:border-slate-700 pb-1 mb-3">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider print:text-xs">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider print:text-xs font-title italic print:font-sans print:not-italic">
                 {t('sections.featuredProjects')}
               </h2>
               <Link
@@ -223,7 +223,7 @@ export default async function LandingPage({
 
           {/* ─────────────────────── WORK EXPERIENCE ─────────────────────── */}
           <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3 print:text-xs">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
               {t('sections.experience')}
             </h2>
 
@@ -254,7 +254,7 @@ export default async function LandingPage({
 
           {/* ─────────────────────── SKILLS ─────────────────────── */}
           <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3 print:text-xs">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
               {t('sections.skills')}
             </h2>
 
@@ -274,7 +274,7 @@ export default async function LandingPage({
 
           {/* ─────────────────────── CERTIFICATIONS ─────────────────────── */}
           <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3 print:text-xs">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
               {t('sections.certifications')}
             </h2>
             <p className="text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
@@ -284,7 +284,7 @@ export default async function LandingPage({
 
           {/* ─────────────────────── ADDITIONAL INFO ─────────────────────── */}
           <section className="print:hidden">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 font-title italic">
               {locale === 'zh-hk' ? '其他資訊' : 'Additional Info'}
             </h2>
             <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">

@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import RetroWave from '@/components/RetroWave';
+import SovietParticles from '@/components/SovietParticles';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -37,6 +38,7 @@ export default async function LocaleLayout({
 
           <Footer />
           <RetroWave />
+          <SovietParticles />
         </div>
       </ThemeProvider>
     </NextIntlClientProvider>
