@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import RetroWave from '@/components/RetroWave';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -17,7 +18,6 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!LOCALES.includes(locale)) notFound();
 
-  // Cache the locale so server-side APIs can infer it without an explicit argument
   setRequestLocale(locale);
 
   const messages = await getMessages();
@@ -25,17 +25,18 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
-        <div className="min-h-screen flex flex-col">
+        <div className={`min-h-screen flex flex-col scanlines ${locale === 'zh-hk' ? 'locale-zh' : 'locale-en'}`}>
           {/* Sticky nav — hidden on print */}
           <div className="print:hidden">
             <Header />
           </div>
 
-          <main className="flex-1">
+          <main className="flex-1 relative z-10">
             {children}
           </main>
 
           <Footer />
+          <RetroWave />
         </div>
       </ThemeProvider>
     </NextIntlClientProvider>

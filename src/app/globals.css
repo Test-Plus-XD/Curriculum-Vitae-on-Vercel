@@ -3,30 +3,126 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* ── Locale-aware body fonts ──────────────────────── */
+  .locale-en {
+    font-family: var(--font-en), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .locale-zh {
+    font-family: var(--font-zh), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 }
 
-/* ── printer-friendly overrides ──────────────────────────── */
+/* ── Soviet Retro-Futuristic Atmosphere ──────────────────────── */
+
+/* Brutalist grid + diagonal constructivist lines — dark mode only */
+.dark body {
+  background-color: #1a1a1a;
+  background-image:
+    /* Brutalist architectural grid (red) */
+    linear-gradient(rgba(143, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 0, 0, 0.08) 1px, transparent 1px),
+    /* Diagonal constructivist lines (orange) */
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 80px,
+      rgba(219, 91, 0, 0.03) 80px,
+      rgba(219, 91, 0, 0.03) 81px
+    ),
+    /* Film grain texture */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 40px 40px, 40px 40px, auto, auto;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Industrial scanline overlay — horizontal (less subtle than before) */
+.dark .scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Soviet-style glow – headings (red/orange instead of cyan) */
+.dark .glow-heading {
+  text-shadow:
+    0 0 15px rgba(143, 0, 0, 0.6),
+    0 0 30px rgba(219, 91, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* Constructivist card borders – angular, geometric */
+.dark .glow-card {
+  border-color: rgba(143, 0, 0, 0.25);
+  box-shadow:
+    0 0 8px rgba(143, 0, 0, 0.08),
+    inset 0 0 6px rgba(219, 91, 0, 0.04),
+    4px 4px 0 rgba(0, 0, 0, 0.15);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dark .glow-card:hover {
+  border-color: rgba(219, 91, 0, 0.5);
+  box-shadow:
+    0 0 16px rgba(143, 0, 0, 0.2),
+    inset 0 0 10px rgba(219, 91, 0, 0.08),
+    6px 6px 0 rgba(0, 0, 0, 0.2);
+  transform: translate(-2px, -2px);
+}
+
+/* Soviet accent line (red-to-orange gradient) */
+.soviet-line {
+  background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
+}
+
+/* Constructivist geometric accent (for decorative elements) */
+.geometric-accent {
+  position: relative;
+}
+.geometric-accent::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 14px 8px;
+  border-color: transparent transparent #db5b00 transparent;
+  opacity: 0.4;
+}
+
+/* ── Printer-friendly overrides ──────────────────────── */
 @media print {
   body,
   .dark {
     background: white !important;
+    background-image: none !important;
     color: #1e293b !important;
   }
-  /* hide nav, toggles, video triggers, modal */
   .print\:hidden,
   [data-print="hidden"] {
     display: none !important;
   }
-  /* collapse card borders into flat dividers */
   .border-slate-200,
   .border-slate-800 {
     border-color: #cbd5e1 !important;
   }
-  /* remove box shadows */
   * {
     box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .scanlines::after {
+    display: none !important;
+  }
+  .glow-card {
+    border-color: #cbd5e1 !important;
   }
 }

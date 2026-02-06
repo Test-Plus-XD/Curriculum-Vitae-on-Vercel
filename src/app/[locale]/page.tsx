@@ -46,11 +46,12 @@ export default async function LandingPage({
       <header className="border-b-2 border-slate-800 dark:border-slate-200 pb-4 mb-6 print:pb-3 print:mb-4">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            {/* PLACEHOLDER: Enter full English name */}
-            {/* PLACEHOLDER: Enter Chinese name */}
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight print:text-2xl">
+            <h1 className="text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight print:text-2xl font-title font-light italic glow-heading">
               {t('placeholders.name')}
             </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              {t('placeholders.nameAlt')}
+            </p>
             <p className="text-base text-slate-600 dark:text-slate-400 mt-1 font-medium">
               {t('title')}
             </p>
@@ -276,33 +277,9 @@ export default async function LandingPage({
             <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-slate-700 pb-1 mb-3 print:text-xs">
               {t('sections.certifications')}
             </h2>
-
-            {/* IELTS */}
-            <div className="mb-3 print:mb-2">
-              <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 print:text-[10px]">
-                {t('certifications.title')}
-              </h4>
-              <p className="text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
-                {t('certifications.ielts')}
-              </p>
-            </div>
-
-            {/* Memberships */}
-            <div>
-              <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 print:text-[10px]">
-                {t('certifications.memberships')}
-              </h4>
-              <ul className="space-y-0.5 text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
-                <li className="flex items-start gap-1.5">
-                  <span className="mt-1.5 w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
-                  {t('certifications.hkcs')}
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="mt-1.5 w-1 h-1 rounded-full bg-slate-400 flex-shrink-0" />
-                  {t('certifications.hkdea')}
-                </li>
-              </ul>
-            </div>
+            <p className="text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
+              {t('certifications.ielts')}
+            </p>
           </section>
 
           {/* ─────────────────────── ADDITIONAL INFO ─────────────────────── */}

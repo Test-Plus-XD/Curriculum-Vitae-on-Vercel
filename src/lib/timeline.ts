@@ -7,6 +7,7 @@ export interface TimelineEvent {
   description?: { en: string; zh: string };
   videoUrl?: string;
   videoId?: string;
+  embedUrl?: string;
 }
 
 export const projectTimelines: Record<string, TimelineEvent[]> = {
@@ -18,6 +19,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Project presentation for Open Mobile Software Design course', zh: '開放手機軟件設計課程項目簡報' },
       videoUrl: 'https://youtu.be/rXnUfZ1FnUE',
       videoId: 'rXnUfZ1FnUE',
+      embedUrl: 'https://www.youtube.com/embed/rXnUfZ1FnUE',
     },
     {
       date: '29/12/2025',
@@ -26,6 +28,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Full operation demonstration of Flutter Android app', zh: 'Flutter Android 應用完整操作演示' },
       videoUrl: 'https://youtu.be/WB2t-f88AME',
       videoId: 'WB2t-f88AME',
+      embedUrl: 'https://www.youtube.com/embed/WB2t-f88AME',
     },
     {
       date: '12/12/2025',
@@ -34,6 +37,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Cross-platform mobile application demonstration', zh: '跨平台手機應用演示' },
       videoUrl: 'https://youtu.be/tl7z5B5YT7M',
       videoId: 'tl7z5B5YT7M',
+      embedUrl: 'https://www.youtube.com/embed/tl7z5B5YT7M',
     },
     {
       date: '27/11/2025',
@@ -41,6 +45,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'Flutter Assignment 2', zh: 'Flutter 作業 2' },
       videoUrl: 'https://youtube.com/shorts/422JoEHT4SE',
       videoId: '422JoEHT4SE',
+      embedUrl: 'https://www.youtube.com/embed/422JoEHT4SE',
     },
     {
       date: '12/11/2025',
@@ -48,6 +53,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'Ionic Operation Demo', zh: 'Ionic 操作演示' },
       videoUrl: 'https://youtu.be/ybg66eH3-hI',
       videoId: 'ybg66eH3-hI',
+      embedUrl: 'https://www.youtube.com/embed/ybg66eH3-hI',
     },
     {
       date: '02/11/2025',
@@ -55,6 +61,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'Flutter Assignment 1', zh: 'Flutter 作業 1' },
       videoUrl: 'https://youtube.com/shorts/ZJHVqbcWlck',
       videoId: 'ZJHVqbcWlck',
+      embedUrl: 'https://www.youtube.com/embed/ZJHVqbcWlck',
     },
     {
       date: '01/10/2025',
@@ -72,6 +79,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Final project presentation for PHP Application Development', zh: 'PHP 應用開發期末項目簡報' },
       videoUrl: 'https://youtu.be/zQh2nmy-E88',
       videoId: 'zQh2nmy-E88',
+      embedUrl: 'https://www.youtube.com/embed/zQh2nmy-E88',
     },
     {
       date: '28/04/2025',
@@ -79,6 +87,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'PHP Final Operation', zh: 'PHP 期末操作演示' },
       videoUrl: 'https://youtu.be/RHIbLWDbQuY',
       videoId: 'RHIbLWDbQuY',
+      embedUrl: 'https://www.youtube.com/embed/RHIbLWDbQuY',
     },
     {
       date: '13/02/2025',
@@ -86,6 +95,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'PHP Assignment 1', zh: 'PHP 作業 1' },
       videoUrl: 'https://youtu.be/vaPRcK98VzQ',
       videoId: 'vaPRcK98VzQ',
+      embedUrl: 'https://www.youtube.com/embed/vaPRcK98VzQ',
     },
     {
       date: '31/12/2024',
@@ -94,6 +104,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Technology for Web Development final demonstration', zh: '網絡開發技術期末演示' },
       videoUrl: 'https://youtu.be/GNkpLG3K0B0',
       videoId: 'GNkpLG3K0B0',
+      embedUrl: 'https://www.youtube.com/embed/GNkpLG3K0B0',
     },
     {
       date: '27/11/2024',
@@ -101,6 +112,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'TWD Assignment 2', zh: 'TWD 作業 2' },
       videoUrl: 'https://youtu.be/j_4idSlAHkU',
       videoId: 'j_4idSlAHkU',
+      embedUrl: 'https://www.youtube.com/embed/j_4idSlAHkU',
     },
     {
       date: '19/10/2024',
@@ -108,6 +120,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'TWD Assignment 1', zh: 'TWD 作業 1' },
       videoUrl: 'https://youtu.be/OmaRpubezoA',
       videoId: 'OmaRpubezoA',
+      embedUrl: 'https://www.youtube.com/embed/OmaRpubezoA',
     },
     {
       date: '01/09/2024',
@@ -125,6 +138,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Final presentation for 3D Mobile Game Development', zh: '3D 手機遊戲開發期末簡報' },
       videoUrl: 'https://youtu.be/lzrNLRafMHg',
       videoId: 'lzrNLRafMHg',
+      embedUrl: 'https://www.youtube.com/embed/lzrNLRafMHg',
     },
     {
       date: '12/05/2025',
@@ -132,6 +146,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: '3D Shooter Gameplay', zh: '3D 射擊遊戲操作' },
       videoUrl: 'https://youtu.be/Rf3YQ5JqGh8',
       videoId: 'Rf3YQ5JqGh8',
+      embedUrl: 'https://www.youtube.com/embed/Rf3YQ5JqGh8',
     },
     {
       date: '02/05/2025',
@@ -139,6 +154,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: '3D Runner Gameplay', zh: '3D 跑酷遊戲操作' },
       videoUrl: 'https://youtube.com/shorts/TjW_fJ801HU',
       videoId: 'TjW_fJ801HU',
+      embedUrl: 'https://www.youtube.com/embed/TjW_fJ801HU',
     },
     {
       date: '01/01/2025',
@@ -155,6 +171,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'Puzzle Game Assignment 2', zh: '益智遊戲作業 2' },
       videoUrl: 'https://youtube.com/shorts/03PpUxeYq78',
       videoId: '03PpUxeYq78',
+      embedUrl: 'https://www.youtube.com/embed/03PpUxeYq78',
     },
     {
       date: '02/11/2025',
@@ -162,6 +179,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       title: { en: 'Puzzle Game Assignment 1', zh: '益智遊戲作業 1' },
       videoUrl: 'https://youtube.com/shorts/7mM4UJyezGw',
       videoId: '7mM4UJyezGw',
+      embedUrl: 'https://www.youtube.com/embed/7mM4UJyezGw',
     },
     {
       date: '01/09/2025',
@@ -179,6 +197,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Demonstration of 2D chess game mechanics', zh: '2D 國際象棋遊戲機制演示' },
       videoUrl: 'https://youtu.be/oeiCjfTcAOY',
       videoId: 'oeiCjfTcAOY',
+      embedUrl: 'https://www.youtube.com/embed/oeiCjfTcAOY',
     },
     {
       date: '22/12/2025',
@@ -187,6 +206,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Project report presentation', zh: '項目報告簡報' },
       videoUrl: 'https://youtu.be/Ftt7lIPo0Jc',
       videoId: 'Ftt7lIPo0Jc',
+      embedUrl: 'https://www.youtube.com/embed/Ftt7lIPo0Jc',
     },
     {
       date: '01/09/2025',
@@ -204,6 +224,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Software Engineering assignment demonstration', zh: '軟件工程作業演示' },
       videoUrl: 'https://youtu.be/mgE3mYxxpYw',
       videoId: 'mgE3mYxxpYw',
+      embedUrl: 'https://www.youtube.com/embed/mgE3mYxxpYw',
     },
     {
       date: '01/09/2025',
@@ -236,6 +257,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Java Swing card matching game demonstration', zh: 'Java Swing 翻牌配對遊戲演示' },
       videoUrl: 'https://youtu.be/yxGm6arDMzs',
       videoId: 'yxGm6arDMzs',
+      embedUrl: 'https://www.youtube.com/embed/yxGm6arDMzs',
     },
     {
       date: '01/09/2024',
@@ -253,6 +275,7 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       description: { en: 'Open System Administration final presentation', zh: '開放系統管理期末簡報' },
       videoUrl: 'https://youtu.be/U9pubOUTG-8',
       videoId: 'U9pubOUTG-8',
+      embedUrl: 'https://www.youtube.com/embed/U9pubOUTG-8',
     },
     {
       date: '01/01/2025',

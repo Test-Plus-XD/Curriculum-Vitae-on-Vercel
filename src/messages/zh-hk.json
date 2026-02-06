@@ -11,7 +11,7 @@
     "featuredProjects": "精選項目",
     "skills": "技術能力",
     "experience": "工作經歷",
-    "certifications": "認證與專業組織"
+    "certifications": "認證資歷"
   },
   "education": {
     "institution": "香港專業進修學校 (港專)",
@@ -80,17 +80,14 @@
   "footer": {
     "contact": "聯絡",
     "sourceCode": "履歷原碼",
-    "copyright": "© {year} 軟件開發員。使用 Next.js 開發"
+    "copyright": "© {year} 吳宇涵 NG Yu Ham Baldwin。使用 Next.js 開發"
   },
   "certifications": {
-    "title": "認證資歷",
-    "ielts": "IELTS 學術類 — 6.5 分",
-    "memberships": "專業組織",
-    "hkcs": "香港電腦學會（HKCS）— 學生會員",
-    "hkdea": "香港數碼娛樂協會 — 會員"
+    "ielts": "IELTS 學術類 — 6.5 分"
   },
   "placeholders": {
-    "name": "請填入姓名",
+    "name": "吳宇涵",
+    "nameAlt": "NG Yu Ham Baldwin",
     "photoLabel": "照片",
     "personalStatement": "請填入個人介紹（2–3句）。",
     "nationality": "香港特別行政區"

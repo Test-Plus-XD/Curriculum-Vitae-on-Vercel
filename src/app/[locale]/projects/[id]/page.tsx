@@ -1,10 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Video, Calendar } from 'lucide-react';
 import { projects } from '@/lib/projects';
-import { projectTimelines, sortTimelineEvents, formatTimelineDate, getYouTubeThumbnail } from '@/lib/timeline';
+import { projectTimelines, sortTimelineEvents, formatTimelineDate } from '@/lib/timeline';
+import InlineVideo from '@/components/InlineVideo';
 
 type Lang = 'en' | 'zh';
 
@@ -144,32 +144,16 @@ export default async function ProjectDetailPage({
 
                     {/* Content */}
                     <div className="flex-1 pb-6">
-                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-slate-900/50 transition-shadow">
-                        {/* YouTube Thumbnail */}
-                        {event.videoId && (
-                          <a
-                            href={event.videoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="relative block aspect-video bg-slate-100 dark:bg-slate-800 group"
-                          >
-                            <Image
-                              src={getYouTubeThumbnail(event.videoId, 'high')}
-                              alt={event.title[lang]}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 768px) 100vw, 50vw"
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-slate-900/50 transition-shadow glow-card">
+                        {/* YouTube Embed */}
+                        {event.videoId && event.embedUrl && (
+                          <div className="p-2">
+                            <InlineVideo
+                              embedUrl={event.embedUrl}
+                              title={event.title[lang]}
+                              videoId={event.videoId}
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center">
-                                <Play size={28} className="text-white ml-1" fill="white" />
-                              </div>
-                            </div>
-                            <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                              <Play size={10} fill="white" />
-                              YouTube
-                            </div>
-                          </a>
+                          </div>
                         )}
 
                         <div className="p-4">

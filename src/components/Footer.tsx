@@ -28,7 +28,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800 mt-16 print:mt-8">
+    <footer className="relative border-t border-slate-200 dark:border-soviet-red/40 mt-16 print:mt-8">
+      {/* Soviet accent line at the very top — dark mode */}
+      <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-0 dark:opacity-40" />
+
       <div className="max-w-5xl mx-auto px-4 py-8">
         <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">
           {t('contact')}
@@ -55,7 +58,7 @@ export default function Footer() {
                 href={c.href!}
                 target={c.key !== 'email' && c.key !== 'phone' ? '_blank' : undefined}
                 rel={c.key !== 'email' && c.key !== 'phone' ? 'noopener noreferrer' : undefined}
-                className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-soviet-orange transition-colors"
               >
                 <Icon size={15} className="text-slate-400 dark:text-slate-500" />
                 <span>{label}</span>
