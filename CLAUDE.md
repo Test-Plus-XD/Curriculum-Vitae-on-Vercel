@@ -150,19 +150,33 @@ Three Google Fonts are used with locale-aware switching:
 
 ## Styling Guidelines
 
-### Retro-Futuristic Aesthetic (Dark Mode Only)
-- **Grid Background**: Subtle cyan grid pattern (`50px × 50px`)
-- **Scanlines**: CRT-style horizontal scanlines (`.scanlines::after`)
+### Soviet Retro-Futuristic Aesthetic (Dark Mode Only)
+Inspired by 1960s Soviet space age graphics and Russian constructivism
+
+- **Grid Background**: Brutalist architectural grid (red `#8f0000`, 40px × 40px)
+- **Diagonal Lines**: Constructivist 45° orange diagonal lines (repeating every 80px)
+- **Film Grain**: Subtle texture overlay for aged aesthetic
+- **Scanlines**: Industrial horizontal scanlines (`.scanlines::after`)
 - **Glow Effects**:
-  - `.glow-heading` — Cyan text shadow on headings
-  - `.glow-card` — Border glow + hover effects on cards
-  - `.neon-line` — Gradient accent lines (cyan → transparent)
-- **Animated Wave**: SVG wave overlay at bottom (RetroWave component)
+  - `.glow-heading` — Soviet red/orange text shadow with hard drop shadows
+  - `.glow-card` — Angular geometric borders with constructivist box-shadow offsets
+  - `.soviet-line` — Red-to-orange gradient accent lines
+- **Geometric Pattern**: Angular triangular mountain pattern at bottom (RetroWave component)
 - **Colour Palette**:
-  - Primary neon: `#06b6d4` (cyan)
-  - Secondary neon: `#a855f7` (purple)
-  - Background: `slate-950`
+  - Soviet red: `#8f0000` (deep crimson)
+  - Soviet orange: `#db5b00` (warm orange-red)
+  - Aged beige: `#e3d5c1` (paper texture)
+  - Industrial gray: `#8c8670` (concrete)
+  - Space age gold: `#ffa500` (accents)
+  - Background: `#1a1a1a` (dark with warm undertone)
   - Text: `slate-100`
+
+**Design Philosophy**:
+- Geometric & angular (NOT smooth/organic)
+- Warm colors (red/orange/gold, NOT cool cyan/purple)
+- Brutalist architecture influence
+- 1960s Soviet space race imagery
+- Constructivist typography principles
 
 ### General Styling
 - Tailwind CSS utility classes throughout

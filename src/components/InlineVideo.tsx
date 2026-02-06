@@ -23,7 +23,7 @@ export default function InlineVideo({ embedUrl, title, videoId }: Props) {
       {/* Thumbnail Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="group relative aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-cyan-400 transition-all"
+        className="group relative aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-soviet-orange transition-all"
         aria-label={`Play ${title}`}
       >
         <img
@@ -49,7 +49,7 @@ export default function InlineVideo({ embedUrl, title, videoId }: Props) {
         >
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-cyan-400 transition-colors"
+            className="absolute top-4 right-4 text-white hover:text-soviet-orange transition-colors"
             aria-label="Close video"
           >
             <X size={32} />
