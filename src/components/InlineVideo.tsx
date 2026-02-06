@@ -23,7 +23,7 @@ export default function InlineVideo({ embedUrl, title, videoId }: Props) {
       {/* Thumbnail Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="group relative aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-soviet-orange transition-all"
+        className="group relative w-full aspect-video bg-slate-100 dark:bg-slate-800 overflow-hidden hover:ring-2 hover:ring-soviet-orange transition-all"
         aria-label={`Play ${title}`}
       >
         <img
@@ -44,7 +44,7 @@ export default function InlineVideo({ embedUrl, title, videoId }: Props) {
       {/* Fullscreen Modal */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[1100] bg-black/90 flex items-center justify-center p-4"
           onClick={() => setIsOpen(false)}
         >
           <button

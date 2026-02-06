@@ -29,7 +29,7 @@ export default function ProjectsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* heading */}
-      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">
+      <h1 className="text-2xl text-slate-800 dark:text-white mb-6 font-title font-light italic glow-heading">
         {t('allProjects')}
       </h1>
 
@@ -39,10 +39,10 @@ export default function ProjectsPage() {
           <button
             key={f.key}
             onClick={() => setActiveFilter(f.key)}
-            className={`px-4 py-1.5 text-sm rounded-full transition-colors ${
+            className={`px-4 py-1.5 text-sm rounded-full transition-all ${
               activeFilter === f.key
-                ? 'bg-blue-600 text-white dark:bg-blue-500 dark:text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                ? 'bg-blue-600 text-white dark:text-soviet-beige soviet-filter-active'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 soviet-filter'
             }`}
           >
             {f.label}

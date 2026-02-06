@@ -19,30 +19,50 @@
   }
 }
 
-/* ── Soviet Retro-Futuristic Atmosphere ──────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════
+   Soviet Retro-Futuristic Atmosphere — 1960s Space Age Constructivism
+   ══════════════════════════════════════════════════════════════════════════ */
 
 /* Brutalist grid + diagonal constructivist lines — dark mode only */
 .dark body {
   background-color: #1a1a1a;
   background-image:
     /* Brutalist architectural grid (red) */
-    linear-gradient(rgba(143, 0, 0, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(143, 0, 0, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 0, 0, 0.12) 1px, transparent 1px),
     /* Diagonal constructivist lines (orange) */
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 80px,
-      rgba(219, 91, 0, 0.03) 80px,
-      rgba(219, 91, 0, 0.03) 81px
+      rgba(219, 91, 0, 0.05) 80px,
+      rgba(219, 91, 0, 0.05) 81px
+    ),
+    /* Counter-diagonal for cross-hatch */
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 120px,
+      rgba(143, 0, 0, 0.03) 120px,
+      rgba(143, 0, 0, 0.03) 121px
     ),
     /* Film grain texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  background-size: 40px 40px, 40px 40px, auto, auto;
-  background-position: 0 0, 0 0, 0 0, 0 0;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 40px 40px, 40px 40px, auto, auto, auto;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
-/* Industrial scanline overlay — horizontal (less subtle than before) */
+/* Vignette overlay — dark mode only */
+.dark .scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
+  pointer-events: none;
+  z-index: 998;
+}
+
+/* Industrial scanline overlay — horizontal */
 .dark .scanlines::after {
   content: '';
   position: fixed;
@@ -51,47 +71,70 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.05) 2px,
-    rgba(0, 0, 0, 0.05) 4px
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
   );
   pointer-events: none;
   z-index: 999;
 }
 
-/* Soviet-style glow – headings (red/orange instead of cyan) */
+/* ── Soviet-style glow – headings ────────────────────────────────────── */
 .dark .glow-heading {
   text-shadow:
-    0 0 15px rgba(143, 0, 0, 0.6),
-    0 0 30px rgba(219, 91, 0, 0.3),
-    0 2px 4px rgba(0, 0, 0, 0.4);
+    0 0 20px rgba(143, 0, 0, 0.7),
+    0 0 40px rgba(219, 91, 0, 0.35),
+    0 0 80px rgba(143, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: 300;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 
-/* Constructivist card borders – angular, geometric */
+/* ── Constructivist card borders – angular, geometric ────────────────── */
 .dark .glow-card {
-  border-color: rgba(143, 0, 0, 0.25);
+  border-color: rgba(143, 0, 0, 0.3);
   box-shadow:
-    0 0 8px rgba(143, 0, 0, 0.08),
-    inset 0 0 6px rgba(219, 91, 0, 0.04),
-    4px 4px 0 rgba(0, 0, 0, 0.15);
+    0 0 10px rgba(143, 0, 0, 0.1),
+    inset 0 0 8px rgba(219, 91, 0, 0.05),
+    4px 4px 0 rgba(0, 0, 0, 0.2);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .dark .glow-card:hover {
-  border-color: rgba(219, 91, 0, 0.5);
+  border-color: rgba(219, 91, 0, 0.6);
   box-shadow:
-    0 0 16px rgba(143, 0, 0, 0.2),
-    inset 0 0 10px rgba(219, 91, 0, 0.08),
-    6px 6px 0 rgba(0, 0, 0, 0.2);
-  transform: translate(-2px, -2px);
+    0 0 20px rgba(143, 0, 0, 0.25),
+    0 0 40px rgba(219, 91, 0, 0.1),
+    inset 0 0 12px rgba(219, 91, 0, 0.08),
+    6px 6px 0 rgba(0, 0, 0, 0.25);
 }
 
-/* Soviet accent line (red-to-orange gradient) */
+/* ── Soviet accent line (red-to-orange gradient) ─────────────────────── */
 .soviet-line {
   background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
 }
 
-/* Constructivist geometric accent (for decorative elements) */
+/* ── Soviet section header — bold divider with angular accent ────────── */
+.dark .soviet-section-header {
+  position: relative;
+  padding-left: 1rem;
+}
+.dark .soviet-section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #8f0000, #db5b00);
+}
+
+/* ── Soviet badge — angular tag styling ──────────────────────────────── */
+.dark .soviet-badge {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.15), rgba(219, 91, 0, 0.1));
+  border: 1px solid rgba(143, 0, 0, 0.3);
+  color: #e3d5c1;
+}
+
+/* ── Constructivist geometric accent (for decorative elements) ───────── */
 .geometric-accent {
   position: relative;
 }
@@ -106,7 +149,48 @@
   opacity: 0.4;
 }
 
-/* ── Printer-friendly overrides ──────────────────────── */
+/* ── Soviet star decorative element ──────────────────────────────────── */
+.dark .soviet-star::before {
+  content: '\2605';
+  color: #8f0000;
+  opacity: 0.5;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+/* ── Propaganda-style filter buttons — dark mode ─────────────────────── */
+.dark .soviet-filter-active {
+  background: linear-gradient(135deg, #8f0000, #db5b00) !important;
+  color: #e3d5c1 !important;
+  border: 1px solid rgba(219, 91, 0, 0.5);
+  box-shadow: 0 0 12px rgba(143, 0, 0, 0.3), inset 0 0 4px rgba(255, 165, 0, 0.1);
+}
+.dark .soviet-filter {
+  border: 1px solid rgba(143, 0, 0, 0.2);
+  background: rgba(26, 26, 26, 0.8);
+  color: #8c8670;
+}
+.dark .soviet-filter:hover {
+  border-color: rgba(219, 91, 0, 0.4);
+  color: #e3d5c1;
+  background: rgba(143, 0, 0, 0.1);
+}
+
+/* ── Soviet stat card ────────────────────────────────────────────────── */
+.dark .soviet-stat {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.08), rgba(26, 26, 26, 0.9));
+  border: 1px solid rgba(143, 0, 0, 0.25);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ── Soviet timeline line ────────────────────────────────────────────── */
+.dark .soviet-timeline-line {
+  background: linear-gradient(180deg, #8f0000, #db5b00, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Printer-friendly overrides — all retro effects disabled
+   ══════════════════════════════════════════════════════════════════════════ */
 @media print {
   body,
   .dark {
@@ -126,10 +210,14 @@
     box-shadow: none !important;
     text-shadow: none !important;
   }
+  .scanlines::before,
   .scanlines::after {
     display: none !important;
   }
   .glow-card {
     border-color: #cbd5e1 !important;
+  }
+  .soviet-section-header::before {
+    display: none !important;
   }
 }
