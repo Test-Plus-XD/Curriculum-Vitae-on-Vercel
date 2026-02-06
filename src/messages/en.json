@@ -11,7 +11,7 @@
     "featuredProjects": "Featured Projects",
     "skills": "Technical Skills",
     "experience": "Work Experience",
-    "certifications": "Certifications & Memberships"
+    "certifications": "Certifications"
   },
   "education": {
     "institution": "Hong Kong College of Technology (HKCT)",
@@ -80,17 +80,14 @@
   "footer": {
     "contact": "Contact",
     "sourceCode": "CV Source Code",
-    "copyright": "© {year} Software Developer. Built with Next.js"
+    "copyright": "© {year} NG Yu Ham Baldwin. Built with Next.js"
   },
   "certifications": {
-    "title": "Certifications",
-    "ielts": "IELTS Academic — Band 6.5",
-    "memberships": "Professional Memberships",
-    "hkcs": "Hong Kong Computer Society (HKCS) — Student Member",
-    "hkdea": "Hong Kong Digital Entertainment Association — Member"
+    "ielts": "IELTS Academic — Band 6.5"
   },
   "placeholders": {
-    "name": "Enter Full Name",
+    "name": "NG Yu Ham Baldwin",
+    "nameAlt": "吳宇涵",
     "photoLabel": "Photo",
     "personalStatement": "Enter personal statement (2–3 sentences).",
     "nationality": "Hong Kong SAR"

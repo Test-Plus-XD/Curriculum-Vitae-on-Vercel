@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
+import RetroWave from '@/components/RetroWave';
 
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
@@ -72,7 +73,7 @@ export default async function EducationPage({
       {/* Back link */}
       <Link
         href={`/${locale}`}
-        className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6"
+        className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors mb-6"
       >
         <ArrowLeft size={16} />
         {locale === 'zh-hk' ? '返回履歷' : 'Back to CV'}
@@ -80,8 +81,8 @@ export default async function EducationPage({
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-          <GraduationCap className="text-blue-600 dark:text-blue-400" size={28} />
+        <h1 className="text-2xl text-slate-900 dark:text-white flex items-center gap-3 font-title font-light italic glow-heading">
+          <GraduationCap className="text-blue-600 dark:text-cyan-400" size={28} />
           {t('sections.education')}
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
@@ -92,7 +93,7 @@ export default async function EducationPage({
       </div>
 
       {/* Institution Card */}
-      <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-8 border border-blue-100 dark:border-blue-900/50">
+      <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-cyan-900/40 glow-card">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -118,16 +119,18 @@ export default async function EducationPage({
             </div>
           </div>
           <div className="text-right">
-            <div className="inline-flex items-center gap-2 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg">
+            <div className="inline-flex items-center gap-2 bg-blue-600 dark:bg-cyan-700 text-white px-4 py-2 rounded-lg">
               <Calendar size={16} />
               <span className="font-semibold">{t('education.graduation')}</span>
             </div>
-            <p className="mt-2 text-lg font-bold text-blue-600 dark:text-blue-400">
+            <p className="mt-2 text-lg font-bold text-blue-600 dark:text-cyan-400">
               {t('education.gpa')}
             </p>
           </div>
         </div>
       </div>
+
+      <RetroWave height={40} />
 
       {/* Course Timeline */}
       <div className="space-y-8">
@@ -142,7 +145,7 @@ export default async function EducationPage({
             <div className="flex items-center gap-3 mb-4">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
                 semIndex === 0
-                  ? 'bg-blue-600 dark:bg-blue-500'
+                  ? 'bg-blue-600 dark:bg-cyan-600'
                   : 'bg-slate-300 dark:bg-slate-700'
               }`}>
                 <span className="text-white text-xs font-bold">{SEMESTERS.length - semIndex}</span>
@@ -166,7 +169,7 @@ export default async function EducationPage({
               {sem.courses.map((course) => (
                 <div
                   key={course.code}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
                 >
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
                     {course.code}

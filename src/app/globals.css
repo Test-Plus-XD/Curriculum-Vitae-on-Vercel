@@ -3,30 +3,93 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* ── Locale-aware body fonts ──────────────────────── */
+  .locale-en {
+    font-family: var(--font-en), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .locale-zh {
+    font-family: var(--font-zh), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 }
 
-/* ── printer-friendly overrides ──────────────────────────── */
+/* ── Retro-futuristic atmosphere ──────────────────────── */
+
+/* Perspective grid — dark mode only */
+.dark body {
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: -25px -25px;
+}
+
+/* CRT scanline overlay — dark mode, layout wrapper */
+.dark .scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.025) 2px,
+    rgba(0, 0, 0, 0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Neon glow – headings */
+.dark .glow-heading {
+  text-shadow:
+    0 0 20px rgba(6, 182, 212, 0.45),
+    0 0 60px rgba(6, 182, 212, 0.12);
+}
+
+/* Neon glow – card borders */
+.dark .glow-card {
+  border-color: rgba(6, 182, 212, 0.2);
+  box-shadow:
+    0 0 12px rgba(6, 182, 212, 0.06),
+    inset 0 0 8px rgba(6, 182, 212, 0.03);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.dark .glow-card:hover {
+  border-color: rgba(6, 182, 212, 0.45);
+  box-shadow:
+    0 0 22px rgba(6, 182, 212, 0.15),
+    inset 0 0 12px rgba(6, 182, 212, 0.06);
+}
+
+/* Neon accent line (used in Header) */
+.neon-line {
+  background: linear-gradient(90deg, transparent, #06b6d4, transparent);
+}
+
+/* ── Printer-friendly overrides ──────────────────────── */
 @media print {
   body,
   .dark {
     background: white !important;
+    background-image: none !important;
     color: #1e293b !important;
   }
-  /* hide nav, toggles, video triggers, modal */
   .print\:hidden,
   [data-print="hidden"] {
     display: none !important;
   }
-  /* collapse card borders into flat dividers */
   .border-slate-200,
   .border-slate-800 {
     border-color: #cbd5e1 !important;
   }
-  /* remove box shadows */
   * {
     box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .scanlines::after {
+    display: none !important;
+  }
+  .glow-card {
+    border-color: #cbd5e1 !important;
   }
 }

@@ -1,7 +1,9 @@
 # CV Website Project - CLAUDE.md
 
+**Owner**: NG Yu Ham Baldwin | 吳宇涵
+
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV website built with Next.js 16+ (App Router) for Vercel deployment. Formal academic tone required. The Landing Page should be a printer-friendly CV with a professional tech company aesthetic.
+Bilingual (Traditional Chinese / British English) CV website built with Next.js 16+ (App Router) for Vercel deployment. Retro-futuristic aesthetic in dark mode with print-friendly CV landing page. Formal academic tone required.
 
 ## Critical Requirements
 1. **Bilingual Support**: All content in EN and ZH-HK with language toggle
@@ -13,11 +15,14 @@ Bilingual (Traditional Chinese / British English) CV website built with Next.js 
 
 ## Tech Stack
 - Next.js 16.1.6+ (App Router)
-- Tailwind CSS
-- next-intl for i18n
-- next-themes for dark mode
-- lucide-react for icons
-- @vercel/speed-insights for analytics
+- React 19
+- TypeScript 5
+- Tailwind CSS 3.4.6
+- next-intl 4.0.0 (i18n)
+- next-themes 0.4.0 (dark mode)
+- lucide-react 0.460.0 (icons)
+- react-wavify (retro wave animation)
+- @vercel/speed-insights + @vercel/analytics
 - Vercel deployment
 
 ## File Structure
@@ -37,12 +42,14 @@ src/
 │   └── globals.css
 ├── components/
 │   ├── Header.tsx                # Nav (CV/Education/Projects) + toggles
-│   ├── Footer.tsx                # Contact links (6 platforms)
-│   ├── ProjectCard.tsx           # Project display with video links
+│   ├── Footer.tsx                # Contact links (7 platforms with neon accents)
+│   ├── ProjectCard.tsx           # Project display with glow effects
 │   ├── ThemeToggle.tsx           # Dark/light mode
 │   ├── LanguageToggle.tsx        # EN/繁體中文
 │   ├── ThemeProvider.tsx         # next-themes wrapper
-│   └── VideoEmbed.tsx            # YouTube embed component
+│   ├── VideoEmbed.tsx            # Legacy YouTube modal
+│   ├── InlineVideo.tsx           # 🆕 YouTube embed (thumbnail → fullscreen iframe)
+│   └── RetroWave.tsx             # 🆕 Animated SVG wave (react-wavify)
 ├── messages/
 │   ├── en.json                   # English translations
 │   └── zh-hk.json                # Traditional Chinese translations
@@ -62,11 +69,13 @@ Add JSX comments for missing information that the user must provide:
 {/* PLACEHOLDER: Enter date of birth */}
 ```
 
-## Contact Links (Footer) - All Required
-| Platform | Value |
-|----------|-------|
+## Personal Information
+| Field | Value |
+|-------|-------|
+| Name (EN) | NG Yu Ham Baldwin |
+| Name (ZH) | 吳宇涵 |
 | Email | baldwon0xd@gmail.com |
-| Phone | +852 67016557 |
+| Phone | +852 6701 6557 |
 | GitHub | https://github.com/Test-Plus-XD |
 | LinkedIn | https://www.linkedin.com/in/test-plus-004601285/ |
 | YouTube | https://youtube.com/playlist?list=PLkzUf67y42SM-JlZk4eJEDIYPdb7VKbVo |
@@ -81,7 +90,7 @@ Professional, concise CV layout with:
 - Featured projects (top 3)
 - Skills grouped by category
 - Work experience (brief - 炒散侍應 in Chinese)
-- Certifications (IELTS 6.5, HKCS, HKDEA memberships)
+- Certifications (IELTS Academic Band 6.5 only)
 
 ### Education Page (/education)
 - Timeline layout showing all 4 semesters
@@ -102,9 +111,7 @@ Professional, concise CV layout with:
 - Platform components (for multi-platform projects)
 
 ## Key Certifications
-- **IELTS Academic**: Band 6.5
-- **HKCS**: Hong Kong Computer Society — Student Member
-- **HKDEA**: Hong Kong Digital Entertainment Association — Member
+- **IELTS Academic**: Band 6.5 (only certification listed)
 
 ## Repository Links
 | Repo | URL |
@@ -127,13 +134,42 @@ All video data is stored in `src/lib/projects.ts` and `src/lib/timeline.ts`.
 ### Operations/Demos (18)
 - Various assignment and final project demonstrations
 
+## Font System
+Three Google Fonts are used with locale-aware switching:
+
+| Font | Usage | Weight/Style | CSS Variable |
+|------|-------|--------------|--------------|
+| **Iansui** | Chinese (繁體中文) body text | 400 | `--font-zh` |
+| **LINE Seed JP** | English body text | 400 | `--font-en` |
+| **Noto Serif Display** | Titles & headings | 300 Italic | `--font-title` |
+
+**Implementation**:
+- Fonts loaded in `src/app/layout.tsx` via `next/font/google`
+- Locale-specific classes (`.locale-en`, `.locale-zh`) switch body font automatically
+- Use `font-title` class for elegant headings with retro glow effect
+
 ## Styling Guidelines
-- Use Tailwind CSS utility classes
+
+### Retro-Futuristic Aesthetic (Dark Mode Only)
+- **Grid Background**: Subtle cyan grid pattern (`50px × 50px`)
+- **Scanlines**: CRT-style horizontal scanlines (`.scanlines::after`)
+- **Glow Effects**:
+  - `.glow-heading` — Cyan text shadow on headings
+  - `.glow-card` — Border glow + hover effects on cards
+  - `.neon-line` — Gradient accent lines (cyan → transparent)
+- **Animated Wave**: SVG wave overlay at bottom (RetroWave component)
+- **Colour Palette**:
+  - Primary neon: `#06b6d4` (cyan)
+  - Secondary neon: `#a855f7` (purple)
+  - Background: `slate-950`
+  - Text: `slate-100`
+
+### General Styling
+- Tailwind CSS utility classes throughout
 - Dark mode: `dark:` prefix for all colour variations
-- Professional colour scheme (slate/zinc for dark, white/gray for light)
-- Accent colour: Blue (blue-600/blue-400)
-- Minimal animations (subtle hover effects only)
-- Print-friendly: `print:` prefix for CV page
+- Print overrides: All retro effects disabled, clean black/white output
+- Mobile-first responsive design
+- Accent colours: Blue (blue-600/blue-400) for links
 
 ## Commands
 ```bash
@@ -142,9 +178,25 @@ npm run dev
 npm run build
 ```
 
+## Key Features
+
+### Video Embedding System
+- **InlineVideo Component**: Click thumbnail → fullscreen YouTube iframe
+- Thumbnails: Direct `<img>` from `img.youtube.com/vi/{videoId}/hqdefault.jpg`
+- Fixes Next.js Image loading issues with external YouTube CDN
+- All timeline videos embedded directly (no external links needed)
+
+### Dark Mode Theming
+- System preference auto-detection
+- Manual toggle with sun/moon icon
+- Theme persisted in localStorage
+- Retro effects only active in dark mode
+- Print mode forces light theme with clean output
+
 ## Notes
-- Use British English spellings
-- Academic emphasis > work experience
+- **British English** required (colour, centre, organisation, programme)
+- **Academic emphasis** > work experience
 - Mobile-first responsive design
-- Ensure all links open in new tabs
-- YouTube thumbnails loaded via img.youtube.com
+- All external links open in new tabs (`target="_blank"`)
+- Print-friendly CV page (hidden nav, no background effects)
+- For full architecture details, see [`ARCHITECTURE.md`](./ARCHITECTURE.md)

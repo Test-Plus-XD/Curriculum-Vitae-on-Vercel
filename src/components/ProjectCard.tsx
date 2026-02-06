@@ -36,7 +36,7 @@ export default function ProjectCard({ project }: Props) {
   const t      = useTranslations('projects');
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card">
 
       {/* ---- title + badges ---- */}
       <div className="flex items-start justify-between gap-2">
