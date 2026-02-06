@@ -33,7 +33,7 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${iansui.variable} ${notoSerifDisplay.variable} bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors`}>
+      <body className={`${iansui.variable} ${notoSerifDisplay.variable} bg-white dark:bg-[#1a1a1a] text-slate-800 dark:text-slate-100 transition-colors`}>
         {children}
         <SpeedInsights />
         <Analytics />

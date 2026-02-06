@@ -30,10 +30,10 @@ export default function SovietParticles() {
   }, []);
 
   const particles = useMemo<Particle[]>(() => {
-    return Array.from({ length: 25 }, (_, i) => ({
+    return Array.from({ length: 35 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
-      size: 2 + Math.random() * 4,
+      size: 3 + Math.random() * 5,
       delay: Math.random() * 15,
       duration: 12 + Math.random() * 10,
       type: (['star', 'dot', 'diamond', 'sickle', 'gear'] as const)[i % 5],
@@ -68,7 +68,7 @@ export default function SovietParticles() {
               <polygon
                 points="5,0 6,3.5 10,4 7,6.5 8,10 5,8 2,10 3,6.5 0,4 4,3.5"
                 fill="#8f0000"
-                opacity={isDark ? 0.4 : 0.2}
+                opacity={isDark ? 0.5 : 0.25}
               />
             </svg>
           )}
@@ -77,8 +77,8 @@ export default function SovietParticles() {
               className="w-full h-full rounded-full"
               style={{
                 background: isDark
-                  ? 'radial-gradient(circle, rgba(219,91,0,0.5) 0%, transparent 70%)'
-                  : 'radial-gradient(circle, rgba(219,91,0,0.25) 0%, transparent 70%)',
+                  ? 'radial-gradient(circle, rgba(219,91,0,0.6) 0%, transparent 70%)'
+                  : 'radial-gradient(circle, rgba(219,91,0,0.3) 0%, transparent 70%)',
               }}
             />
           )}
@@ -87,7 +87,7 @@ export default function SovietParticles() {
               <polygon
                 points="5,0 10,5 5,10 0,5"
                 fill="#db5b00"
-                opacity={isDark ? 0.35 : 0.18}
+                opacity={isDark ? 0.45 : 0.22}
               />
             </svg>
           )}
@@ -96,13 +96,13 @@ export default function SovietParticles() {
               <path
                 d="M5,1 A4,4 0 1,1 1,5 A2.5,2.5 0 0,0 5,1"
                 fill="#8f0000"
-                opacity={isDark ? 0.35 : 0.15}
+                opacity={isDark ? 0.45 : 0.2}
               />
             </svg>
           )}
           {p.type === 'gear' && (
             <svg viewBox="0 0 10 10" className="w-full h-full" style={{ animation: `slow-rotate ${p.duration * 2}s linear infinite` }}>
-              <circle cx="5" cy="5" r="2" fill="none" stroke="#db5b00" strokeWidth="1" opacity={isDark ? 0.35 : 0.18} />
+              <circle cx="5" cy="5" r="2" fill="none" stroke="#db5b00" strokeWidth="1" opacity={isDark ? 0.45 : 0.22} />
               {[0, 60, 120, 180, 240, 300].map((angle) => (
                 <line
                   key={angle}
@@ -112,7 +112,7 @@ export default function SovietParticles() {
                   y2={5 + 4 * Math.sin((angle * Math.PI) / 180)}
                   stroke="#db5b00"
                   strokeWidth="0.5"
-                  opacity={isDark ? 0.3 : 0.15}
+                  opacity={isDark ? 0.4 : 0.2}
                 />
               ))}
             </svg>

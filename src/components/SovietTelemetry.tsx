@@ -66,7 +66,7 @@ export default function SovietTelemetry() {
 
   return (
     <div
-      className="print:hidden fixed right-0 top-1/2 -translate-y-1/2 pointer-events-none z-[3] hidden xl:block"
+      className="print:hidden fixed right-0 top-1/2 -translate-y-1/2 pointer-events-none z-[3] hidden lg:block"
       aria-hidden="true"
     >
       <div
@@ -107,7 +107,7 @@ export default function SovietTelemetry() {
                   className="text-[9px] tabular-nums transition-all duration-300"
                   style={{
                     color: isDark ? '#db5b00' : '#8f0000',
-                    textShadow: isDark ? '0 0 4px rgba(219,91,0,0.4)' : 'none',
+                    textShadow: isDark ? '0 0 6px rgba(219,91,0,0.5), 0 0 12px rgba(143,0,0,0.2)' : 'none',
                   }}
                 >
                   {values[i]}

@@ -158,7 +158,7 @@ export default async function ProjectDetailPage({
                         <div className="p-4">
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <h3 className="font-semibold text-slate-800 dark:text-slate-100">
+                              <h3 className="font-semibold text-slate-800 dark:text-slate-100 font-title italic">
                                 {event.title[lang]}
                               </h3>
                               {event.description && (

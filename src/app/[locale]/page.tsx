@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { Mail, Phone, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { featuredProjects } from '@/lib/projects';
+import PrintButton from '@/components/PrintButton';
 
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
@@ -79,6 +80,11 @@ export default async function LandingPage({
         {/* <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed print:text-xs">
           {t('placeholders.personalStatement')}
         </p> */}
+
+        {/* Print CV button */}
+        <div className="mt-3 flex justify-end">
+          <PrintButton />
+        </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:gap-4">

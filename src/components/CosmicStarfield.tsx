@@ -14,9 +14,21 @@ interface Star {
   layer: number; // 0 = far, 1 = mid, 2 = near (for parallax)
 }
 
+interface Nebula {
+  id: number;
+  x: number;
+  y: number;
+  rx: number;
+  ry: number;
+  rotation: number;
+  color: string;
+  opacity: number;
+}
+
 /**
  * CosmicStarfield — Interactive parallax star field inspired by Soviet space-age imagery.
  * Stars respond to mouse movement with a subtle parallax effect.
+ * Enhanced with nebula clouds and more stars for greater visual impact.
  * Hidden on the landing CV page and print.
  */
 export default function CosmicStarfield() {
@@ -47,14 +59,28 @@ export default function CosmicStarfield() {
   }, []);
 
   const stars = useMemo<Star[]>(() => {
-    return Array.from({ length: 60 }, (_, i) => ({
+    return Array.from({ length: 90 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: 0.5 + Math.random() * 2.5,
-      baseOpacity: 0.1 + Math.random() * 0.5,
+      size: 0.8 + Math.random() * 3,
+      baseOpacity: 0.15 + Math.random() * 0.6,
       twinkleSpeed: 2 + Math.random() * 6,
       layer: i % 3,
+    }));
+  }, []);
+
+  const nebulae = useMemo<Nebula[]>(() => {
+    const colors = ['#8f0000', '#db5b00', '#ffa500'];
+    return Array.from({ length: 5 }, (_, i) => ({
+      id: i,
+      x: 15 + Math.random() * 70,
+      y: 10 + Math.random() * 80,
+      rx: 60 + Math.random() * 100,
+      ry: 40 + Math.random() * 60,
+      rotation: Math.random() * 360,
+      color: colors[i % 3],
+      opacity: 0.015 + Math.random() * 0.02,
     }));
   }, []);
 
@@ -72,24 +98,43 @@ export default function CosmicStarfield() {
         <defs>
           {/* Star glow filter */}
           <filter id="star-glow">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+          </filter>
+          {/* Nebula blur filter */}
+          <filter id="nebula-blur">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
           </filter>
         </defs>
 
+        {/* Nebula clouds — subtle coloured fog patches */}
+        {isDark && nebulae.map((n) => (
+          <ellipse
+            key={`nebula-${n.id}`}
+            cx={`${n.x}%`}
+            cy={`${n.y}%`}
+            rx={n.rx}
+            ry={n.ry}
+            fill={n.color}
+            opacity={n.opacity}
+            filter="url(#nebula-blur)"
+            transform={`rotate(${n.rotation} ${n.x * 10} ${n.y * 10})`}
+          />
+        ))}
+
         {stars.map((star) => {
-          const parallaxFactor = (star.layer + 1) * 4;
+          const parallaxFactor = (star.layer + 1) * 6;
           const tx = mouse.x * parallaxFactor;
           const ty = mouse.y * parallaxFactor;
 
           return (
             <g key={star.id}>
-              {/* Star glow */}
+              {/* Star glow — larger halo */}
               <circle
                 cx={`${star.x}%`}
                 cy={`${star.y}%`}
-                r={star.size * 2}
+                r={star.size * 2.5}
                 fill={isDark ? '#ffa500' : '#8f0000'}
-                opacity={star.baseOpacity * 0.3}
+                opacity={star.baseOpacity * 0.35}
                 filter="url(#star-glow)"
                 style={{
                   transform: `translate(${tx}px, ${ty}px)`,
@@ -119,14 +164,22 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Occasional shooting star / satellite trail */}
+        {/* Multiple shooting star / satellite trails */}
         <line
-          x1="0%" y1="30%"
-          x2="100%" y2="45%"
+          x1="0%" y1="25%"
+          x2="100%" y2="40%"
           stroke={isDark ? '#db5b00' : '#8f0000'}
-          strokeWidth="0.5"
+          strokeWidth="0.8"
           opacity="0"
           className="animate-shooting-star"
+        />
+        <line
+          x1="20%" y1="5%"
+          x2="80%" y2="55%"
+          stroke={isDark ? '#ffa500' : '#db5b00'}
+          strokeWidth="0.5"
+          opacity="0"
+          style={{ animation: 'shooting-star 12s ease-in-out 4s infinite' }}
         />
       </svg>
     </div>

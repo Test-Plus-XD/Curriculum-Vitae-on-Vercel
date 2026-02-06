@@ -176,7 +176,7 @@ export default async function EducationPage({
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
                     {course.code}
                   </span>
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100 font-title italic">
                     {course[lang]}
                   </p>
                   {lang === 'zh' && (

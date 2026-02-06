@@ -62,16 +62,30 @@ export default function MorseCodeTicker() {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <div className="print:hidden fixed top-12 left-0 right-0 pointer-events-none z-[2] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
+    <>
       {/* Top ticker */}
-      <div
-        className="whitespace-nowrap font-mono text-[10px] tracking-[0.3em] animate-morse-scroll"
-        style={{
-          color: isDark ? 'rgba(143, 0, 0, 0.35)' : 'rgba(143, 0, 0, 0.15)',
-        }}
-      >
-        {morseStrip}
+      <div className="print:hidden fixed top-12 left-0 right-0 pointer-events-none z-[2] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
+        <div
+          className="whitespace-nowrap font-mono text-[10px] tracking-[0.3em] animate-morse-scroll"
+          style={{
+            color: isDark ? 'rgba(143, 0, 0, 0.45)' : 'rgba(143, 0, 0, 0.2)',
+          }}
+        >
+          {morseStrip}
+        </div>
       </div>
-    </div>
+      {/* Bottom ticker — reversed direction */}
+      <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-[2] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
+        <div
+          className="whitespace-nowrap font-mono text-[10px] tracking-[0.3em]"
+          style={{
+            color: isDark ? 'rgba(219, 91, 0, 0.3)' : 'rgba(219, 91, 0, 0.12)',
+            animation: 'morse-scroll 40s linear infinite reverse',
+          }}
+        >
+          {morseStrip}
+        </div>
+      </div>
+    </>
   );
 }

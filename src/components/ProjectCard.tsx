@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: Props) {
           {/* Stretched link — covers entire card */}
           <Link
             href={`/${locale}/projects/${project.id}`}
-            className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-['']"
+            className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
           >
             {project.title[lang]}
           </Link>

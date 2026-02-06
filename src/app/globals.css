@@ -33,26 +33,26 @@
   background-color: #1a1a1a;
   background-image:
     /* Brutalist architectural grid (red) — pulsing via animation */
-    linear-gradient(rgba(143, 0, 0, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 0, 0, 0.14) 1px, transparent 1px),
+    linear-gradient(rgba(143, 0, 0, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 0, 0, 0.18) 1px, transparent 1px),
     /* Diagonal constructivist lines (orange) */
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 80px,
-      rgba(219, 91, 0, 0.06) 80px,
-      rgba(219, 91, 0, 0.06) 81px
+      rgba(219, 91, 0, 0.09) 80px,
+      rgba(219, 91, 0, 0.09) 81px
     ),
     /* Counter-diagonal for cross-hatch */
     repeating-linear-gradient(
       -45deg,
       transparent,
       transparent 120px,
-      rgba(143, 0, 0, 0.04) 120px,
-      rgba(143, 0, 0, 0.04) 121px
+      rgba(143, 0, 0, 0.06) 120px,
+      rgba(143, 0, 0, 0.06) 121px
     ),
     /* Film grain texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
   background-size: 40px 40px, 40px 40px, auto, auto, auto;
   background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
 }
@@ -66,7 +66,7 @@
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.5) 100%);
   pointer-events: none;
   z-index: 998;
 }
@@ -115,9 +115,10 @@
    ══════════════════════════════════════════════════════════════════════════ */
 .dark .glow-heading {
   text-shadow:
-    0 0 20px rgba(143, 0, 0, 0.7),
-    0 0 40px rgba(219, 91, 0, 0.35),
-    0 0 80px rgba(143, 0, 0, 0.15),
+    0 0 20px rgba(143, 0, 0, 0.8),
+    0 0 40px rgba(219, 91, 0, 0.45),
+    0 0 80px rgba(143, 0, 0, 0.2),
+    0 0 120px rgba(219, 91, 0, 0.08),
     0 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: 300;
   letter-spacing: 0.03em;
@@ -140,11 +141,12 @@
    ══════════════════════════════════════════════════════════════════════════ */
 .dark .glow-card {
   position: relative;
-  border-color: rgba(143, 0, 0, 0.3);
+  border-color: rgba(143, 0, 0, 0.35);
   box-shadow:
-    0 0 10px rgba(143, 0, 0, 0.1),
-    inset 0 0 8px rgba(219, 91, 0, 0.05),
-    4px 4px 0 rgba(0, 0, 0, 0.2);
+    0 0 12px rgba(143, 0, 0, 0.15),
+    0 0 30px rgba(143, 0, 0, 0.05),
+    inset 0 0 10px rgba(219, 91, 0, 0.06),
+    4px 4px 0 rgba(0, 0, 0, 0.25);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
@@ -174,22 +176,25 @@
 }
 
 .dark .glow-card:hover {
-  border-color: rgba(219, 91, 0, 0.6);
+  border-color: rgba(219, 91, 0, 0.7);
   box-shadow:
-    0 0 25px rgba(143, 0, 0, 0.3),
-    0 0 50px rgba(219, 91, 0, 0.12),
-    inset 0 0 15px rgba(219, 91, 0, 0.08),
+    0 0 30px rgba(143, 0, 0, 0.4),
+    0 0 60px rgba(219, 91, 0, 0.15),
+    0 0 90px rgba(143, 0, 0, 0.06),
+    inset 0 0 20px rgba(219, 91, 0, 0.1),
     6px 6px 0 rgba(0, 0, 0, 0.3);
 }
 .dark .glow-card:hover::before {
-  width: 24px;
-  height: 24px;
-  border-color: rgba(219, 91, 0, 0.8);
+  width: 28px;
+  height: 28px;
+  border-color: rgba(219, 91, 0, 0.9);
+  filter: drop-shadow(0 0 4px rgba(219, 91, 0, 0.4));
 }
 .dark .glow-card:hover::after {
-  width: 24px;
-  height: 24px;
-  border-color: rgba(143, 0, 0, 0.8);
+  width: 28px;
+  height: 28px;
+  border-color: rgba(143, 0, 0, 0.9);
+  filter: drop-shadow(0 0 4px rgba(143, 0, 0, 0.4));
 }
 
 /* Shimmer sweep on card hover — dark mode */
@@ -201,11 +206,13 @@
   bottom: 0;
   background: linear-gradient(
     105deg,
-    transparent 40%,
-    rgba(219, 91, 0, 0.06) 45%,
-    rgba(143, 0, 0, 0.08) 50%,
-    rgba(219, 91, 0, 0.06) 55%,
-    transparent 60%
+    transparent 35%,
+    rgba(219, 91, 0, 0.08) 42%,
+    rgba(255, 165, 0, 0.06) 47%,
+    rgba(143, 0, 0, 0.1) 50%,
+    rgba(255, 165, 0, 0.06) 53%,
+    rgba(219, 91, 0, 0.08) 58%,
+    transparent 65%
   );
   background-size: 200% 100%;
   opacity: 0;
@@ -215,7 +222,7 @@
 }
 .dark .glow-card:hover .soviet-shimmer {
   opacity: 1;
-  animation: shimmer 2s linear infinite;
+  animation: shimmer 1.8s linear infinite;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -223,11 +230,11 @@
    ══════════════════════════════════════════════════════════════════════════ */
 :not(.dark) :not(.cv-page) .glow-card {
   position: relative;
-  border-color: rgba(143, 0, 0, 0.15);
+  border-color: rgba(143, 0, 0, 0.18);
   box-shadow:
-    0 0 6px rgba(143, 0, 0, 0.04),
-    inset 0 0 4px rgba(219, 91, 0, 0.02),
-    3px 3px 0 rgba(143, 0, 0, 0.06);
+    0 0 8px rgba(143, 0, 0, 0.06),
+    inset 0 0 6px rgba(219, 91, 0, 0.03),
+    3px 3px 0 rgba(143, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
@@ -257,12 +264,12 @@
 }
 
 :not(.dark) :not(.cv-page) .glow-card:hover {
-  border-color: rgba(219, 91, 0, 0.3);
+  border-color: rgba(219, 91, 0, 0.35);
   box-shadow:
-    0 0 12px rgba(143, 0, 0, 0.08),
-    0 0 24px rgba(219, 91, 0, 0.04),
-    inset 0 0 8px rgba(219, 91, 0, 0.03),
-    4px 4px 0 rgba(143, 0, 0, 0.08);
+    0 0 16px rgba(143, 0, 0, 0.1),
+    0 0 30px rgba(219, 91, 0, 0.06),
+    inset 0 0 10px rgba(219, 91, 0, 0.04),
+    4px 4px 0 rgba(143, 0, 0, 0.1);
 }
 :not(.dark) :not(.cv-page) .glow-card:hover::before {
   width: 20px;
@@ -461,13 +468,41 @@
 .dark .soviet-tech-tag {
   transition: all 0.2s ease;
   cursor: default;
+  position: relative;
 }
 .dark .soviet-tech-tag:hover {
-  background: rgba(143, 0, 0, 0.15) !important;
-  border-color: rgba(219, 91, 0, 0.4);
+  background: rgba(143, 0, 0, 0.18) !important;
+  border-color: rgba(219, 91, 0, 0.5);
   color: #e3d5c1 !important;
-  box-shadow: 0 0 8px rgba(143, 0, 0, 0.2);
-  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(143, 0, 0, 0.25), 0 0 4px rgba(219, 91, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ── Holographic scanner sweep — appears on interactive elements ──── */
+.soviet-holo-scan {
+  position: relative;
+  overflow: hidden;
+}
+.soviet-holo-scan::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(219, 91, 0, 0.08),
+    rgba(255, 165, 0, 0.12),
+    rgba(219, 91, 0, 0.08),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.soviet-holo-scan:hover::after {
+  left: 100%;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -599,8 +634,8 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 @keyframes glow-breathe {
-  0%, 100% { text-shadow: 0 0 20px rgba(143,0,0,0.7), 0 0 40px rgba(219,91,0,0.35), 0 2px 4px rgba(0,0,0,0.5); }
-  50% { text-shadow: 0 0 30px rgba(143,0,0,0.9), 0 0 60px rgba(219,91,0,0.5), 0 0 100px rgba(143,0,0,0.2), 0 2px 4px rgba(0,0,0,0.5); }
+  0%, 100% { text-shadow: 0 0 20px rgba(143,0,0,0.8), 0 0 40px rgba(219,91,0,0.4), 0 0 80px rgba(143,0,0,0.1), 0 2px 4px rgba(0,0,0,0.5); }
+  50% { text-shadow: 0 0 35px rgba(143,0,0,1), 0 0 70px rgba(219,91,0,0.6), 0 0 120px rgba(143,0,0,0.25), 0 2px 4px rgba(0,0,0,0.5); }
 }
 
 @keyframes glow-breathe-light {
@@ -677,6 +712,57 @@
 @keyframes aurora {
   0%, 100% { background-position: 0% 0; }
   50% { background-position: 100% 0; }
+}
+
+@keyframes radar-ping {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes holo-stripe {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+
+/* ── Print CV button — Soviet styled action button ─────────────────── */
+.soviet-print-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(143, 0, 0, 0.4);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+.dark .soviet-print-btn {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.2), rgba(26, 26, 26, 0.9));
+  color: #e3d5c1;
+  box-shadow: 0 0 10px rgba(143, 0, 0, 0.15), inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+.dark .soviet-print-btn:hover {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.2));
+  border-color: rgba(219, 91, 0, 0.6);
+  box-shadow: 0 0 20px rgba(143, 0, 0, 0.3), 0 0 40px rgba(219, 91, 0, 0.1);
+  transform: translateY(-1px);
+}
+:not(.dark) .soviet-print-btn {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.06), rgba(245, 239, 230, 0.9));
+  color: #8f0000;
+  box-shadow: 2px 2px 0 rgba(143, 0, 0, 0.08);
+}
+:not(.dark) .soviet-print-btn:hover {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.12), rgba(219, 91, 0, 0.06));
+  border-color: rgba(219, 91, 0, 0.4);
+  box-shadow: 0 0 10px rgba(143, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
