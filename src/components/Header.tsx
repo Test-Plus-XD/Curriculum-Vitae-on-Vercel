@@ -42,7 +42,7 @@ export default function Header() {
       </div>
 
       {/* Soviet accent line — dark mode only (double-line effect) */}
-      <div className="absolute bottom-0 left-0 right-0 h-px soviet-line opacity-0 dark:opacity-60" />
+      <div className="absolute bottom-0 left-0 right-0 h-px soviet-line-animated opacity-0 dark:opacity-60" />
       <div className="hidden dark:block absolute bottom-[-2px] left-0 right-0 h-px soviet-line opacity-30" />
     </header>
   );

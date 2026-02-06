@@ -39,7 +39,7 @@ export default function ProjectsPage() {
           <button
             key={f.key}
             onClick={() => setActiveFilter(f.key)}
-            className={`px-4 py-1.5 text-sm rounded-full transition-all ${
+            className={`px-4 py-1.5 text-sm rounded-full transition-all soviet-ripple ${
               activeFilter === f.key
                 ? 'bg-blue-600 text-white dark:text-soviet-beige soviet-filter-active'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 soviet-filter'

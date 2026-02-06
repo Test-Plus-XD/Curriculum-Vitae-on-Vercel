@@ -37,6 +37,8 @@ export default function ProjectCard({ project }: Props) {
 
   return (
     <div className="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer">
+      {/* Soviet shimmer sweep on hover */}
+      <div className="soviet-shimmer" />
 
       {/* ---- title + badges ---- */}
       <div className="flex items-start justify-between gap-2">
@@ -119,7 +121,7 @@ export default function ProjectCard({ project }: Props) {
       {/* ---- tech stack ---- */}
       <div className="mt-4 flex flex-wrap gap-1.5">
         {project.techStack.map((tech, i) => (
-          <span key={i} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">
+          <span key={i} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded soviet-tech-tag">
             {tech}
           </span>
         ))}

@@ -145,6 +145,7 @@ export default async function ProjectDetailPage({
                     {/* Content */}
                     <div className="flex-1 pb-6">
                       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-slate-900/50 transition-shadow glow-card">
+                        <div className="soviet-shimmer" />
                         {/* YouTube Embed */}
                         {event.videoId && event.embedUrl && (
                           <InlineVideo
@@ -201,6 +202,7 @@ export default async function ProjectDetailPage({
         <div className="space-y-6">
           {/* Tech Stack */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+            <div className="soviet-shimmer" />
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
               {t('techStack')}
             </h3>
@@ -208,7 +210,7 @@ export default async function ProjectDetailPage({
               {project.techStack.map((tech, i) => (
                 <span
                   key={i}
-                  className="text-sm px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg"
+                  className="text-sm px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg soviet-tech-tag"
                 >
                   {tech}
                 </span>
@@ -219,6 +221,7 @@ export default async function ProjectDetailPage({
           {/* Repositories */}
           {(project.repo || project.platforms?.some((p) => p.repo)) && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('viewRepo')}
               </h3>
@@ -255,6 +258,7 @@ export default async function ProjectDetailPage({
           {/* Platform Components (PourRice only) */}
           {project.platforms && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('pourRicePlatforms')}
               </h3>
@@ -299,6 +303,7 @@ export default async function ProjectDetailPage({
           {/* All Videos */}
           {project.videos.length > 0 && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('videos')} ({project.videos.length})
               </h3>

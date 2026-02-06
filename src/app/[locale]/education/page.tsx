@@ -94,6 +94,7 @@ export default async function EducationPage({
 
       {/* Institution Card */}
       <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-soviet-red/40 glow-card">
+        <div className="soviet-shimmer" />
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h2 className="text-xl text-slate-900 dark:text-white font-title font-light italic">
@@ -171,6 +172,7 @@ export default async function EducationPage({
                   key={course.code}
                   className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
                 >
+                  <div className="soviet-shimmer" />
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
                     {course.code}
                   </span>
