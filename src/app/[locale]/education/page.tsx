@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
 import RetroWave from '@/components/RetroWave';
 import DadaTypography from '@/components/DadaTypography';
+import DadaScatterLayout from '@/components/DadaScatterLayout';
+import GlitchRevealText from '@/components/GlitchRevealText';
 
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
@@ -84,12 +86,16 @@ export default async function EducationPage({
       <div className="mb-8">
         <h1 className="text-2xl text-slate-900 dark:text-white flex items-center gap-3 font-title font-light italic glow-heading">
           <GraduationCap className="text-blue-600 dark:text-soviet-orange" size={28} />
-          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} />
+          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} scatterOnView />
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
-          {locale === 'zh-hk'
-            ? `${totalCourses} 門課程，分佈於 ${SEMESTERS.length} 個學期`
-            : `${totalCourses} courses across ${SEMESTERS.length} semesters`}
+          <GlitchRevealText
+            text={locale === 'zh-hk'
+              ? `${totalCourses} 門課程，分佈於 ${SEMESTERS.length} 個學期`
+              : `${totalCourses} courses across ${SEMESTERS.length} semesters`}
+            speed={7}
+            glitchOnHover={false}
+          />
         </p>
       </div>
 
@@ -99,13 +105,13 @@ export default async function EducationPage({
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h2 className="text-xl text-slate-900 dark:text-white font-title font-light italic">
-              {t('education.institution')}
+              <DadaTypography text={t('education.institution')} as="span" intensity={0.4} scatterOnView />
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              {t('education.institutionZh')}
+              <GlitchRevealText text={t('education.institutionZh')} speed={6} />
             </p>
             <p className="text-base text-slate-700 dark:text-slate-200 mt-3 font-medium">
-              {t('education.programme')}
+              <GlitchRevealText text={t('education.programme')} speed={7} />
             </p>
             <div className="mt-3 flex flex-wrap gap-3">
               <span className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
@@ -157,7 +163,7 @@ export default async function EducationPage({
                   ? 'text-blue-600 dark:text-soviet-orange'
                   : 'text-slate-700 dark:text-slate-300'
               }`}>
-                {t(sem.translationKey)}
+                <DadaTypography text={t(sem.translationKey)} as="span" intensity={0.4} scatterOnView />
                 {semIndex === 0 && (
                   <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
                     {locale === 'zh-hk' ? '進行中' : 'Current'}
@@ -166,8 +172,13 @@ export default async function EducationPage({
               </h3>
             </div>
 
-            {/* Course cards */}
-            <div className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Course cards — scattered entrance, then align into grid */}
+            <DadaScatterLayout
+              className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3"
+              stagger={0.05}
+              delay={0.1 + semIndex * 0.15}
+              intensity={0.4}
+            >
               {sem.courses.map((course) => (
                 <div
                   key={course.code}
@@ -178,7 +189,7 @@ export default async function EducationPage({
                     {course.code}
                   </span>
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-100 font-title italic">
-                    {course[lang]}
+                    <GlitchRevealText text={course[lang]} speed={6} />
                   </p>
                   {lang === 'zh' && (
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
@@ -192,13 +203,18 @@ export default async function EducationPage({
                   )}
                 </div>
               ))}
-            </div>
+            </DadaScatterLayout>
           </div>
         ))}
       </div>
 
-      {/* Summary stats */}
-      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Summary stats — scattered entrance */}
+      <DadaScatterLayout
+        className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
+        stagger={0.08}
+        delay={0.3}
+        intensity={0.7}
+      >
         <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-1.5deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -223,7 +239,7 @@ export default async function EducationPage({
             {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
           </p>
         </div>
-      </div>
+      </DadaScatterLayout>
     </div>
   );
 }

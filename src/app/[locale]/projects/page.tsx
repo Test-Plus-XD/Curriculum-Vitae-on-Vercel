@@ -5,6 +5,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import ProjectCard from '@/components/ProjectCard';
 import { projects } from '@/lib/projects';
 import DadaTypography from '@/components/DadaTypography';
+import DadaScatterLayout from '@/components/DadaScatterLayout';
+import GlitchText from '@/components/GlitchText';
 
 /* ─────────────────────────────────────────────────────────── types       */
 type CategoryFilter = 'all' | 'mobile' | 'web' | 'game' | 'backend';
@@ -31,7 +33,7 @@ export default function ProjectsPage() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* heading */}
       <h1 className="text-2xl text-slate-800 dark:text-white mb-6 font-title font-light italic glow-heading">
-        <DadaTypography text={t('allProjects')} as="span" intensity={0.5} />
+        <DadaTypography text={t('allProjects')} as="span" intensity={0.5} scatterOnView />
       </h1>
 
       {/* filter pills — hidden on print */}
@@ -53,18 +55,25 @@ export default function ProjectsPage() {
 
       {/* project count */}
       <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-        {displayed.length}{' '}
-        {locale === 'zh-hk'
-          ? '個項目'
-          : displayed.length === 1 ? 'project' : 'projects'}
+        <GlitchText
+          text={`${displayed.length} ${locale === 'zh-hk' ? '個項目' : displayed.length === 1 ? 'project' : 'projects'}`}
+          glitchOnView
+          glitchOnHover={false}
+          speed={8}
+        />
       </p>
 
-      {/* project grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* project grid — scattered entrance, then reorder into grid */}
+      <DadaScatterLayout
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+        stagger={0.07}
+        delay={0.15}
+        intensity={0.5}
+      >
         {displayed.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} />
         ))}
-      </div>
+      </DadaScatterLayout>
     </div>
   );
 }

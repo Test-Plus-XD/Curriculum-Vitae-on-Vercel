@@ -5,6 +5,8 @@ import { ArrowLeft, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Vide
 import { projects } from '@/lib/projects';
 import { projectTimelines, sortTimelineEvents, formatTimelineDate } from '@/lib/timeline';
 import InlineVideo from '@/components/InlineVideo';
+import GlitchRevealText from '@/components/GlitchRevealText';
+import DadaTypography from '@/components/DadaTypography';
 
 type Lang = 'en' | 'zh';
 
@@ -80,11 +82,11 @@ export default async function ProjectDetailPage({
         </div>
 
         <h1 className="text-2xl sm:text-3xl text-slate-900 dark:text-white font-title font-light italic glow-heading">
-          {project.title[lang]}
+          <DadaTypography text={project.title[lang]} as="span" intensity={0.5} scatterOnView />
         </h1>
 
         <p className="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
-          {project.description[lang]}
+          <GlitchRevealText text={project.description[lang]} speed={4} glitchOnHover={false} />
         </p>
 
         {/* Related Courses */}
@@ -112,7 +114,7 @@ export default async function ProjectDetailPage({
         <div className="lg:col-span-2">
           <h2 className="text-lg text-slate-900 dark:text-white flex items-center gap-2 mb-6 font-title font-light italic glow-heading">
             <Calendar className="text-blue-600 dark:text-soviet-orange" size={20} />
-            {t('timeline')}
+            <DadaTypography text={t('timeline')} as="span" intensity={0.4} scatterOnView />
           </h2>
 
           {timeline.length > 0 ? (
@@ -159,7 +161,7 @@ export default async function ProjectDetailPage({
                           <div className="flex items-start justify-between gap-2">
                             <div>
                               <h3 className="font-semibold text-slate-800 dark:text-slate-100 font-title italic">
-                                {event.title[lang]}
+                                <DadaTypography text={event.title[lang]} as="span" intensity={0.35} scatterOnView />
                               </h3>
                               {event.description && (
                                 <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
@@ -204,7 +206,7 @@ export default async function ProjectDetailPage({
           <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
             <div className="soviet-shimmer" />
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-              {t('techStack')}
+              <DadaTypography text={t('techStack')} as="span" intensity={0.3} scatterOnView />
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech, i) => (
@@ -223,7 +225,7 @@ export default async function ProjectDetailPage({
             <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                {t('viewRepo')}
+                <DadaTypography text={t('viewRepo')} as="span" intensity={0.3} scatterOnView />
               </h3>
               <div className="space-y-2">
                 {project.repo && (
@@ -260,7 +262,7 @@ export default async function ProjectDetailPage({
             <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                {t('pourRicePlatforms')}
+                <DadaTypography text={t('pourRicePlatforms')} as="span" intensity={0.3} scatterOnView />
               </h3>
               <div className="space-y-3">
                 {project.platforms.map((plat, i) => (
@@ -287,7 +289,7 @@ export default async function ProjectDetailPage({
           {project.highlights && (
             <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 border border-blue-100 dark:border-blue-900/50 rounded-xl p-5">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                {t('highlights')}
+                <DadaTypography text={t('highlights')} as="span" intensity={0.3} scatterOnView />
               </h3>
               <ul className="space-y-2">
                 {project.highlights[lang].map((h, i) => (
@@ -305,7 +307,7 @@ export default async function ProjectDetailPage({
             <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                {t('videos')} ({project.videos.length})
+                <DadaTypography text={`${t('videos')} (${project.videos.length})`} as="span" intensity={0.3} scatterOnView />
               </h3>
               <div className="space-y-2">
                 {project.videos.map((video, i) => (
