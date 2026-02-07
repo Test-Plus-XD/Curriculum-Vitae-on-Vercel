@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
 import RetroWave from '@/components/RetroWave';
 import DadaTypography from '@/components/DadaTypography';
+import DadaScatterLayout from '@/components/DadaScatterLayout';
 
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
@@ -166,8 +167,13 @@ export default async function EducationPage({
               </h3>
             </div>
 
-            {/* Course cards */}
-            <div className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Course cards — scattered entrance, then align into grid */}
+            <DadaScatterLayout
+              className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3"
+              stagger={0.05}
+              delay={0.1 + semIndex * 0.15}
+              intensity={0.4}
+            >
               {sem.courses.map((course) => (
                 <div
                   key={course.code}
@@ -192,13 +198,18 @@ export default async function EducationPage({
                   )}
                 </div>
               ))}
-            </div>
+            </DadaScatterLayout>
           </div>
         ))}
       </div>
 
-      {/* Summary stats */}
-      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Summary stats — scattered entrance */}
+      <DadaScatterLayout
+        className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
+        stagger={0.08}
+        delay={0.3}
+        intensity={0.7}
+      >
         <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-1.5deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -223,7 +234,7 @@ export default async function EducationPage({
             {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
           </p>
         </div>
-      </div>
+      </DadaScatterLayout>
     </div>
   );
 }

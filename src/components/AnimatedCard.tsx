@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 /**
@@ -8,6 +8,9 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
  * spotlight tracking, and entrance animation for cards.
  * Inspired by Atomic Heart's metallic inventory panels and
  * Arknights' blueprint schematic interactions.
+ *
+ * Tilt is disabled on touch devices to prevent mobile glitching.
+ * Overflow is visible to prevent clipping of tilted card borders.
  */
 interface AnimatedCardProps {
   children: React.ReactNode;
@@ -26,9 +29,16 @@ export default function AnimatedCard({
 }: AnimatedCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const tiltActive = enableTilt && !isTouchDevice;
 
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), {
     damping: 20,
@@ -40,7 +50,7 @@ export default function AnimatedCard({
   });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current || !enableTilt) return;
+    if (!ref.current || !tiltActive) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -62,12 +72,13 @@ export default function AnimatedCard({
   return (
     <motion.div
       ref={ref}
-      className={`${className} ${enableSpotlight ? 'soviet-spotlight' : ''}`}
+      className={`${className} ${enableSpotlight && !isTouchDevice ? 'soviet-spotlight' : ''}`}
       style={{
-        rotateX: enableTilt ? rotateX : 0,
-        rotateY: enableTilt ? rotateY : 0,
+        rotateX: tiltActive ? rotateX : 0,
+        rotateY: tiltActive ? rotateY : 0,
         transformPerspective: 800,
         transformStyle: 'preserve-3d',
+        overflow: 'visible',
       }}
       initial={{ opacity: 0, y: 30, scale: 0.97 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}

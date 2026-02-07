@@ -36,11 +36,22 @@ interface CosmicRing {
   color: string;
 }
 
+interface ShootingStar {
+  id: number;
+  x1: string;
+  y1: string;
+  x2: string;
+  y2: string;
+  width: number;
+  dasharray: string;
+  delay: number;
+  duration: number;
+}
+
 /**
- * CosmicStarfield — Enhanced interactive parallax star field inspired by
+ * CosmicStarfield — Interactive parallax star field inspired by
  * Reverse:1999 Cosmic Overture's warped starry grids and Arknights Lone Trail's
- * starry voids. Features deeper parallax, pulsing nebulae, orbital rings,
- * cross-sparkle effects, and more dramatic shooting stars.
+ * starry voids. Reduced star count for performance, increased shooting star trails.
  * Hidden on the landing CV page and print.
  */
 export default function CosmicStarfield() {
@@ -48,10 +59,12 @@ export default function CosmicStarfield() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
     setMounted(true);
+    setIsMobile(window.innerWidth < 768);
 
     const handleMouseMove = (e: MouseEvent) => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -70,9 +83,10 @@ export default function CosmicStarfield() {
     };
   }, []);
 
-  /* More stars — 120 instead of 90 */
+  /* Reduced stars — 50 instead of 120 for better mobile performance */
   const stars = useMemo<Star[]>(() => {
-    return Array.from({ length: 120 }, (_, i) => ({
+    const count = 50;
+    return Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -112,6 +126,19 @@ export default function CosmicStarfield() {
     }));
   }, []);
 
+  /* Increased shooting star trails — 7 instead of 3 */
+  const shootingStars = useMemo<ShootingStar[]>(() => {
+    return [
+      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8 },
+      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
+      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
+      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9 },
+      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
+      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
+      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+    ];
+  }, []);
+
   if (!mounted) return null;
 
   const segments = pathname.split('/').filter(Boolean);
@@ -119,6 +146,8 @@ export default function CosmicStarfield() {
   if (isCvPage) return null;
 
   const isDark = resolvedTheme === 'dark';
+  // On mobile, only show a subset of stars for performance
+  const displayStars = isMobile ? stars.slice(0, 25) : stars;
 
   return (
     <div className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden" aria-hidden="true">
@@ -178,8 +207,8 @@ export default function CosmicStarfield() {
           />
         ))}
 
-        {stars.map((star) => {
-          const parallaxFactor = (star.layer + 1) * 8;
+        {displayStars.map((star) => {
+          const parallaxFactor = (star.layer + 1) * (isMobile ? 2 : 8);
           const tx = mouse.x * parallaxFactor;
           const ty = mouse.y * parallaxFactor;
           const glowFilter = star.layer === 2 ? 'url(#star-glow-bright)' : 'url(#star-glow)';
@@ -218,8 +247,8 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Cross sparkle for bright near-layer stars */}
-              {star.layer === 2 && star.baseOpacity > 0.5 && (
+              {/* Cross sparkle for bright near-layer stars — desktop only */}
+              {star.layer === 2 && star.baseOpacity > 0.5 && !isMobile && (
                 <>
                   <line
                     x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
@@ -253,34 +282,22 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Multiple shooting star / satellite trails — more frequent */}
-        <line
-          x1="0%" y1="20%"
-          x2="100%" y2="35%"
-          stroke={isDark ? '#db5b00' : '#8f0000'}
-          strokeWidth="0.8"
-          strokeDasharray="200"
-          opacity="0"
-          className="animate-shooting-star"
-        />
-        <line
-          x1="15%" y1="5%"
-          x2="85%" y2="45%"
-          stroke={isDark ? '#ffa500' : '#db5b00'}
-          strokeWidth="0.5"
-          strokeDasharray="150"
-          opacity="0"
-          style={{ animation: 'shooting-star 10s ease-in-out 3s infinite' }}
-        />
-        <line
-          x1="70%" y1="10%"
-          x2="30%" y2="60%"
-          stroke={isDark ? '#8f0000' : '#a04000'}
-          strokeWidth="0.6"
-          strokeDasharray="180"
-          opacity="0"
-          style={{ animation: 'shooting-star 14s ease-in-out 7s infinite' }}
-        />
+        {/* Multiple shooting star / satellite trails — 7 trails */}
+        {shootingStars.map((ss) => (
+          <line
+            key={`trail-${ss.id}`}
+            x1={ss.x1} y1={ss.y1}
+            x2={ss.x2} y2={ss.y2}
+            stroke={isDark
+              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+              : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+            }
+            strokeWidth={ss.width}
+            strokeDasharray={ss.dasharray}
+            opacity="0"
+            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite` }}
+          />
+        ))}
       </svg>
     </div>
   );

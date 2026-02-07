@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import ProjectCard from '@/components/ProjectCard';
 import { projects } from '@/lib/projects';
 import DadaTypography from '@/components/DadaTypography';
+import DadaScatterLayout from '@/components/DadaScatterLayout';
 
 /* ─────────────────────────────────────────────────────────── types       */
 type CategoryFilter = 'all' | 'mobile' | 'web' | 'game' | 'backend';
@@ -59,12 +60,17 @@ export default function ProjectsPage() {
           : displayed.length === 1 ? 'project' : 'projects'}
       </p>
 
-      {/* project grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* project grid — scattered entrance, then reorder into grid */}
+      <DadaScatterLayout
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+        stagger={0.07}
+        delay={0.15}
+        intensity={0.5}
+      >
         {displayed.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} />
         ))}
-      </div>
+      </DadaScatterLayout>
     </div>
   );
 }

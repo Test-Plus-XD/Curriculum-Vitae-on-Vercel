@@ -1218,6 +1218,44 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   Mobile performance — reduce compositing layers and heavy effects
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* Reduce scanline intensity on mobile to prevent compositing glitches */
+  .dark .scanlines::after {
+    opacity: 0.3;
+    animation: none;
+  }
+  :not(.dark) .scanlines::after {
+    display: none;
+  }
+  /* Soften vignette on mobile */
+  .dark .scanlines::before {
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.35) 100%);
+  }
+  /* Disable spotlight effect on mobile (touch devices) */
+  .soviet-spotlight::before {
+    display: none;
+  }
+  /* Simplify card effects on mobile */
+  .soviet-scan-sweep::before {
+    display: none;
+  }
+  .soviet-shimmer {
+    display: none;
+  }
+  /* Reduce card glow intensity on mobile */
+  .dark .glow-card {
+    box-shadow: 0 0 6px rgba(143, 0, 0, 0.1), 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+  /* Disable card corner bracket animations on mobile */
+  .dark .glow-card::before,
+  .dark .glow-card::after {
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Printer-friendly overrides — all retro effects disabled
    ══════════════════════════════════════════════════════════════════════════ */
 @media print {

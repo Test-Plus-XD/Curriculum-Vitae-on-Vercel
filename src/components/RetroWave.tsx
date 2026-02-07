@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import Wave from 'react-wavify';
 
 /**
- * RetroWave — Enlarged animated mountain range + animated wave + radar sweep.
+ * RetroWave — Responsive animated mountain range + animated wave + radar sweep.
  * Soviet retro-futuristic horizon inspired by Atomic Heart/Arknights Lone Trail.
+ * Uses viewport-relative sizing so it doesn't squish on narrow mobile screens.
  * Works in both light and dark modes (including CV page in dark mode).
  * Hidden on print.
  */
@@ -41,9 +42,9 @@ export default function RetroWave() {
 
   return (
     <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-0 overflow-hidden">
-      {/* Glowing horizon line — more prominent */}
+      {/* Glowing horizon line — responsive positioning */}
       <div
-        className="absolute bottom-[420px] left-0 right-0 h-[3px]"
+        className="absolute left-0 right-0 h-[2px] sm:h-[3px] bottom-[220px] sm:bottom-[320px] lg:bottom-[420px]"
         style={{
           background: isDark
             ? 'linear-gradient(90deg, transparent 5%, rgba(143,0,0,0.5) 25%, rgba(219,91,0,0.8) 50%, rgba(143,0,0,0.5) 75%, transparent 95%)'
@@ -56,7 +57,7 @@ export default function RetroWave() {
 
       {/* Secondary horizon glow — diffused */}
       <div
-        className="absolute bottom-[415px] left-0 right-0 h-[8px]"
+        className="absolute left-0 right-0 h-[6px] sm:h-[8px] bottom-[215px] sm:bottom-[315px] lg:bottom-[415px]"
         style={{
           background: isDark
             ? 'linear-gradient(90deg, transparent 10%, rgba(143,0,0,0.15) 30%, rgba(219,91,0,0.25) 50%, rgba(143,0,0,0.15) 70%, transparent 90%)'
@@ -65,8 +66,8 @@ export default function RetroWave() {
         }}
       />
 
-      {/* Animated wave layer using react-wavify */}
-      <div className="absolute bottom-[380px] left-0 right-0" style={{ height: '60px' }}>
+      {/* Animated wave layer using react-wavify — responsive positioning */}
+      <div className="absolute left-0 right-0 bottom-[180px] sm:bottom-[280px] lg:bottom-[380px]" style={{ height: '60px' }}>
         <Wave
           fill={isDark ? 'rgba(143, 0, 0, 0.12)' : 'rgba(143, 0, 0, 0.05)'}
           paused={false}
@@ -79,7 +80,7 @@ export default function RetroWave() {
           }}
         />
       </div>
-      <div className="absolute bottom-[370px] left-0 right-0" style={{ height: '50px' }}>
+      <div className="absolute left-0 right-0 bottom-[170px] sm:bottom-[270px] lg:bottom-[370px]" style={{ height: '50px' }}>
         <Wave
           fill={isDark ? 'rgba(219, 91, 0, 0.08)' : 'rgba(219, 91, 0, 0.035)'}
           paused={false}
@@ -93,14 +94,14 @@ export default function RetroWave() {
         />
       </div>
 
-      {/* Main mountain range SVG — enlarged */}
+      {/* Main mountain range SVG — responsive height, maintains aspect ratio on mobile */}
       <svg
         width="100%"
-        height="440"
+        className="h-[240px] sm:h-[340px] lg:h-[440px]"
         viewBox="0 0 1200 440"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMax slice"
         xmlns="http://www.w3.org/2000/svg"
-        className={isDark ? 'opacity-30' : 'opacity-15'}
+        style={{ opacity: isDark ? 0.3 : 0.15 }}
       >
         <defs>
           {/* Soviet red-to-orange gradient */}
@@ -128,7 +129,7 @@ export default function RetroWave() {
           <ellipse cx="600" cy="440" rx="600" ry="300" fill="url(#radar-sweep)" opacity="0.6" />
         </g>
 
-        {/* Horizontal grid lines (perspective illusion) — more lines, more prominent */}
+        {/* Horizontal grid lines (perspective illusion) */}
         {[400, 375, 345, 310, 270, 225, 180].map((y, i) => (
           <line
             key={`hline-${i}`}
