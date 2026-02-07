@@ -55,7 +55,7 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-15 dark:opacity-40" />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4 font-title italic dark:text-soviet-beige/60">
+        <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-4 font-title italic dark:text-soviet-beige/70">
           {t('contact')}
         </h3>
 
@@ -76,13 +76,13 @@ export default function Footer() {
                 href={c.href!}
                 target={c.key !== 'email' && c.key !== 'phone' ? '_blank' : undefined}
                 rel={c.key !== 'email' && c.key !== 'phone' ? 'noopener noreferrer' : undefined}
-                className="group flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-soviet-orange transition-all duration-200 soviet-link"
+                className="group flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-soviet-orange transition-all duration-200 soviet-link"
                 variants={itemVariants}
                 whileHover={{ y: -2, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.97 }}
               >
                 <span className="relative">
-                  <Icon size={15} className="text-slate-400 dark:text-slate-500 group-hover:text-soviet-orange dark:group-hover:text-soviet-gold transition-colors duration-200" />
+                  <Icon size={16} className="text-slate-500 dark:text-slate-400 group-hover:text-soviet-orange dark:group-hover:text-soviet-gold transition-colors duration-200" />
                   {/* Neon glow behind icon on hover */}
                   <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm bg-soviet-orange/20 dark:bg-soviet-orange/30 scale-150" />
                 </span>
@@ -93,7 +93,7 @@ export default function Footer() {
         </motion.div>
 
         <motion.p
-          className="mt-6 text-xs text-slate-400 dark:text-slate-500"
+          className="mt-6 text-xs text-slate-500 dark:text-slate-400"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

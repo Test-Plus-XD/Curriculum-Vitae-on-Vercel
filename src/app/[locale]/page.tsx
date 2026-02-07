@@ -59,7 +59,7 @@ export default async function LandingPage({
           </div>
 
           {/* Contact info - inline for print-friendly layout */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 dark:text-slate-400 print:text-[10px]">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
             {CONTACTS.map((c, i) => (
               <a
                 key={i}
@@ -112,7 +112,7 @@ export default async function LandingPage({
               </div>
             </div>
 
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400 print:text-[10px]">
+            <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-600 dark:text-slate-300 print:text-[10px]">
               <span>{t('education.code')}</span>
               <span>•</span>
               <span>{t('education.level')}</span>
@@ -249,7 +249,7 @@ export default async function LandingPage({
                 {t('experience.duration')}
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300 print:text-[10px]">
+            <p className="mt-1 text-xs text-slate-700 dark:text-slate-200 print:text-[10px]">
               {t('experience.description')}
             </p>
           </section>

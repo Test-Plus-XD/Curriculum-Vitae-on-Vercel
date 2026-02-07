@@ -39,7 +39,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
 
   return (
     <AnimatedCard index={index} enableTilt enableSpotlight>
-      <div className="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer soviet-scan-sweep">
+      <div className="relative group bg-white/90 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer soviet-scan-sweep">
         {/* Soviet shimmer sweep on hover */}
         <div className="soviet-shimmer" />
 
@@ -77,7 +77,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
         </div>
 
         {/* ---- description ---- */}
-        <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="mt-3 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
           {project.description[lang]}
         </p>
 
@@ -145,7 +145,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
         </div>
 
         {/* ---- course codes ---- */}
-        <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
           {project.courses.map((c, i) => (
             <span key={i}>
               {c.code}
