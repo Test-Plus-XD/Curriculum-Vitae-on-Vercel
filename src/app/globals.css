@@ -2644,3 +2644,27 @@
     display: none !important;
   }
 }
+
+/* ── Deconstructed Grid Styles ──────────────────────────────────────── */
+.deconstructed-grid-item {
+  /* Smooth transitions for layout changes */
+  transition: transform 0.3s ease-out;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .deconstructed-grid-item {
+    /* Disable transformations for users who prefer reduced motion */
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 768px) {
+  .deconstructed-grid-item {
+    /* Reduce rotation and offset intensity on mobile for better readability */
+    --tilt: calc(var(--tilt) * 0.5) !important;
+    --offset: calc(var(--offset) * 0.4) !important;
+  }
+}
