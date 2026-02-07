@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import ProjectCard from '@/components/ProjectCard';
 import { projects } from '@/lib/projects';
+import DadaTypography from '@/components/DadaTypography';
 
 /* ─────────────────────────────────────────────────────────── types       */
 type CategoryFilter = 'all' | 'mobile' | 'web' | 'game' | 'backend';
@@ -30,7 +31,7 @@ export default function ProjectsPage() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* heading */}
       <h1 className="text-2xl text-slate-800 dark:text-white mb-6 font-title font-light italic glow-heading">
-        {t('allProjects')}
+        <DadaTypography text={t('allProjects')} as="span" intensity={0.5} />
       </h1>
 
       {/* filter pills — hidden on print */}

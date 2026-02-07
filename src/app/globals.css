@@ -15,6 +15,18 @@
     --soviet-warm-bg: #f5efe6;
   }
 
+  /* ── Hide scrollbars globally (content remains scrollable) ─────── */
+  html,
+  body {
+    scrollbar-width: none;           /* Firefox */
+    -ms-overflow-style: none;        /* IE / Edge */
+    overflow-x: hidden;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;                   /* Chrome / Safari / Opera */
+  }
+
   /* ── Locale-aware body fonts ──────────────────────── */
   .locale-en {
     font-family: var(--font-en), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -1008,6 +1020,204 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   DADA / DECONSTRUCTIVISM — Collage, fragmentation & anti-order effects
+   Inspired by Reverse:1999 Cosmic Overture, Tzara, Heartfield, Derrida
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Torn paper edge — clip-path simulating ripped paper ─────────────── */
+.dada-torn-edge {
+  clip-path: polygon(
+    0% 3%, 2% 0%, 5% 4%, 8% 1%, 12% 3%, 15% 0%, 18% 2%, 22% 0%,
+    25% 3%, 28% 1%, 32% 4%, 35% 0%, 38% 2%, 42% 0%, 45% 3%, 48% 1%,
+    52% 4%, 55% 0%, 58% 2%, 62% 0%, 65% 3%, 68% 1%, 72% 4%, 75% 0%,
+    78% 2%, 82% 0%, 85% 3%, 88% 1%, 92% 4%, 95% 0%, 98% 2%, 100% 0%,
+    100% 97%, 98% 100%, 95% 96%, 92% 100%, 88% 97%, 85% 100%, 82% 98%,
+    78% 100%, 75% 97%, 72% 100%, 68% 96%, 65% 100%, 62% 97%, 58% 100%,
+    55% 98%, 52% 100%, 48% 97%, 45% 100%, 42% 96%, 38% 100%, 35% 97%,
+    32% 100%, 28% 98%, 25% 100%, 22% 97%, 18% 100%, 15% 96%, 12% 100%,
+    8% 97%, 5% 100%, 2% 98%, 0% 100%
+  );
+}
+
+/* ── Dada collage fragment — aged paper snippet with shadow + tilt ──── */
+.dada-fragment {
+  position: relative;
+  background: linear-gradient(135deg, rgba(227, 213, 193, 0.12), rgba(245, 239, 230, 0.08));
+  border: 1px solid rgba(143, 0, 0, 0.15);
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(227, 213, 193, 0.05);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+.dark .dada-fragment {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.08), rgba(26, 26, 26, 0.6));
+  border-color: rgba(143, 0, 0, 0.25);
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(143, 0, 0, 0.04);
+}
+
+/* ── Dada stamp — circular/rectangular ink stamp ─────────────────────── */
+.dada-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  color: var(--soviet-red);
+  transform: rotate(-12deg);
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dada-stamp:hover {
+  opacity: 0.6;
+  transform: rotate(-8deg) scale(1.05);
+}
+.dark .dada-stamp {
+  color: var(--soviet-orange);
+  opacity: 0.25;
+}
+.dark .dada-stamp:hover {
+  opacity: 0.5;
+}
+.dada-stamp-rect {
+  border-radius: 2px;
+}
+
+/* ── Dada scattered text — rotated, displaced typographic fragments ─── */
+.dada-scatter {
+  position: absolute;
+  font-family: var(--font-title), serif;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  mix-blend-mode: overlay;
+}
+.dark .dada-scatter {
+  mix-blend-mode: screen;
+}
+
+/* ── Dada diagonal divider — constructivist/deconstructivist separator ── */
+.dada-diagonal {
+  position: relative;
+  overflow: hidden;
+}
+.dada-diagonal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    -3deg,
+    transparent 48.5%,
+    rgba(143, 0, 0, 0.12) 49%,
+    rgba(219, 91, 0, 0.08) 51%,
+    transparent 51.5%
+  );
+  pointer-events: none;
+}
+.dark .dada-diagonal::before {
+  background: linear-gradient(
+    -3deg,
+    transparent 48.5%,
+    rgba(143, 0, 0, 0.2) 49%,
+    rgba(219, 91, 0, 0.15) 51%,
+    transparent 51.5%
+  );
+}
+
+/* ── Dada noise overlay — more aggressive grain for collage areas ──── */
+.dada-noise {
+  position: relative;
+}
+.dada-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+}
+
+/* ── Dada redaction / censorship bar — deconstructivist text treatment ── */
+.dada-redact {
+  position: relative;
+  display: inline;
+}
+.dada-redact::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 40%;
+  height: 30%;
+  background: var(--soviet-red);
+  opacity: 0.25;
+  transform: rotate(-0.5deg);
+  pointer-events: none;
+}
+.dark .dada-redact::after {
+  opacity: 0.35;
+}
+
+/* ── Dada cutout text — newspaper clipping style typography ────────── */
+.dada-cutout {
+  display: inline-block;
+  padding: 0.05em 0.15em;
+  background: rgba(143, 0, 0, 0.06);
+  border: 1px solid rgba(143, 0, 0, 0.12);
+  transform: rotate(var(--dada-rotate, -1deg));
+  font-style: italic;
+  transition: transform 0.3s ease;
+}
+.dark .dada-cutout {
+  background: rgba(219, 91, 0, 0.06);
+  border-color: rgba(219, 91, 0, 0.15);
+}
+
+/* ── Dada hover tilt — slight chaotic rotation on hover ──────────── */
+.dada-tilt:hover {
+  transform: rotate(var(--dada-hover-rotate, -1.5deg)) scale(1.01);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Keyframes for Dada-specific animations ──────────────────────── */
+@keyframes dada-drift {
+  0%, 100% { transform: translate(0, 0) rotate(var(--dada-rotate, 0deg)); }
+  25% { transform: translate(3px, -2px) rotate(calc(var(--dada-rotate, 0deg) + 0.5deg)); }
+  50% { transform: translate(-2px, 3px) rotate(calc(var(--dada-rotate, 0deg) - 0.3deg)); }
+  75% { transform: translate(1px, -1px) rotate(calc(var(--dada-rotate, 0deg) + 0.2deg)); }
+}
+
+@keyframes dada-flicker {
+  0%, 100% { opacity: var(--dada-opacity, 0.3); }
+  15% { opacity: calc(var(--dada-opacity, 0.3) * 0.4); }
+  16% { opacity: var(--dada-opacity, 0.3); }
+  45% { opacity: var(--dada-opacity, 0.3); }
+  46% { opacity: calc(var(--dada-opacity, 0.3) * 0.6); }
+  48% { opacity: var(--dada-opacity, 0.3); }
+  78% { opacity: calc(var(--dada-opacity, 0.3) * 0.7); }
+  80% { opacity: var(--dada-opacity, 0.3); }
+}
+
+@keyframes dada-typewriter {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes dada-tear-reveal {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Printer-friendly overrides — all retro effects disabled
    ══════════════════════════════════════════════════════════════════════════ */
 @media print {
@@ -1043,5 +1253,20 @@
   }
   .soviet-section-header::before {
     display: none !important;
+  }
+  .dada-torn-edge {
+    clip-path: none !important;
+  }
+  .dada-fragment,
+  .dada-stamp,
+  .dada-scatter,
+  .dada-diagonal::before,
+  .dada-noise::after,
+  .dada-redact::after {
+    display: none !important;
+  }
+  .dada-tilt:hover,
+  .dada-cutout {
+    transform: none !important;
   }
 }

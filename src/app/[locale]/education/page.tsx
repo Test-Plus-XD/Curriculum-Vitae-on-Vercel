@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
 import RetroWave from '@/components/RetroWave';
+import DadaTypography from '@/components/DadaTypography';
 
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
@@ -83,7 +84,7 @@ export default async function EducationPage({
       <div className="mb-8">
         <h1 className="text-2xl text-slate-900 dark:text-white flex items-center gap-3 font-title font-light italic glow-heading">
           <GraduationCap className="text-blue-600 dark:text-soviet-orange" size={28} />
-          {t('sections.education')}
+          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} />
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
           {locale === 'zh-hk'
@@ -198,25 +199,25 @@ export default async function EducationPage({
 
       {/* Summary stats */}
       <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-1.5deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '總課程數' : 'Total Courses'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '1.2deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{SEMESTERS.length}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '學期' : 'Semesters'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-0.8deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.7</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '大一 GPA' : 'Year 1 GPA'}
           </p>
         </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat">
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '1.8deg' } as React.CSSProperties}>
           <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}

@@ -12,6 +12,7 @@ import MorseCodeTicker from '@/components/MorseCodeTicker';
 import SovietTelemetry from '@/components/SovietTelemetry';
 import SovietPropagandaPoster from '@/components/SovietPropagandaPoster';
 import SovietCursorGlow from '@/components/SovietCursorGlow';
+import DadaCollage from '@/components/DadaCollage';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
           <MorseCodeTicker />
           <SovietTelemetry />
           <SovietPropagandaPoster />
+          <DadaCollage />
           <RetroWave />
           <SovietParticles />
           <SovietCursorGlow />
