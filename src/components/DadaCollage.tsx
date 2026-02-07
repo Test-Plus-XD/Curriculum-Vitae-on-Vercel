@@ -47,6 +47,30 @@ const STAMPS = [
   { text: '№ 1916', rotate: 12 },
 ];
 
+/* ── Dada image fragments — archival references ─────────────────── */
+const DADA_IMAGE_FRAGMENTS = [
+  {
+    src: '/dada/collage-1.svg',
+    alt: 'Dada collage fragment with emblem',
+  },
+  {
+    src: '/dada/collage-2.svg',
+    alt: 'Dada photomontage fragment',
+  },
+  {
+    src: '/dada/collage-3.svg',
+    alt: 'Dada magazine cover fragment',
+  },
+  {
+    src: '/dada/collage-4.svg',
+    alt: 'UTTU dossier fragment',
+  },
+  {
+    src: '/dada/collage-5.svg',
+    alt: 'Lucidscape fragment',
+  },
+];
+
 /* ── Geometric fragment shapes ───────────────────────────────────── */
 interface CollageFragment {
   id: number;
@@ -139,6 +163,20 @@ const stampVariants: Variants = {
       stiffness: 200,
       damping: 15,
       delay: 1.0 + i * 0.25,
+    },
+  }),
+};
+
+const imageVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.85, filter: 'blur(6px)' },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.8,
+      delay: 0.6 + i * 0.2,
+      ease: [0.4, 0, 0.2, 1],
     },
   }),
 };
@@ -758,19 +796,25 @@ function MusicalNote({ isDark, x, y, size }: { isDark: boolean; x: string; y: st
 function useMouseParallax(strength: number = 0.02) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
   const springX = useSpring(useTransform(mouseX, (v) => v * strength), { damping: 30, stiffness: 100 });
   const springY = useSpring(useTransform(mouseY, (v) => v * strength), { damping: 30, stiffness: 100 });
+  const cursorSpringX = useSpring(cursorX, { damping: 25, stiffness: 180 });
+  const cursorSpringY = useSpring(cursorY, { damping: 25, stiffness: 180 });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       mouseX.set(e.clientX - window.innerWidth / 2);
       mouseY.set(e.clientY - window.innerHeight / 2);
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
     };
     window.addEventListener('mousemove', handler);
     return () => window.removeEventListener('mousemove', handler);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, cursorX, cursorY]);
 
-  return { x: springX, y: springY };
+  return { x: springX, y: springY, cursorX: cursorSpringX, cursorY: cursorSpringY };
 }
 
 /* ── Main component ──────────────────────────────────────────────── */
@@ -778,13 +822,25 @@ export default function DadaCollage() {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const { x: parallaxX, y: parallaxY } = useMouseParallax(0.015);
+  const { x: parallaxX, y: parallaxY, cursorX, cursorY } = useMouseParallax(0.015);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const fragments = useMemo(() => generateFragments(16, 42), []);
+  const imageLayouts = useMemo(() => {
+    const count = 2 + Math.floor(Math.random() * 2);
+    const shuffled = [...DADA_IMAGE_FRAGMENTS].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count).map((image) => {
+      const x = 8 + Math.random() * 82;
+      const y = 6 + Math.random() * 76;
+      const rotate = (Math.random() - 0.5) * 36;
+      const scale = 0.85 + Math.random() * 0.35;
+      const zIndex = 2 + Math.floor(Math.random() * 2);
+      return { ...image, x: `${x}%`, y: `${y}%`, rotate, scale, zIndex };
+    });
+  }, []);
 
   if (!mounted) return null;
 
@@ -818,6 +874,15 @@ export default function DadaCollage() {
         className="absolute inset-0"
         style={{ x: parallaxX, y: parallaxY }}
       >
+        {/* ── Cursor inversion halo ──────────────────────────────── */}
+        <motion.div
+          className="dada-cursor-invert hidden lg:block"
+          style={{
+            x: cursorX,
+            y: cursorY,
+          }}
+        />
+
         {/* ── Floating collage fragments ──────────────────────────── */}
         {fragments.map((frag) => (
           <FloatingFragment
@@ -827,6 +892,37 @@ export default function DadaCollage() {
             paperColor={paperColor}
             strokeColor={strokeColor}
             accentColor={accentColor}
+          />
+        ))}
+
+        {/* ── Dada image references — archival collage snippets ───── */}
+        {imageLayouts.map((image, i) => (
+          <motion.img
+            key={image.src}
+            src={image.src}
+            alt={image.alt}
+            loading="lazy"
+            decoding="async"
+            className="dada-image-fragment hidden lg:block"
+            style={{
+              left: image.x,
+              top: image.y,
+              rotate: `${image.rotate}deg`,
+              scale: image.scale,
+              zIndex: image.zIndex,
+            }}
+            custom={i}
+            variants={imageVariants}
+            animate={{
+              y: [0, -10, 0],
+              rotate: [image.rotate, image.rotate + (i % 2 === 0 ? 2 : -2), image.rotate],
+              scale: [image.scale, image.scale + 0.04, image.scale],
+            }}
+            transition={{
+              duration: 10 + i * 1.6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
           />
         ))}
 
