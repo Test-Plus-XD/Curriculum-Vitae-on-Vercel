@@ -38,10 +38,8 @@ interface CosmicRing {
 
 interface ShootingStar {
   id: number;
-  x1: string;
-  y1: string;
-  x2: string;
-  y2: string;
+  /// SVG path data with quadratic bezier curves for natural arcs
+  path: string;
   width: number;
   dasharray: string;
   delay: number;
@@ -51,7 +49,8 @@ interface ShootingStar {
 /**
  * CosmicStarfield — Interactive parallax star field inspired by
  * Reverse:1999 Cosmic Overture's warped starry grids and Arknights Lone Trail's
- * starry voids. Reduced star count for performance, increased shooting star trails.
+ * starry voids. Reduced star count for performance, increased shooting star trails
+ * with curved paths for more natural orbital trajectories.
  * Hidden on the landing CV page and print.
  */
 export default function CosmicStarfield() {
@@ -83,7 +82,8 @@ export default function CosmicStarfield() {
     };
   }, []);
 
-  /* Reduced stars — 50 instead of 120 for better mobile performance */
+  /// Star count reduced to 50 instead of 120 for better mobile performance
+  /// Each star has depth layering for parallax scrolling effect
   const stars = useMemo<Star[]>(() => {
     const count = 50;
     return Array.from({ length: count }, (_, i) => ({
@@ -97,7 +97,7 @@ export default function CosmicStarfield() {
     }));
   }, []);
 
-  /* More nebulae — 7 with pulsing */
+  /// Nebulae — pulsing coloured fog for cosmic atmosphere
   const nebulae = useMemo<Nebula[]>(() => {
     const colors = ['#8f0000', '#db5b00', '#ffa500', '#6b0000', '#ff7700'];
     return Array.from({ length: 7 }, (_, i) => ({
@@ -113,7 +113,7 @@ export default function CosmicStarfield() {
     }));
   }, []);
 
-  /* Cosmic orbital rings — warped elliptical paths */
+  /// Cosmic orbital rings — warped elliptical paths inspired by Reverse:1999
   const cosmicRings = useMemo<CosmicRing[]>(() => {
     return Array.from({ length: 3 }, (_, i) => ({
       id: i,
@@ -126,16 +126,119 @@ export default function CosmicStarfield() {
     }));
   }, []);
 
-  /* Increased shooting star trails — 7 instead of 3 */
+  /// Shooting stars with curved paths — 12 trails with quadratic bezier curves
+  /// Each path uses Q command for smooth arcs simulating orbital trajectories
+  /// Thicker strokes (1.2-1.8px) for better visibility
   const shootingStars = useMemo<ShootingStar[]>(() => {
     return [
-      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8 },
-      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
-      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
-      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9 },
-      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
-      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
-      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+      /// Trail 1 — gentle downward arc from top-left
+      { 
+        id: 0, 
+        path: 'M 0 20 Q 40 25 100 35', 
+        width: 1.4, 
+        dasharray: '220', 
+        delay: 0, 
+        duration: 8 
+      },
+      /// Trail 2 — steep curved descent
+      { 
+        id: 1, 
+        path: 'M 15 5 Q 50 20 85 45', 
+        width: 1.2, 
+        dasharray: '180', 
+        delay: 3, 
+        duration: 10 
+      },
+      /// Trail 3 — reverse arc from right to left
+      { 
+        id: 2, 
+        path: 'M 70 10 Q 50 30 30 60', 
+        width: 1.5, 
+        dasharray: '200', 
+        delay: 7, 
+        duration: 14 
+      },
+      /// Trail 4 — wide sweeping arc
+      { 
+        id: 3, 
+        path: 'M 90 15 Q 60 35 10 50', 
+        width: 1.6, 
+        dasharray: '240', 
+        delay: 2, 
+        duration: 9 
+      },
+      /// Trail 5 — gentle upward curve (ascending satellite)
+      { 
+        id: 4, 
+        path: 'M 5 40 Q 35 35 80 70', 
+        width: 1.3, 
+        dasharray: '190', 
+        delay: 5, 
+        duration: 12 
+      },
+      /// Trail 6 — sharp parabolic arc
+      { 
+        id: 5, 
+        path: 'M 60 5 Q 40 15 20 35', 
+        width: 1.2, 
+        dasharray: '160', 
+        delay: 8, 
+        duration: 11 
+      },
+      /// Trail 7 — diagonal sweeping trajectory
+      { 
+        id: 6, 
+        path: 'M 40 8 Q 65 30 95 55', 
+        width: 1.5, 
+        dasharray: '210', 
+        delay: 1, 
+        duration: 13 
+      },
+      /// Trail 8 — gentle S-curve (complex orbital path)
+      { 
+        id: 7, 
+        path: 'M 25 12 Q 45 28 50 48', 
+        width: 1.4, 
+        dasharray: '170', 
+        delay: 4, 
+        duration: 10 
+      },
+      /// Trail 9 — steep downward parabola
+      { 
+        id: 8, 
+        path: 'M 85 8 Q 70 25 55 52', 
+        width: 1.7, 
+        dasharray: '200', 
+        delay: 6, 
+        duration: 11 
+      },
+      /// Trail 10 — wide horizontal arc
+      { 
+        id: 9, 
+        path: 'M 10 18 Q 50 22 90 28', 
+        width: 1.3, 
+        dasharray: '230', 
+        delay: 9, 
+        duration: 15 
+      },
+      /// Trail 11 — tight curved descent
+      { 
+        id: 10, 
+        path: 'M 75 6 Q 65 18 58 35', 
+        width: 1.8, 
+        dasharray: '150', 
+        delay: 3.5, 
+        duration: 9 
+      },
+      /// Trail 12 — ascending arc with gentle curve
+      { 
+        id: 11, 
+        path: 'M 12 45 Q 40 42 75 65', 
+        width: 1.5, 
+        dasharray: '195', 
+        delay: 7.5, 
+        duration: 12 
+      },
     ];
   }, []);
 
@@ -143,10 +246,11 @@ export default function CosmicStarfield() {
 
   const segments = pathname.split('/').filter(Boolean);
   const isCvPage = segments.length <= 1;
+  /// Hidden on CV landing page to maintain professional print-friendly appearance
   if (isCvPage) return null;
 
   const isDark = resolvedTheme === 'dark';
-  // On mobile, only show a subset of stars for performance
+  /// On mobile, display only a subset of stars for performance optimisation
   const displayStars = isMobile ? stars.slice(0, 25) : stars;
 
   return (
@@ -167,7 +271,7 @@ export default function CosmicStarfield() {
           </filter>
         </defs>
 
-        {/* Nebula clouds — larger, pulsing coloured fog */}
+        {/* Nebula clouds — larger, pulsing coloured fog for cosmic atmosphere */}
         {isDark && nebulae.map((n) => (
           <ellipse
             key={`nebula-${n.id}`}
@@ -207,7 +311,9 @@ export default function CosmicStarfield() {
           />
         ))}
 
+        {/* Stars with parallax motion based on mouse position */}
         {displayStars.map((star) => {
+          /// Parallax intensity varies by depth layer (far, mid, near)
           const parallaxFactor = (star.layer + 1) * (isMobile ? 2 : 8);
           const tx = mouse.x * parallaxFactor;
           const ty = mouse.y * parallaxFactor;
@@ -215,7 +321,7 @@ export default function CosmicStarfield() {
 
           return (
             <g key={star.id}>
-              {/* Star glow — larger halo */}
+              {/* Star glow — larger halo for atmospheric effect */}
               <circle
                 cx={`${star.x}%`}
                 cy={`${star.y}%`}
@@ -230,7 +336,7 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Star core */}
+              {/* Star core — solid centre point */}
               <circle
                 cx={`${star.x}%`}
                 cy={`${star.y}%`}
@@ -247,9 +353,10 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Cross sparkle for bright near-layer stars — desktop only */}
+              {/* Cross sparkle for bright near-layer stars — desktop only for performance */}
               {star.layer === 2 && star.baseOpacity > 0.5 && !isMobile && (
                 <>
+                  {/* Vertical sparkle line */}
                   <line
                     x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
                     x2={`${star.x}%`} y2={`${star.y + 0.3}%`}
@@ -263,6 +370,7 @@ export default function CosmicStarfield() {
                       animationDelay: `${star.id * 0.08}s`,
                     }}
                   />
+                  {/* Horizontal sparkle line */}
                   <line
                     x1={`${star.x - 0.15}%`} y1={`${star.y}%`}
                     x2={`${star.x + 0.15}%`} y2={`${star.y}%`}
@@ -282,20 +390,24 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Multiple shooting star / satellite trails — 7 trails */}
+        {/* Shooting star / satellite trails — 12 curved paths for natural orbital motion */}
         {shootingStars.map((ss) => (
-          <line
+          <path
             key={`trail-${ss.id}`}
-            x1={ss.x1} y1={ss.y1}
-            x2={ss.x2} y2={ss.y2}
+            d={ss.path}
             stroke={isDark
               ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
               : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
             }
             strokeWidth={ss.width}
             strokeDasharray={ss.dasharray}
+            fill="none"
             opacity="0"
-            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite` }}
+            style={{ 
+              animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
+              /// Stroke line cap set to round for smoother trail appearance
+              strokeLinecap: 'round',
+            }}
           />
         ))}
       </svg>

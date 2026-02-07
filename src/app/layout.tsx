@@ -2,16 +2,10 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
-import { Iansui } from 'next/font/google';
 import { Noto_Serif_Display } from 'next/font/google';
 
-const iansui = Iansui({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-zh',
-  display: 'swap',
-});
-
+/// Noto Serif Display font for elegant titles and headings
+/// Weight: 300 Light, Style: Italic
 const notoSerifDisplay = Noto_Serif_Display({
   subsets: ['latin'],
   weight: ['300'],
@@ -33,7 +27,26 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${iansui.variable} ${notoSerifDisplay.variable} bg-white dark:bg-[#1a1a1a] text-slate-800 dark:text-slate-100 transition-colors`}>
+      <head>
+        {/* Iansui font loaded via Google Fonts CDN for Traditional Chinese content */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Iansui:wght@400&display=swap"
+          rel="stylesheet"
+        />
+        {/* LINE Seed JP font loaded via Google Fonts CDN for English content */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400&display=swap"
+          rel="stylesheet"
+        />
+        {/* Noto Serif Display font loaded via Google Fonts CDN for titles, names, and highlights */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@1,300&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className={`${notoSerifDisplay.variable} bg-[#f5efe6] dark:bg-[#1a1a1a] text-slate-800 dark:text-slate-100 transition-colors`}>
         {children}
         <SpeedInsights />
         <Analytics />

@@ -2,13 +2,15 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 /**
  * GlitchText — Soviet-style text scramble/glitch effect inspired by
- * CRT displays and analog telemetry readouts from Atomic Heart and Arknights.
+ * CRT displays and analogue telemetry readouts from Atomic Heart and Arknights.
  * Text scrambles through Cyrillic/symbol characters before resolving.
  *
  * Supports hover trigger, mount trigger, and viewport-entry trigger.
+ * Extended duration for Traditional Chinese content to account for character complexity.
  */
 
 const GLITCH_CHARS =
@@ -37,8 +39,9 @@ export default function GlitchText({
   glitchOnHover = true,
   glitchOnMount = false,
   glitchOnView = false,
-  speed = 10,
+  speed: basespeed,
 }: GlitchTextProps) {
+  const pathname = usePathname();
   const [displayText, setDisplayText] = useState(text);
   const [isGlitching, setIsGlitching] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -46,6 +49,13 @@ export default function GlitchText({
   const viewRef = useRef<HTMLDivElement>(null);
   const hasGlitchedOnView = useRef(false);
   const isInView = useInView(viewRef, { once: true, margin: '-30px' });
+
+  /// Locale detection — zh-hk path segments indicate Traditional Chinese mode
+  const isChineseMode = pathname.includes('/zh-hk');
+
+  /// Speed adjustment — slower animation for Traditional Chinese (7ms vs 10ms)
+  /// This gives users more time to appreciate the complex character transitions
+  const speed = basespeed ?? (isChineseMode ? 7 : 10);
 
   const runGlitch = useCallback(() => {
     if (isGlitching) return;
@@ -60,13 +70,17 @@ export default function GlitchText({
         text
           .split('')
           .map((char, i) => {
+            /// Preserve spaces in the glitch animation
             if (char === ' ') return ' ';
+            /// Characters before the progress point are resolved to final text
             if (i < progress) return text[i];
+            /// Characters after progress point show random Cyrillic glitch characters
             return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
           })
           .join('')
       );
 
+      /// Animation completes when all characters have been resolved
       if (progress >= text.length) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setDisplayText(text);
@@ -75,6 +89,7 @@ export default function GlitchText({
     }, speed);
   }, [text, speed, isGlitching]);
 
+  /// Mount effect — trigger glitch animation on component mount if enabled
   useEffect(() => {
     if (glitchOnMount) {
       const timer = setTimeout(runGlitch, 200);
@@ -82,7 +97,7 @@ export default function GlitchText({
     }
   }, [glitchOnMount, runGlitch]);
 
-  /* Trigger glitch on viewport entry */
+  /// Viewport entry effect — trigger glitch when element scrolls into view
   useEffect(() => {
     if (glitchOnView && isInView && !hasGlitchedOnView.current) {
       hasGlitchedOnView.current = true;
@@ -91,10 +106,12 @@ export default function GlitchText({
     }
   }, [glitchOnView, isInView, runGlitch]);
 
+  /// Text synchronisation — update display text when prop changes
   useEffect(() => {
     setDisplayText(text);
   }, [text]);
 
+  /// Cleanup effect — clear interval on component unmount
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

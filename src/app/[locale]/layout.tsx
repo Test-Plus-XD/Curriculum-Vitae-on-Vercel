@@ -1,4 +1,4 @@
-import { NextIntlClientProvider } from 'next-intl';
+﻿import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -39,7 +39,7 @@ export default async function LocaleLayout({
             <Header />
           </div>
 
-          <main className="flex-1 relative z-10">
+          <main className="relative z-10 flex-1">
             {children}
           </main>
 
