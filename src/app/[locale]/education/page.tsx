@@ -86,14 +86,14 @@ export default async function EducationPage({
       <div className="mb-8">
         <h1 className="text-2xl text-slate-900 dark:text-white flex items-center gap-3 font-title font-light italic glow-heading">
           <GraduationCap className="text-blue-600 dark:text-soviet-orange" size={28} />
-          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} />
+          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} scatterOnView />
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
           <GlitchRevealText
             text={locale === 'zh-hk'
               ? `${totalCourses} 門課程，分佈於 ${SEMESTERS.length} 個學期`
               : `${totalCourses} courses across ${SEMESTERS.length} semesters`}
-            speed={20}
+            speed={7}
             glitchOnHover={false}
           />
         </p>
@@ -105,13 +105,13 @@ export default async function EducationPage({
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h2 className="text-xl text-slate-900 dark:text-white font-title font-light italic">
-              <GlitchRevealText text={t('education.institution')} speed={20} />
+              <DadaTypography text={t('education.institution')} as="span" intensity={0.4} scatterOnView />
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              <GlitchRevealText text={t('education.institutionZh')} speed={18} />
+              <GlitchRevealText text={t('education.institutionZh')} speed={6} />
             </p>
             <p className="text-base text-slate-700 dark:text-slate-200 mt-3 font-medium">
-              <GlitchRevealText text={t('education.programme')} speed={22} />
+              <GlitchRevealText text={t('education.programme')} speed={7} />
             </p>
             <div className="mt-3 flex flex-wrap gap-3">
               <span className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
@@ -163,7 +163,7 @@ export default async function EducationPage({
                   ? 'text-blue-600 dark:text-soviet-orange'
                   : 'text-slate-700 dark:text-slate-300'
               }`}>
-                <GlitchRevealText text={t(sem.translationKey)} speed={22} />
+                <DadaTypography text={t(sem.translationKey)} as="span" intensity={0.4} scatterOnView />
                 {semIndex === 0 && (
                   <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
                     {locale === 'zh-hk' ? '進行中' : 'Current'}
@@ -189,7 +189,7 @@ export default async function EducationPage({
                     {course.code}
                   </span>
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-100 font-title italic">
-                    <GlitchRevealText text={course[lang]} speed={18} />
+                    <GlitchRevealText text={course[lang]} speed={6} />
                   </p>
                   {lang === 'zh' && (
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">

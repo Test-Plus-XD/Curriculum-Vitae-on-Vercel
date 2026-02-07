@@ -8,6 +8,7 @@ import type { Project } from '@/lib/projects';
 import VideoEmbed from './VideoEmbed';
 import AnimatedCard from './AnimatedCard';
 import GlitchText from './GlitchText';
+import DadaTypography from './DadaTypography';
 
 /* --------------------------------------------------------- colour maps     */
 const catColour: Record<string, string> = {
@@ -52,7 +53,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
               href={`/${locale}/projects/${project.id}`}
               className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
             >
-              <GlitchText text={project.title[lang]} glitchOnView glitchOnHover speed={20} />
+              <DadaTypography text={project.title[lang]} as="span" intensity={0.4} scatterOnView />
             </Link>
             {project.status === 'in-progress' && (
               <span className="inline-flex items-center gap-1 mt-0.5 text-xs text-amber-600 dark:text-amber-400">
@@ -79,7 +80,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
 
         {/* ---- description ---- */}
         <p className="mt-3 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-          <GlitchText text={project.description[lang]} glitchOnView glitchOnHover={false} speed={12} />
+          <GlitchText text={project.description[lang]} glitchOnView glitchOnHover={false} speed={4} />
         </p>
 
         {/* ---- platforms (PourRice only) ---- */}

@@ -33,7 +33,7 @@ export default function ProjectsPage() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* heading */}
       <h1 className="text-2xl text-slate-800 dark:text-white mb-6 font-title font-light italic glow-heading">
-        <DadaTypography text={t('allProjects')} as="span" intensity={0.5} />
+        <DadaTypography text={t('allProjects')} as="span" intensity={0.5} scatterOnView />
       </h1>
 
       {/* filter pills — hidden on print */}
@@ -59,7 +59,7 @@ export default function ProjectsPage() {
           text={`${displayed.length} ${locale === 'zh-hk' ? '個項目' : displayed.length === 1 ? 'project' : 'projects'}`}
           glitchOnView
           glitchOnHover={false}
-          speed={25}
+          speed={8}
         />
       </p>
 

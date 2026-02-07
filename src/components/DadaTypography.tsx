@@ -1,18 +1,16 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, useInView } from 'framer-motion';
 
 /**
  * DadaTypography — Deconstructivist text treatment inspired by
  * Reverse:1999, Dada movement typography, and David Carson's design.
  *
- * On hover, individual characters displace (shift, rotate, scale) with
- * staggered spring physics, colour shifts, and chromatic text shadow
- * creating a vivid "pulled apart" / fragmented typographic effect.
- * Characters settle back on mouse leave with spring physics.
+ * Characters can start scattered and align on viewport entry (`scatterOnView`),
+ * then re-scatter on hover with spring physics.
  *
- * Suitable for section headings on education/projects pages.
+ * Suitable for all titles on education/projects pages.
  */
 
 interface DadaTypographyProps {
@@ -23,6 +21,8 @@ interface DadaTypographyProps {
   intensity?: number;
   /** Whether to apply deconstructed effect on hover (default true) */
   deconstructOnHover?: boolean;
+  /** Start scattered and align when entering viewport (default false) */
+  scatterOnView?: boolean;
 }
 
 interface CharDisplacement {
@@ -39,35 +39,47 @@ export default function DadaTypography({
   as: Tag = 'h2',
   intensity = 0.7,
   deconstructOnHover = true,
+  scatterOnView = false,
 }: DadaTypographyProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isScattered, setIsScattered] = useState(scatterOnView);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
+  const hasAligned = useRef(false);
+  const isInView = useInView(containerRef, { once: true, margin: '-40px' });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  /* Align characters on viewport entry when scatterOnView is enabled */
+  useEffect(() => {
+    if (scatterOnView && isInView && !hasAligned.current) {
+      hasAligned.current = true;
+      const timer = setTimeout(() => setIsScattered(false), 120);
+      return () => clearTimeout(timer);
+    }
+  }, [scatterOnView, isInView]);
+
   const displacements = useMemo((): CharDisplacement[] => {
     return text.split('').map((_, i) => {
       const seed = ((i + 1) * 7919) % 100;
       return {
-        x: ((seed % 11) - 5) * intensity * 5,
-        y: ((seed % 7) - 3) * intensity * 6,
-        rotate: ((seed % 13) - 6) * intensity * 10,
-        scale: 1 + ((seed % 5) - 2) * intensity * 0.12,
-        colorShift: ((seed % 9) - 4) * intensity * 14,
+        x: ((seed % 11) - 5) * intensity * 3,
+        y: ((seed % 7) - 3) * intensity * 3.5,
+        rotate: ((seed % 13) - 6) * intensity * 6,
+        scale: 1 + ((seed % 5) - 2) * intensity * 0.08,
+        colorShift: ((seed % 9) - 4) * intensity * 10,
       };
     });
   }, [text, intensity]);
 
   const handleMouseEnter = useCallback(() => {
-    if (deconstructOnHover && !prefersReduced) setIsHovered(true);
+    if (deconstructOnHover && !prefersReduced) setIsScattered(true);
   }, [deconstructOnHover, prefersReduced]);
 
   const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
+    setIsScattered(false);
   }, []);
 
   if (!mounted) {
@@ -97,37 +109,38 @@ export default function DadaTypography({
 
         const d = displacements[i];
 
+        const scatteredState = {
+          x: d.x,
+          y: d.y,
+          rotate: d.rotate,
+          scale: d.scale,
+          filter: `hue-rotate(${d.colorShift}deg)`,
+          textShadow: i % 3 === 0
+            ? '-1px 0 rgba(143,0,0,0.4), 1px 0 rgba(255,165,0,0.3)'
+            : '0 0 4px rgba(219,91,0,0.25)',
+        };
+
+        const alignedState = {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 1,
+          filter: 'hue-rotate(0deg)',
+          textShadow: '0 0 0px transparent',
+        };
+
         return (
           <motion.span
             key={i}
             className="inline-block origin-center"
-            animate={
-              isHovered
-                ? {
-                    x: d.x,
-                    y: d.y,
-                    rotate: d.rotate,
-                    scale: d.scale,
-                    filter: `hue-rotate(${d.colorShift}deg)`,
-                    textShadow: i % 3 === 0
-                      ? '-1px 0 rgba(143,0,0,0.4), 1px 0 rgba(255,165,0,0.3)'
-                      : '0 0 4px rgba(219,91,0,0.25)',
-                  }
-                : {
-                    x: 0,
-                    y: 0,
-                    rotate: 0,
-                    scale: 1,
-                    filter: 'hue-rotate(0deg)',
-                    textShadow: '0 0 0px transparent',
-                  }
-            }
+            initial={scatterOnView ? scatteredState : undefined}
+            animate={isScattered ? scatteredState : alignedState}
             transition={{
               type: 'spring',
-              stiffness: isHovered ? 120 : 280,
-              damping: isHovered ? 10 : 18,
+              stiffness: isScattered ? 120 : 280,
+              damping: isScattered ? 10 : 18,
               mass: 0.3 + (i % 3) * 0.1,
-              delay: isHovered ? i * 0.02 : i * 0.01,
+              delay: isScattered ? i * 0.02 : i * 0.015,
             }}
             style={{
               display: 'inline-block',

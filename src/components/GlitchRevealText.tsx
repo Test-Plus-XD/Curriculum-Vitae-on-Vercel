@@ -20,7 +20,7 @@ export default function GlitchRevealText({
   text,
   className = '',
   as = 'span',
-  speed = 25,
+  speed = 8,
   glitchOnHover = true,
 }: GlitchRevealTextProps) {
   return (

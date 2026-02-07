@@ -11,7 +11,12 @@ import { motion, useInView } from 'framer-motion';
  * Supports hover trigger, mount trigger, and viewport-entry trigger.
  */
 
-const GLITCH_CHARS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ★●◆▲▼◀▶□■△▽◇◈';
+const GLITCH_CHARS =
+  'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзиклмнопрстуфхцчшщэюя' +
+  'ЀЁЂЃЄЅІЇЈЉЊЋЌЎЏ' +
+  '★●◆▲▼◀▶□■△▽◇◈※‡†§¶' +
+  '⌬⌖⊕⊗⊘⊙⊚⊛⊜⟐⟁⎔⎕⏣⏢⏥' +
+  'Ω∆Σ∞≈≡∴∵⊿⋈⋉⟠⟡';
 
 interface GlitchTextProps {
   text: string;
