@@ -5,6 +5,7 @@ import { ArrowLeft, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Vide
 import { projects } from '@/lib/projects';
 import { projectTimelines, sortTimelineEvents, formatTimelineDate } from '@/lib/timeline';
 import InlineVideo from '@/components/InlineVideo';
+import GlitchRevealText from '@/components/GlitchRevealText';
 
 type Lang = 'en' | 'zh';
 
@@ -80,11 +81,11 @@ export default async function ProjectDetailPage({
         </div>
 
         <h1 className="text-2xl sm:text-3xl text-slate-900 dark:text-white font-title font-light italic glow-heading">
-          {project.title[lang]}
+          <GlitchRevealText text={project.title[lang]} speed={20} />
         </h1>
 
         <p className="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
-          {project.description[lang]}
+          <GlitchRevealText text={project.description[lang]} speed={12} glitchOnHover={false} />
         </p>
 
         {/* Related Courses */}
@@ -112,7 +113,7 @@ export default async function ProjectDetailPage({
         <div className="lg:col-span-2">
           <h2 className="text-lg text-slate-900 dark:text-white flex items-center gap-2 mb-6 font-title font-light italic glow-heading">
             <Calendar className="text-blue-600 dark:text-soviet-orange" size={20} />
-            {t('timeline')}
+            <GlitchRevealText text={t('timeline')} speed={22} />
           </h2>
 
           {timeline.length > 0 ? (
@@ -159,7 +160,7 @@ export default async function ProjectDetailPage({
                           <div className="flex items-start justify-between gap-2">
                             <div>
                               <h3 className="font-semibold text-slate-800 dark:text-slate-100 font-title italic">
-                                {event.title[lang]}
+                                <GlitchRevealText text={event.title[lang]} speed={18} />
                               </h3>
                               {event.description && (
                                 <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">

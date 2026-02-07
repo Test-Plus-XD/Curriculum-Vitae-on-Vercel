@@ -53,11 +53,11 @@ export default function DadaTypography({
     return text.split('').map((_, i) => {
       const seed = ((i + 1) * 7919) % 100;
       return {
-        x: ((seed % 11) - 5) * intensity * 2.5,
-        y: ((seed % 7) - 3) * intensity * 3,
-        rotate: ((seed % 13) - 6) * intensity * 5,
-        scale: 1 + ((seed % 5) - 2) * intensity * 0.06,
-        colorShift: ((seed % 9) - 4) * intensity * 8,
+        x: ((seed % 11) - 5) * intensity * 5,
+        y: ((seed % 7) - 3) * intensity * 6,
+        rotate: ((seed % 13) - 6) * intensity * 10,
+        scale: 1 + ((seed % 5) - 2) * intensity * 0.12,
+        colorShift: ((seed % 9) - 4) * intensity * 14,
       };
     });
   }, [text, intensity]);

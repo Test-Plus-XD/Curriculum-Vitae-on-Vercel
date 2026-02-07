@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 /**
  * GlitchText — Soviet-style text scramble/glitch effect inspired by
  * CRT displays and analog telemetry readouts from Atomic Heart and Arknights.
- * Text scrambles through Cyrillic/symbol characters on hover before resolving.
+ * Text scrambles through Cyrillic/symbol characters before resolving.
+ *
+ * Supports hover trigger, mount trigger, and viewport-entry trigger.
  */
 
 const GLITCH_CHARS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ★●◆▲▼◀▶□■△▽◇◈';
@@ -17,6 +19,8 @@ interface GlitchTextProps {
   as?: 'span' | 'h1' | 'h2' | 'h3' | 'p' | 'div';
   glitchOnHover?: boolean;
   glitchOnMount?: boolean;
+  /** Trigger scramble when element first enters the viewport */
+  glitchOnView?: boolean;
   speed?: number;
 }
 
@@ -26,12 +30,16 @@ export default function GlitchText({
   as: Tag = 'span',
   glitchOnHover = true,
   glitchOnMount = false,
+  glitchOnView = false,
   speed = 30,
 }: GlitchTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const [isGlitching, setIsGlitching] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const frameRef = useRef(0);
+  const viewRef = useRef<HTMLDivElement>(null);
+  const hasGlitchedOnView = useRef(false);
+  const isInView = useInView(viewRef, { once: true, margin: '-30px' });
 
   const runGlitch = useCallback(() => {
     if (isGlitching) return;
@@ -68,6 +76,15 @@ export default function GlitchText({
     }
   }, [glitchOnMount, runGlitch]);
 
+  /* Trigger glitch on viewport entry */
+  useEffect(() => {
+    if (glitchOnView && isInView && !hasGlitchedOnView.current) {
+      hasGlitchedOnView.current = true;
+      const timer = setTimeout(runGlitch, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [glitchOnView, isInView, runGlitch]);
+
   useEffect(() => {
     setDisplayText(text);
   }, [text]);
@@ -82,6 +99,7 @@ export default function GlitchText({
 
   return (
     <MotionTag
+      ref={viewRef}
       className={`${className} ${isGlitching ? 'soviet-rgb-split' : ''}`}
       data-text={text}
       onMouseEnter={glitchOnHover ? runGlitch : undefined}

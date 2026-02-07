@@ -6,6 +6,7 @@ import ProjectCard from '@/components/ProjectCard';
 import { projects } from '@/lib/projects';
 import DadaTypography from '@/components/DadaTypography';
 import DadaScatterLayout from '@/components/DadaScatterLayout';
+import GlitchText from '@/components/GlitchText';
 
 /* ─────────────────────────────────────────────────────────── types       */
 type CategoryFilter = 'all' | 'mobile' | 'web' | 'game' | 'backend';
@@ -54,10 +55,12 @@ export default function ProjectsPage() {
 
       {/* project count */}
       <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-        {displayed.length}{' '}
-        {locale === 'zh-hk'
-          ? '個項目'
-          : displayed.length === 1 ? 'project' : 'projects'}
+        <GlitchText
+          text={`${displayed.length} ${locale === 'zh-hk' ? '個項目' : displayed.length === 1 ? 'project' : 'projects'}`}
+          glitchOnView
+          glitchOnHover={false}
+          speed={25}
+        />
       </p>
 
       {/* project grid — scattered entrance, then reorder into grid */}

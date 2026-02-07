@@ -443,6 +443,317 @@ function RotaryDial({ isDark, x, y }: { isDark: boolean; x: string; y: string })
   );
 }
 
+/* ── Reverse:1999 Hourglass / time motif ───────────────────────── */
+function HourglassSymbol({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(219, 91, 0, 0.25)' : 'rgba(219, 91, 0, 0.1)';
+  const accent = isDark ? 'rgba(143, 0, 0, 0.3)' : 'rgba(143, 0, 0, 0.12)';
+
+  return (
+    <motion.svg
+      className="absolute hidden md:block"
+      style={{ left: x, top: y }}
+      width="50"
+      height="70"
+      viewBox="0 0 50 70"
+      initial={{ opacity: 0, scale: 0.4, rotate: 10 }}
+      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      transition={{ duration: 1.2, delay: 1.8, ease: 'easeOut' }}
+    >
+      {/* Top bulb */}
+      <motion.path
+        d="M10,5 L40,5 L25,30 Z"
+        fill="none"
+        stroke={accent}
+        strokeWidth="0.8"
+        animate={{ rotate: [0, 0.5, -0.5, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '25px 35px' }}
+      />
+      {/* Bottom bulb */}
+      <motion.path
+        d="M10,65 L40,65 L25,40 Z"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="0.8"
+      />
+      {/* Frame top/bottom */}
+      <line x1="8" y1="5" x2="42" y2="5" stroke={accent} strokeWidth="1.2" />
+      <line x1="8" y1="65" x2="42" y2="65" stroke={accent} strokeWidth="1.2" />
+      {/* Sand falling — animated dot */}
+      <motion.circle
+        cx="25" cy="30" r="1"
+        fill={stroke}
+        animate={{ cy: [30, 42, 30] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeIn' }}
+      />
+    </motion.svg>
+  );
+}
+
+/* ── Reverse:1999-style film strip frame ──────────────────────── */
+function FilmStrip({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(143, 0, 0, 0.22)' : 'rgba(143, 0, 0, 0.09)';
+  const perfColor = isDark ? 'rgba(219, 91, 0, 0.18)' : 'rgba(219, 91, 0, 0.07)';
+
+  return (
+    <motion.svg
+      className="absolute hidden lg:block"
+      style={{ left: x, top: y }}
+      width="120"
+      height="40"
+      viewBox="0 0 120 40"
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 1.0, delay: 2.2, ease: 'easeOut' }}
+    >
+      {/* Film strip body */}
+      <rect x="0" y="5" width="120" height="30" fill="none" stroke={stroke} strokeWidth="0.6" rx="1" />
+      {/* Perforations — top row */}
+      {Array.from({ length: 10 }, (_, i) => (
+        <rect key={`t-${i}`} x={6 + i * 12} y="1" width="5" height="4" rx="0.5" fill={perfColor} />
+      ))}
+      {/* Perforations — bottom row */}
+      {Array.from({ length: 10 }, (_, i) => (
+        <rect key={`b-${i}`} x={6 + i * 12} y="35" width="5" height="4" rx="0.5" fill={perfColor} />
+      ))}
+      {/* Frame dividers */}
+      {[30, 60, 90].map((xPos) => (
+        <line key={xPos} x1={xPos} y1="5" x2={xPos} y2="35" stroke={stroke} strokeWidth="0.4" />
+      ))}
+      {/* Moving light sweep */}
+      <motion.rect
+        x="0" y="5" width="20" height="30" rx="1"
+        fill={isDark ? 'rgba(255, 165, 0, 0.04)' : 'rgba(219, 91, 0, 0.02)'}
+        animate={{ x: [0, 100, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      />
+    </motion.svg>
+  );
+}
+
+/* ── Esoteric all-seeing eye (Reverse:1999 / occult motif) ─────── */
+function EsotericEye({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(143, 0, 0, 0.28)' : 'rgba(143, 0, 0, 0.1)';
+  const accent = isDark ? 'rgba(219, 91, 0, 0.22)' : 'rgba(219, 91, 0, 0.08)';
+
+  return (
+    <motion.svg
+      className="absolute hidden md:block"
+      style={{ right: x, top: y }}
+      width="65"
+      height="45"
+      viewBox="0 0 65 45"
+      initial={{ opacity: 0, scale: 0.3 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 80, damping: 12, delay: 2.5 }}
+    >
+      {/* Eye outline — almond shape */}
+      <motion.path
+        d="M5,22 Q32,0 60,22 Q32,44 5,22 Z"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="0.8"
+        animate={{ scale: [1, 1.03, 1] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '32px 22px' }}
+      />
+      {/* Iris */}
+      <circle cx="32" cy="22" r="8" fill="none" stroke={accent} strokeWidth="0.6" />
+      {/* Pupil */}
+      <motion.circle
+        cx="32" cy="22" r="3"
+        fill={stroke}
+        animate={{ r: [3, 4, 3] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      {/* Radiating lines above */}
+      {[-20, -10, 0, 10, 20].map((angle) => {
+        const rad = ((angle - 90) * Math.PI) / 180;
+        return (
+          <line
+            key={angle}
+            x1={32 + 12 * Math.cos(rad)}
+            y1={22 + 12 * Math.sin(rad)}
+            x2={32 + 18 * Math.cos(rad)}
+            y2={22 + 18 * Math.sin(rad)}
+            stroke={accent}
+            strokeWidth="0.4"
+          />
+        );
+      })}
+    </motion.svg>
+  );
+}
+
+/* ── Tarot card frame (Reverse:1999 card motif) ────────────────── */
+function TarotFrame({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(143, 0, 0, 0.2)' : 'rgba(143, 0, 0, 0.08)';
+  const accent = isDark ? 'rgba(219, 91, 0, 0.18)' : 'rgba(219, 91, 0, 0.07)';
+  const innerFill = isDark ? 'rgba(227, 213, 193, 0.02)' : 'rgba(143, 0, 0, 0.015)';
+
+  return (
+    <motion.svg
+      className="absolute hidden lg:block"
+      style={{ left: x, bottom: y }}
+      width="55"
+      height="85"
+      viewBox="0 0 55 85"
+      initial={{ opacity: 0, y: 30, rotate: 5 }}
+      animate={{ opacity: 1, y: 0, rotate: -2 }}
+      transition={{ duration: 1.5, delay: 1.6, ease: 'easeOut' }}
+    >
+      {/* Outer card border */}
+      <rect x="2" y="2" width="51" height="81" rx="3" fill={innerFill} stroke={stroke} strokeWidth="0.8" />
+      {/* Inner decorative border */}
+      <rect x="6" y="6" width="43" height="73" rx="1.5" fill="none" stroke={accent} strokeWidth="0.4" />
+      {/* Corner ornaments */}
+      <circle cx="10" cy="10" r="2" fill="none" stroke={stroke} strokeWidth="0.4" />
+      <circle cx="45" cy="10" r="2" fill="none" stroke={stroke} strokeWidth="0.4" />
+      <circle cx="10" cy="75" r="2" fill="none" stroke={stroke} strokeWidth="0.4" />
+      <circle cx="45" cy="75" r="2" fill="none" stroke={stroke} strokeWidth="0.4" />
+      {/* Central diamond motif */}
+      <motion.polygon
+        points="27.5,22 38,42.5 27.5,63 17,42.5"
+        fill="none"
+        stroke={accent}
+        strokeWidth="0.5"
+        strokeDasharray="3 4"
+        animate={{ rotate: [0, 1, -1, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '27.5px 42.5px' }}
+      />
+      {/* Central star */}
+      <motion.circle
+        cx="27.5" cy="42.5" r="4"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="0.6"
+        animate={{ scale: [1, 1.15, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '27.5px 42.5px' }}
+      />
+    </motion.svg>
+  );
+}
+
+/* ── Pendulum / swing (Reverse:1999 time motif) ────────────────── */
+function Pendulum({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(143, 0, 0, 0.25)' : 'rgba(143, 0, 0, 0.1)';
+  const accent = isDark ? 'rgba(219, 91, 0, 0.22)' : 'rgba(219, 91, 0, 0.08)';
+
+  return (
+    <motion.svg
+      className="absolute hidden md:block"
+      style={{ right: x, bottom: y }}
+      width="40"
+      height="80"
+      viewBox="0 0 40 80"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1, delay: 2.0 }}
+    >
+      {/* Pivot point */}
+      <circle cx="20" cy="5" r="2" fill={stroke} />
+      {/* Swinging arm + bob */}
+      <motion.g
+        style={{ transformOrigin: '20px 5px' }}
+        animate={{ rotate: [-15, 15, -15] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <line x1="20" y1="5" x2="20" y2="62" stroke={stroke} strokeWidth="0.6" />
+        <circle cx="20" cy="65" r="6" fill="none" stroke={accent} strokeWidth="0.8" />
+        <circle cx="20" cy="65" r="2.5" fill={stroke} />
+      </motion.g>
+    </motion.svg>
+  );
+}
+
+/* ── Alchemical / esoteric circle with inscriptions ────────────── */
+function AlchemyCircle({ isDark, x, y }: { isDark: boolean; x: string; y: string }) {
+  const stroke = isDark ? 'rgba(143, 0, 0, 0.18)' : 'rgba(143, 0, 0, 0.07)';
+  const accent = isDark ? 'rgba(219, 91, 0, 0.15)' : 'rgba(219, 91, 0, 0.06)';
+
+  return (
+    <motion.svg
+      className="absolute hidden lg:block"
+      style={{ left: x, top: y }}
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      initial={{ opacity: 0, rotate: -45, scale: 0.5 }}
+      animate={{ opacity: 1, rotate: 0, scale: 1 }}
+      transition={{ duration: 1.8, delay: 2.4, ease: 'easeOut' }}
+    >
+      {/* Outer circle */}
+      <circle cx="50" cy="50" r="45" fill="none" stroke={stroke} strokeWidth="0.5" />
+      {/* Inner circle */}
+      <circle cx="50" cy="50" r="35" fill="none" stroke={accent} strokeWidth="0.4" strokeDasharray="5 3" />
+      {/* Inscribed triangle */}
+      <motion.polygon
+        points="50,10 87,68 13,68"
+        fill="none"
+        stroke={stroke}
+        strokeWidth="0.6"
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+        style={{ transformOrigin: '50px 50px' }}
+      />
+      {/* Inverted triangle */}
+      <motion.polygon
+        points="50,90 13,32 87,32"
+        fill="none"
+        stroke={accent}
+        strokeWidth="0.4"
+        strokeDasharray="4 3"
+        animate={{ rotate: [0, -360] }}
+        transition={{ duration: 100, repeat: Infinity, ease: 'linear' }}
+        style={{ transformOrigin: '50px 50px' }}
+      />
+      {/* Centre point */}
+      <circle cx="50" cy="50" r="2" fill={stroke} />
+      {/* Small orbiting dot */}
+      <motion.circle
+        cx="50" cy="12" r="1.5"
+        fill={accent}
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        style={{ transformOrigin: '50px 50px' }}
+      />
+    </motion.svg>
+  );
+}
+
+/* ── Musical note silhouette (Seine Chronicle reference) ──────── */
+function MusicalNote({ isDark, x, y, size }: { isDark: boolean; x: string; y: string; size: number }) {
+  const fill = isDark ? 'rgba(143, 0, 0, 0.18)' : 'rgba(143, 0, 0, 0.07)';
+
+  return (
+    <motion.svg
+      className="absolute hidden md:block"
+      style={{ left: x, top: y }}
+      width={size}
+      height={size * 1.4}
+      viewBox="0 0 30 42"
+      initial={{ opacity: 0, y: 15, rotate: -10 }}
+      animate={{ opacity: 1, y: 0, rotate: 5 }}
+      transition={{ duration: 1.2, delay: 2.6, ease: 'easeOut' }}
+    >
+      <motion.g
+        animate={{ y: [0, -3, 0], rotate: [5, 3, 5] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ transformOrigin: '15px 21px' }}
+      >
+        {/* Note head */}
+        <ellipse cx="10" cy="34" rx="6" ry="4.5" fill={fill} transform="rotate(-15 10 34)" />
+        {/* Stem */}
+        <line x1="16" y1="31" x2="16" y2="5" stroke={fill} strokeWidth="1.2" />
+        {/* Flag */}
+        <path d="M16,5 Q24,10 18,18" fill="none" stroke={fill} strokeWidth="1" />
+      </motion.g>
+    </motion.svg>
+  );
+}
+
 /* ── Mouse parallax hook ─────────────────────────────────────────── */
 function useMouseParallax(strength: number = 0.02) {
   const mouseX = useMotionValue(0);
@@ -736,6 +1047,28 @@ export default function DadaCollage() {
           style={{ transformOrigin: '30px 35px' }}
         />
       </motion.svg>
+
+      {/* ── Reverse:1999-style hourglass ─────────────────────────── */}
+      <HourglassSymbol isDark={isDark} x="72%" y="18%" />
+
+      {/* ── Film strip frame ──────────────────────────────────────── */}
+      <FilmStrip isDark={isDark} x="12%" y="82%" />
+
+      {/* ── Esoteric all-seeing eye ───────────────────────────────── */}
+      <EsotericEye isDark={isDark} x="5%" y="38%" />
+
+      {/* ── Tarot card frame ──────────────────────────────────────── */}
+      <TarotFrame isDark={isDark} x="78%" y="120px" />
+
+      {/* ── Pendulum ──────────────────────────────────────────────── */}
+      <Pendulum isDark={isDark} x="18%" y="180px" />
+
+      {/* ── Alchemy circle ────────────────────────────────────────── */}
+      <AlchemyCircle isDark={isDark} x="38%" y="75%" />
+
+      {/* ── Musical notes (Seine Chronicle) ───────────────────────── */}
+      <MusicalNote isDark={isDark} x="88%" y="28%" size={28} />
+      <MusicalNote isDark={isDark} x="22%" y="55%" size={22} />
 
       {/* ── Scattered dot pattern (Seine Chronicle style) ──────────── */}
       <motion.svg

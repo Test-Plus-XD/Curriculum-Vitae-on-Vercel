@@ -44,14 +44,23 @@ export default function DadaScatterLayout({
 }: DadaScatterLayoutProps) {
   const childArray = Children.toArray(children);
 
-  /* Generate deterministic scatter offsets for each child */
+  /* Generate deterministic scatter offsets for each child —
+     wide displacement for a truly fragmented Dada collage start */
   const scatterData = useMemo(() => {
-    return childArray.map((_, i) => ({
-      x: (seededRandom(i * 3 + 1) - 0.5) * 120 * intensity,
-      y: (seededRandom(i * 3 + 2) - 0.5) * 80 * intensity,
-      rotate: (seededRandom(i * 3 + 3) - 0.5) * 18 * intensity,
-      scale: 0.85 + seededRandom(i * 7) * 0.1,
-    }));
+    return childArray.map((_, i) => {
+      const rx = seededRandom(i * 3 + 1);
+      const ry = seededRandom(i * 3 + 2);
+      const rr = seededRandom(i * 3 + 3);
+      const rs = seededRandom(i * 7);
+      const rk = seededRandom(i * 5 + 11);
+      return {
+        x: (rx - 0.5) * 320 * intensity,
+        y: (ry - 0.5) * 220 * intensity,
+        rotate: (rr - 0.5) * 50 * intensity,
+        scale: 0.55 + rs * 0.25,
+        skewX: (rk - 0.5) * 18 * intensity,
+      };
+    });
   }, [childArray.length, intensity]);
 
   const containerVariants: Variants = {
@@ -85,7 +94,8 @@ export default function DadaScatterLayout({
             y: scatter.y,
             rotate: scatter.rotate,
             scale: scatter.scale,
-            filter: 'blur(3px)',
+            skewX: scatter.skewX,
+            filter: 'blur(6px)',
           },
           visible: {
             opacity: 1,
@@ -93,12 +103,13 @@ export default function DadaScatterLayout({
             y: 0,
             rotate: 0,
             scale: 1,
+            skewX: 0,
             filter: 'blur(0px)',
             transition: {
               type: 'spring',
-              stiffness: 120,
-              damping: 14,
-              mass: 0.6 + (i % 3) * 0.15,
+              stiffness: 100,
+              damping: 13,
+              mass: 0.5 + (i % 4) * 0.15,
             },
           },
         };
