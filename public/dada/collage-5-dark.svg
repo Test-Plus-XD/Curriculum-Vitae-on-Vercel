@@ -1,0 +1,9 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" fill="#1b1918"/>
+  <polygon points="24,32 110,54 86,132 16,110" fill="#8f0000" opacity="0.22"/>
+  <rect x="120" y="96" width="96" height="70" fill="#e3d5c1" opacity="0.06" transform="rotate(-5 168 132)"/>
+  <circle cx="70" cy="174" r="24" fill="#db5b00" opacity="0.25"/>
+  <path d="M34 206 H210" stroke="#e3d5c1" stroke-width="1.5" stroke-dasharray="5 7" opacity="0.25"/>
+  <text x="38" y="74" font-family="serif" font-size="14" fill="#e3d5c1" opacity="0.4">LUCID</text>
+  <text x="132" y="142" font-family="serif" font-size="16" fill="#e3d5c1" opacity="0.45">SCAPE</text>
+</svg>

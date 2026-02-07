@@ -1,0 +1,9 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" fill="#1a1917"/>
+  <rect x="20" y="28" width="88" height="140" fill="#e3d5c1" opacity="0.05"/>
+  <rect x="120" y="46" width="90" height="56" fill="#8f0000" opacity="0.22" transform="rotate(6 165 74)"/>
+  <circle cx="186" cy="164" r="30" fill="#db5b00" opacity="0.22"/>
+  <path d="M22 198 L216 150" stroke="#8f0000" stroke-width="2" opacity="0.45"/>
+  <text x="34" y="74" font-family="serif" font-size="16" fill="#e3d5c1" opacity="0.45">UTTU</text>
+  <text x="132" y="94" font-family="serif" font-size="14" fill="#e3d5c1" opacity="0.4">STAGE</text>
+</svg>

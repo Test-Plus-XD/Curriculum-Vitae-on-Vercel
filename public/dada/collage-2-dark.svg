@@ -1,0 +1,9 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" fill="#1c1a18"/>
+  <rect x="28" y="30" width="72" height="110" fill="#e3d5c1" opacity="0.06"/>
+  <polygon points="130,36 210,58 186,136 120,114" fill="#8f0000" opacity="0.22"/>
+  <circle cx="70" cy="176" r="28" fill="#db5b00" opacity="0.25"/>
+  <line x1="20" y1="210" x2="220" y2="150" stroke="#8f0000" stroke-width="2" opacity="0.5"/>
+  <text x="120" y="96" font-family="serif" font-size="18" fill="#e3d5c1" opacity="0.5">MERZ</text>
+  <text x="40" y="68" font-family="serif" font-size="14" fill="#e3d5c1" opacity="0.4">№ 391</text>
+</svg>

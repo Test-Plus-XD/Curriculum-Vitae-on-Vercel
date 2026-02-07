@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, useReducedMotion, useInView } from 'framer-motion';
 
 /**
@@ -8,10 +8,11 @@ import { motion, useReducedMotion, useInView } from 'framer-motion';
  * Reverse:1999, Dada movement typography, and David Carson's design.
  *
  * Behaviour:
- * 1. Characters start scattered on page load / viewport entry.
- * 2. After one frame (~10 ms) they realign with a smooth spring transition.
+ * 1. Characters start scattered on page content load.
+ * 2. Immediately realign to readable positions with a smooth spring
+ *    transition. A failsafe re-fires after 2 rAF frames (~10 ms).
  * 3. On mouse hover they scatter again with random offsets.
- * 4. When the mouse leaves they realign again.
+ * 4. When the mouse leaves they realign again (same smooth transition).
  *
  * Suitable for all titles on education/projects pages.
  */
@@ -56,6 +57,36 @@ function generateDisplacements(
   }));
 }
 
+/**
+ * Schedule alignment after 2 rAF frames with a setTimeout failsafe.
+ * Returns a cleanup function that cancels both.
+ */
+function scheduleAlign(callback: () => void): () => void {
+  let raf1 = 0;
+  let raf2 = 0;
+  let timeout = 0;
+
+  // Primary: wait 2 animation frames so the browser has painted the
+  // scattered state before we transition to aligned.
+  raf1 = requestAnimationFrame(() => {
+    raf2 = requestAnimationFrame(() => {
+      callback();
+    });
+  });
+
+  // Failsafe: if rAF is delayed (background tab, slow paint) fire
+  // after 10 ms anyway so the text never stays scattered.
+  timeout = window.setTimeout(() => {
+    callback();
+  }, 10);
+
+  return () => {
+    cancelAnimationFrame(raf1);
+    cancelAnimationFrame(raf2);
+    clearTimeout(timeout);
+  };
+}
+
 export default function DadaTypography({
   text,
   className = '',
@@ -70,7 +101,7 @@ export default function DadaTypography({
   const prefersReduced = useReducedMotion();
   const hasAligned = useRef(false);
   const isInView = useInView(containerRef, { once: true, margin: '-40px' });
-  const settleTimeout = useRef<NodeJS.Timeout | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
   const scatterSeed = useRef(42);
 
   // Displacements use a ref-based seed so hover re-scatter gets new random values
@@ -81,7 +112,7 @@ export default function DadaTypography({
   useEffect(() => {
     setMounted(true);
     return () => {
-      if (settleTimeout.current) clearTimeout(settleTimeout.current);
+      cleanupRef.current?.();
     };
   }, []);
 
@@ -91,15 +122,17 @@ export default function DadaTypography({
   }, [text, intensity]);
 
   // ── Initial alignment logic ──────────────────────────────────────
+  // Scatter is the initial state. As soon as we mount, schedule alignment
+  // after 2 rAF frames so the browser has painted the scattered position
+  // and Framer Motion can animate the transition smoothly.
   useEffect(() => {
     if (prefersReduced) {
       setIsScattered(false);
       return;
     }
-    // When NOT scatterOnView, scatter on mount then align after a frame
     if (!scatterOnView) {
-      if (settleTimeout.current) clearTimeout(settleTimeout.current);
-      settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
+      cleanupRef.current?.();
+      cleanupRef.current = scheduleAlign(() => setIsScattered(false));
     }
   }, [prefersReduced, scatterOnView]);
 
@@ -108,13 +141,16 @@ export default function DadaTypography({
     if (prefersReduced) return;
     if (scatterOnView && isInView && !hasAligned.current) {
       hasAligned.current = true;
-      if (settleTimeout.current) clearTimeout(settleTimeout.current);
-      settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
+      cleanupRef.current?.();
+      cleanupRef.current = scheduleAlign(() => setIsScattered(false));
     }
   }, [scatterOnView, isInView, prefersReduced]);
 
   const handleMouseEnter = useCallback(() => {
     if (deconstructOnHover && !prefersReduced) {
+      // Cancel any pending alignment so hover scatter isn't immediately undone
+      cleanupRef.current?.();
+      cleanupRef.current = null;
       // New random seed each hover for unique scatter
       scatterSeed.current = Date.now() % 2147483647;
       setDisplacements(generateDisplacements(text.length, intensity * 1.8, scatterSeed.current));
@@ -127,8 +163,8 @@ export default function DadaTypography({
       setIsScattered(false);
       return;
     }
-    if (settleTimeout.current) clearTimeout(settleTimeout.current);
-    settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
+    cleanupRef.current?.();
+    cleanupRef.current = scheduleAlign(() => setIsScattered(false));
   }, [prefersReduced]);
 
   if (!mounted) {

@@ -50,23 +50,28 @@ const STAMPS = [
 /* ── Dada image fragments — archival references ─────────────────── */
 const DADA_IMAGE_FRAGMENTS = [
   {
-    src: '/dada/collage-1.svg',
+    srcLight: '/dada/collage-1.svg',
+    srcDark: '/dada/collage-1-dark.svg',
     alt: 'Dada collage fragment with emblem',
   },
   {
-    src: '/dada/collage-2.svg',
+    srcLight: '/dada/collage-2.svg',
+    srcDark: '/dada/collage-2-dark.svg',
     alt: 'Dada photomontage fragment',
   },
   {
-    src: '/dada/collage-3.svg',
+    srcLight: '/dada/collage-3.svg',
+    srcDark: '/dada/collage-3-dark.svg',
     alt: 'Dada magazine cover fragment',
   },
   {
-    src: '/dada/collage-4.svg',
+    srcLight: '/dada/collage-4.svg',
+    srcDark: '/dada/collage-4-dark.svg',
     alt: 'UTTU dossier fragment',
   },
   {
-    src: '/dada/collage-5.svg',
+    srcLight: '/dada/collage-5.svg',
+    srcDark: '/dada/collage-5-dark.svg',
     alt: 'Lucidscape fragment',
   },
 ];
@@ -851,6 +856,7 @@ export default function DadaCollage() {
       const zIndex = 2 + Math.floor(Math.random() * 2);
       return { ...image, x: `${x}%`, y: `${y}%`, rotate, scale, zIndex };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!mounted) return null;
@@ -909,8 +915,8 @@ export default function DadaCollage() {
         {/* ── Dada image references — archival collage snippets ───── */}
         {imageLayouts.map((image, i) => (
           <motion.img
-            key={image.src}
-            src={image.src}
+            key={image.alt}
+            src={isDark ? image.srcDark : image.srcLight}
             alt={image.alt}
             loading="eager"
             decoding="async"
