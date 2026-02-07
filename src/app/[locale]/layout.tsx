@@ -11,6 +11,7 @@ import CosmicStarfield from '@/components/CosmicStarfield';
 import MorseCodeTicker from '@/components/MorseCodeTicker';
 import SovietTelemetry from '@/components/SovietTelemetry';
 import SovietPropagandaPoster from '@/components/SovietPropagandaPoster';
+import SovietCursorGlow from '@/components/SovietCursorGlow';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -51,6 +52,7 @@ export default async function LocaleLayout({
           <SovietPropagandaPoster />
           <RetroWave />
           <SovietParticles />
+          <SovietCursorGlow />
         </div>
       </ThemeProvider>
     </NextIntlClientProvider>

@@ -5,9 +5,10 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 /**
- * SovietBackground — Full-page background overlay with brutalist grid,
- * diagonal constructivist lines, film grain, and holographic stripe effects.
- * Enhanced opacity for greater visual impact.
+ * SovietBackground — Enhanced full-page background overlay with brutalist grid,
+ * diagonal constructivist lines, film grain, holographic stripes, data stream,
+ * and concentric radar rings. Inspired by Atomic Heart's architectural geometry
+ * and Arknights Lone Trail's blueprint schematics.
  * Works in both light and dark modes. Hidden on the landing CV page in light mode and print.
  */
 export default function SovietBackground() {
@@ -94,6 +95,34 @@ export default function SovietBackground() {
             backgroundImage:
               'linear-gradient(rgba(143, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(143, 0, 0, 0.1) 1px, transparent 1px)',
             backgroundSize: '80px 80px',
+          }}
+        />
+      )}
+
+      {/* Data stream overlay — vertical scrolling lines (Atomic Heart telemetry) */}
+      {isDark && (
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(180deg, transparent, transparent 8px, rgba(219, 91, 0, 0.008) 8px, rgba(219, 91, 0, 0.008) 9px)',
+            backgroundSize: '200px 200px',
+            animation: 'data-stream 20s linear infinite',
+          }}
+        />
+      )}
+
+      {/* Concentric radar rings — bottom-right corner accent */}
+      {isDark && (
+        <div
+          className="absolute -bottom-20 -right-20 w-[400px] h-[400px]"
+          style={{
+            background: `
+              radial-gradient(circle, transparent 78px, rgba(143, 0, 0, 0.05) 79px, transparent 80px),
+              radial-gradient(circle, transparent 118px, rgba(219, 91, 0, 0.04) 119px, transparent 120px),
+              radial-gradient(circle, transparent 158px, rgba(143, 0, 0, 0.03) 159px, transparent 160px),
+              radial-gradient(circle, transparent 198px, rgba(219, 91, 0, 0.02) 199px, transparent 200px)
+            `,
           }}
         />
       )}

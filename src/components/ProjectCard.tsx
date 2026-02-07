@@ -3,8 +3,10 @@
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Github, Clock, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { Project } from '@/lib/projects';
 import VideoEmbed from './VideoEmbed';
+import AnimatedCard from './AnimatedCard';
 
 /* --------------------------------------------------------- colour maps     */
 const catColour: Record<string, string> = {
@@ -28,146 +30,166 @@ const statusLabel: Record<string, { en: string; zh: string }> = {
 };
 
 /* --------------------------------------------------------------- component */
-interface Props { project: Project }
+interface Props { project: Project; index?: number }
 
-export default function ProjectCard({ project }: Props) {
+export default function ProjectCard({ project, index = 0 }: Props) {
   const locale = useLocale();
   const lang   = locale === 'zh-hk' ? 'zh' : 'en';
   const t      = useTranslations('projects');
 
   return (
-    <div className="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer">
-      {/* Soviet shimmer sweep on hover */}
-      <div className="soviet-shimmer" />
+    <AnimatedCard index={index} enableTilt enableSpotlight>
+      <div className="relative group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer soviet-scan-sweep">
+        {/* Soviet shimmer sweep on hover */}
+        <div className="soviet-shimmer" />
 
-      {/* ---- title + badges ---- */}
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          {/* Stretched link — covers entire card */}
-          <Link
-            href={`/${locale}/projects/${project.id}`}
-            className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
-          >
-            {project.title[lang]}
-          </Link>
-          {project.status === 'in-progress' && (
-            <span className="inline-flex items-center gap-1 mt-0.5 text-xs text-amber-600 dark:text-amber-400">
-              <Clock size={10} />
-              {t('inProgress')}
-            </span>
-          )}
-        </div>
+        {/* ---- title + badges ---- */}
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            {/* Stretched link — covers entire card */}
+            <Link
+              href={`/${locale}/projects/${project.id}`}
+              className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
+            >
+              {project.title[lang]}
+            </Link>
+            {project.status === 'in-progress' && (
+              <span className="inline-flex items-center gap-1 mt-0.5 text-xs text-amber-600 dark:text-amber-400">
+                <Clock size={10} />
+                {t('inProgress')}
+              </span>
+            )}
+          </div>
 
-        <div className="flex gap-1.5 flex-shrink-0 flex-wrap justify-end">
-          {project.categories.map((cat) => (
-            <span key={cat} className={`text-xs px-2 py-0.5 rounded-full ${catColour[cat]}`}>
-              {catLabel[cat][lang]}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ---- description ---- */}
-      <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-        {project.description[lang]}
-      </p>
-
-      {/* ---- platforms (PourRice only) ---- */}
-      {project.platforms && (
-        <div className="mt-4">
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-            {t('pourRicePlatforms')}
-          </p>
-          <div className="space-y-1.5">
-            {project.platforms.map((plat, i) => (
-              <div key={i} className="flex items-center justify-between text-sm">
-                <span className="text-slate-600 dark:text-slate-300">{plat.name[lang]}</span>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-xs px-1.5 py-0.5 rounded ${
-                      plat.status === 'complete'
-                        ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'
-                        : plat.status === 'in-progress'
-                        ? 'bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400'
-                        : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
-                    }`}
-                  >
-                    {statusLabel[plat.status][lang]}
-                  </span>
-                  {plat.repo && (
-                    <a href={plat.repo} target="_blank" rel="noopener noreferrer" className="relative z-10 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                      <Github size={13} />
-                    </a>
-                  )}
-                </div>
-              </div>
+          <div className="flex gap-1.5 flex-shrink-0 flex-wrap justify-end">
+            {project.categories.map((cat, i) => (
+              <motion.span
+                key={cat}
+                className={`text-xs px-2 py-0.5 rounded-full ${catColour[cat]}`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + i * 0.05, duration: 0.3 }}
+              >
+                {catLabel[cat][lang]}
+              </motion.span>
             ))}
           </div>
         </div>
-      )}
 
-      {/* ---- highlights (PourRice only) ---- */}
-      {project.highlights && (
-        <ul className="mt-3 space-y-1">
-          {project.highlights[lang].map((h, i) => (
-            <li key={i} className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1.5">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-              {h}
-            </li>
+        {/* ---- description ---- */}
+        <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          {project.description[lang]}
+        </p>
+
+        {/* ---- platforms (PourRice only) ---- */}
+        {project.platforms && (
+          <div className="mt-4">
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+              {t('pourRicePlatforms')}
+            </p>
+            <div className="space-y-1.5">
+              {project.platforms.map((plat, i) => (
+                <div key={i} className="flex items-center justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-300">{plat.name[lang]}</span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs px-1.5 py-0.5 rounded ${
+                        plat.status === 'complete'
+                          ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'
+                          : plat.status === 'in-progress'
+                          ? 'bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400'
+                          : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                      }`}
+                    >
+                      {statusLabel[plat.status][lang]}
+                    </span>
+                    {plat.repo && (
+                      <a href={plat.repo} target="_blank" rel="noopener noreferrer" className="relative z-10 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <Github size={13} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ---- highlights (PourRice only) ---- */}
+        {project.highlights && (
+          <ul className="mt-3 space-y-1">
+            {project.highlights[lang].map((h, i) => (
+              <li key={i} className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1.5">
+                <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                {h}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* ---- tech stack ---- */}
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {project.techStack.map((tech, i) => (
+            <motion.span
+              key={i}
+              className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded soviet-tech-tag"
+              whileHover={{
+                scale: 1.08,
+                transition: { duration: 0.15 },
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {tech}
+            </motion.span>
           ))}
-        </ul>
-      )}
+        </div>
 
-      {/* ---- tech stack ---- */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {project.techStack.map((tech, i) => (
-          <span key={i} className="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded soviet-tech-tag">
-            {tech}
-          </span>
-        ))}
-      </div>
+        {/* ---- course codes ---- */}
+        <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+          {project.courses.map((c, i) => (
+            <span key={i}>
+              {c.code}
+              {i < project.courses.length - 1 && ' · '}
+            </span>
+          ))}
+        </p>
 
-      {/* ---- course codes ---- */}
-      <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-        {project.courses.map((c, i) => (
-          <span key={i}>
-            {c.code}
-            {i < project.courses.length - 1 && ' · '}
-          </span>
-        ))}
-      </p>
-
-      {/* ---- actions row (interactive elements above stretched link) ---- */}
-      <div className="relative z-10 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
-          {t('viewProject')}
-          <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
-        </span>
-
-        {project.repo && (
-          <a
-            href={project.repo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        {/* ---- actions row (interactive elements above stretched link) ---- */}
+        <div className="relative z-10 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+          <motion.span
+            className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors"
+            whileHover={{ x: 3 }}
+            transition={{ duration: 0.2 }}
           >
-            <Github size={13} />
-            {t('viewRepo')}
-          </a>
-        )}
-        {!project.repo && !project.platforms && (
-          <span className="text-xs text-slate-400 dark:text-slate-500 italic">{t('noRepo')}</span>
-        )}
+            {t('viewProject')}
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
+          </motion.span>
 
-        {project.videos.slice(0, 2).map((v, i) => (
-          <VideoEmbed key={i} embedUrl={v.embedUrl} url={v.url} title={v.title[lang]} />
-        ))}
-        {project.videos.length > 2 && (
-          <span className="text-xs text-slate-400 dark:text-slate-500">
-            +{project.videos.length - 2} {locale === 'zh-hk' ? '更多' : 'more'}
-          </span>
-        )}
+          {project.repo && (
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors soviet-link"
+            >
+              <Github size={13} />
+              {t('viewRepo')}
+            </a>
+          )}
+          {!project.repo && !project.platforms && (
+            <span className="text-xs text-slate-400 dark:text-slate-500 italic">{t('noRepo')}</span>
+          )}
+
+          {project.videos.slice(0, 2).map((v, i) => (
+            <VideoEmbed key={i} embedUrl={v.embedUrl} url={v.url} title={v.title[lang]} />
+          ))}
+          {project.videos.length > 2 && (
+            <span className="text-xs text-slate-400 dark:text-slate-500">
+              +{project.videos.length - 2} {locale === 'zh-hk' ? '更多' : 'more'}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
+    </AnimatedCard>
   );
 }

@@ -25,6 +25,73 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   Text Selection — Soviet propaganda red highlight
+   ══════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: rgba(143, 0, 0, 0.35);
+  color: #ffa500;
+  text-shadow: 0 0 8px rgba(219, 91, 0, 0.6);
+}
+.dark ::selection {
+  background: rgba(219, 91, 0, 0.4);
+  color: #ffe0b2;
+  text-shadow: 0 0 12px rgba(255, 165, 0, 0.8), 0 0 24px rgba(143, 0, 0, 0.5);
+}
+::-moz-selection {
+  background: rgba(143, 0, 0, 0.35);
+  color: #ffa500;
+}
+.dark ::-moz-selection {
+  background: rgba(219, 91, 0, 0.4);
+  color: #ffe0b2;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Link Hover/Click Effects — Soviet industrial mechanical activation
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Soviet link underline scan effect */
+.soviet-link {
+  position: relative;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+.soviet-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, #8f0000, #db5b00, #ffa500);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px rgba(219, 91, 0, 0.4);
+}
+.soviet-link:hover::after {
+  width: 100%;
+}
+.soviet-link:hover {
+  text-shadow: 0 0 8px rgba(219, 91, 0, 0.3);
+}
+.soviet-link:active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+.soviet-link:active::after {
+  background: linear-gradient(90deg, #ffa500, #db5b00, #8f0000);
+  box-shadow: 0 0 12px rgba(255, 165, 0, 0.6);
+}
+
+/* Dark mode link glow enhancement */
+.dark .soviet-link:hover {
+  text-shadow: 0 0 12px rgba(219, 91, 0, 0.5), 0 0 24px rgba(143, 0, 0, 0.3);
+}
+.dark .soviet-link::after {
+  box-shadow: 0 0 8px rgba(219, 91, 0, 0.6), 0 0 16px rgba(143, 0, 0, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Soviet Retro-Futuristic Atmosphere — 1960s Space Age Constructivism
    ══════════════════════════════════════════════════════════════════════════ */
 
@@ -723,6 +790,181 @@
 @keyframes holo-stripe {
   0% { background-position: 0 0; }
   100% { background-position: 0 40px; }
+}
+
+@keyframes rgb-shift-red {
+  0% { transform: translate(-2px, 0); }
+  33% { transform: translate(2px, -1px); }
+  66% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes rgb-shift-gold {
+  0% { transform: translate(2px, 0); }
+  33% { transform: translate(-2px, 1px); }
+  66% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes scan-sweep-down {
+  0% { top: -5%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 105%; opacity: 0; }
+}
+
+@keyframes holo-border-spin {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes electromagnetic-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(219, 91, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(219, 91, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(219, 91, 0, 0); }
+}
+
+@keyframes data-stream {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 -200px; }
+}
+
+@keyframes chromatic-aberration {
+  0% { text-shadow: -1px 0 #8f0000, 1px 0 #ffa500; }
+  25% { text-shadow: 1px 0 #8f0000, -1px 0 #ffa500; }
+  50% { text-shadow: -1px 1px #8f0000, 1px -1px #ffa500; }
+  75% { text-shadow: 1px -1px #8f0000, -1px 1px #ffa500; }
+  100% { text-shadow: -1px 0 #8f0000, 1px 0 #ffa500; }
+}
+
+@keyframes stamp-in {
+  0% { transform: scale(3) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(0.95) rotate(0deg); opacity: 1; }
+  80% { transform: scale(1.02) rotate(0deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Enhanced CRT / Glitch — RGB split & scanline text effects
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* RGB channel split on glitch */
+.soviet-rgb-split {
+  position: relative;
+}
+.soviet-rgb-split::before,
+.soviet-rgb-split::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.soviet-rgb-split:hover::before {
+  color: #8f0000;
+  opacity: 0.7;
+  animation: rgb-shift-red 0.4s steps(3) infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+.soviet-rgb-split:hover::after {
+  color: #ffa500;
+  opacity: 0.7;
+  animation: rgb-shift-gold 0.4s steps(3) infinite;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+/* Magnetic hover — subtle pull towards cursor */
+.soviet-magnetic {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Enhanced scan line sweep — thicker, more visible */
+.soviet-scan-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.soviet-scan-sweep::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(180deg, transparent, rgba(219, 91, 0, 0.6), rgba(255, 165, 0, 0.3), transparent);
+  transition: none;
+  pointer-events: none;
+  opacity: 0;
+}
+.soviet-scan-sweep:hover::before {
+  opacity: 1;
+  animation: scan-sweep-down 1.2s ease-in-out infinite;
+}
+
+/* Holographic border — animated gradient border effect */
+.soviet-holo-border {
+  position: relative;
+  background-clip: padding-box;
+}
+.soviet-holo-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    #8f0000, #db5b00, #ffa500, #db5b00, #8f0000,
+    #db5b00, #ffa500, #db5b00, #8f0000
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: holo-border-spin 4s linear infinite;
+}
+.soviet-holo-border:hover::before {
+  opacity: 0.6;
+}
+.dark .soviet-holo-border:hover::before {
+  opacity: 0.8;
+}
+
+/* Typewriter cursor blink for telemetry/terminal elements */
+.soviet-cursor-blink::after {
+  content: '█';
+  animation: cursor-blink 0.8s step-end infinite;
+  color: #db5b00;
+  font-size: 0.8em;
+  margin-left: 2px;
+}
+
+/* Spotlight gradient that follows hover position (via CSS custom properties) */
+.soviet-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.soviet-spotlight::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(219, 91, 0, 0.15) 0%, transparent 70%);
+  transform: translate(var(--spotlight-x, -200px), var(--spotlight-y, -200px));
+  pointer-events: none;
+  transition: transform 0.1s ease;
+  z-index: 0;
+}
+.dark .soviet-spotlight::before {
+  background: radial-gradient(circle, rgba(219, 91, 0, 0.2) 0%, rgba(143, 0, 0, 0.1) 40%, transparent 70%);
 }
 
 /* ── Print CV button — Soviet styled action button ─────────────────── */
