@@ -104,9 +104,14 @@ export default function DadaTypography({
   const cleanupRef = useRef<(() => void) | null>(null);
   const scatterSeed = useRef(42);
 
+  // Constants for scatter intensity
+  const INITIAL_SCATTER_INTENSITY = 0.25; // 25% intensity for initial scatter
+  const HOVER_SCATTER_MULTIPLIER = 1.8; // 180% intensity for hover scatter
+
   // Displacements use a ref-based seed so hover re-scatter gets new random values
+  // Initial scatter uses reduced intensity for readability
   const [displacements, setDisplacements] = useState<CharDisplacement[]>(() =>
-    generateDisplacements(text.length, intensity, scatterSeed.current),
+    generateDisplacements(text.length, intensity * INITIAL_SCATTER_INTENSITY, scatterSeed.current),
   );
 
   useEffect(() => {
@@ -118,8 +123,8 @@ export default function DadaTypography({
 
   // Re-generate displacements when text changes
   useEffect(() => {
-    setDisplacements(generateDisplacements(text.length, intensity, scatterSeed.current));
-  }, [text, intensity]);
+    setDisplacements(generateDisplacements(text.length, intensity * INITIAL_SCATTER_INTENSITY, scatterSeed.current));
+  }, [text, intensity, INITIAL_SCATTER_INTENSITY]);
 
   // ── Initial alignment logic ──────────────────────────────────────
   // Scatter is the initial state. As soon as we mount, schedule alignment
@@ -153,10 +158,10 @@ export default function DadaTypography({
       cleanupRef.current = null;
       // New random seed each hover for unique scatter
       scatterSeed.current = Date.now() % 2147483647;
-      setDisplacements(generateDisplacements(text.length, intensity * 1.8, scatterSeed.current));
+      setDisplacements(generateDisplacements(text.length, intensity * HOVER_SCATTER_MULTIPLIER, scatterSeed.current));
       setIsScattered(true);
     }
-  }, [deconstructOnHover, prefersReduced, text.length, intensity]);
+  }, [deconstructOnHover, prefersReduced, text.length, intensity, HOVER_SCATTER_MULTIPLIER]);
 
   const handleMouseLeave = useCallback(() => {
     if (prefersReduced) {
