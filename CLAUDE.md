@@ -60,7 +60,9 @@ src/
 │   ├── CosmicStarfield.tsx       # 120 stars, 7 nebulae, 3 orbital rings, shooting stars
 │   ├── MorseCodeTicker.tsx       # Dual scrolling Morse code strips (top + bottom)
 │   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (lg+ screens)
-│   └── SovietPropagandaPoster.tsx # Constructivist geometric decorations
+│   ├── SovietPropagandaPoster.tsx # Constructivist geometric decorations
+│   ├── DadaCollage.tsx           # Floating Dada collage fragments, stamps, scattered text
+│   └── DadaTypography.tsx        # Deconstructed text with per-character displacement on hover
 ├── messages/
 │   ├── en.json                   # English translations
 │   └── zh-hk.json                # Traditional Chinese translations
@@ -196,6 +198,17 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - `.soviet-print-btn` — Soviet-styled action button with gradient background
 - Text selection — Soviet propaganda red/gold highlight with glow
 
+**Dada / Deconstructivist Effects** (Reverse:1999 inspired):
+- `.dada-torn-edge` — Clip-path simulating ripped/torn paper edges
+- `.dada-fragment` — Aged paper collage snippet with tilt + shadow
+- `.dada-stamp` / `.dada-stamp-rect` — Circular/rectangular ink stamp decorations
+- `.dada-scatter` — Rotated, displaced typographic fragments (positioned absolute)
+- `.dada-diagonal` — Constructivist/deconstructivist diagonal line divider via `::before`
+- `.dada-noise` — Heavy SVG grain overlay for collage texture areas
+- `.dada-redact` — Censorship/redaction bar over text via `::after`
+- `.dada-cutout` — Newspaper clipping style inline text (slightly rotated, bordered)
+- `.dada-tilt` — Slight chaotic rotation on hover (uses `--dada-hover-rotate` CSS var)
+
 **Atmospheric Components** (hidden on CV page in light mode):
 - `RetroWave` — Enlarged (440px) SVG mountain range with react-wavify animated waves, perspective grid, dual glow lines, stronger horizon glow
 - `SovietParticles` — 35 floating particles (stars, dots, diamonds, sickles, gears)
@@ -205,6 +218,8 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - `SovietTelemetry` — Side-panel mission control readout with fluctuating values (lg+ screens)
 - `SovietPropagandaPoster` — Enlarged corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
 - `SovietCursorGlow` — Mouse-following radial glow with spring physics (Atomic Heart polymer glove HUD)
+- `DadaCollage` — Floating Dada collage fragments (torn paper, diagonal slashes, ink stamps, scattered typographic text), inspired by Reverse:1999 / Tzara / Heartfield
+- `DadaTypography` — Per-character deconstructed text displacement on hover with spring physics (used on education/projects headings)
 
 **Interactive Components** (added in PR #7):
 - `GlitchText` — Cyrillic text scramble on hover, inspired by CRT displays and Atomic Heart telemetry
@@ -227,6 +242,7 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - 1960s Soviet space race imagery
 - Constructivist typography principles
 - Analog tech aesthetic (CRT, Morse code, telemetry, radar)
+- Dada/Deconstructivist accents: collage fragments, torn edges, scattered typography, ink stamps, slight tilts (Reverse:1999 / Tzara)
 - Interactive elements respond to mouse/hover/click
 
 ### General Styling

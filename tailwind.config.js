@@ -133,6 +133,27 @@ module.exports = {
           '75%': { textShadow: '1px -1px #8f0000, -1px 1px #ffa500' },
           '100%': { textShadow: '-1px 0 #8f0000, 1px 0 #ffa500' },
         },
+        /* ── Dada / Deconstructivist keyframes ──────────────────── */
+        'dada-drift': {
+          '0%, 100%': { transform: 'translate(0, 0) rotate(var(--dada-rotate, 0deg))' },
+          '25%': { transform: 'translate(3px, -2px) rotate(calc(var(--dada-rotate, 0deg) + 0.5deg))' },
+          '50%': { transform: 'translate(-2px, 3px) rotate(calc(var(--dada-rotate, 0deg) - 0.3deg))' },
+          '75%': { transform: 'translate(1px, -1px) rotate(calc(var(--dada-rotate, 0deg) + 0.2deg))' },
+        },
+        'dada-flicker': {
+          '0%, 100%': { opacity: 'var(--dada-opacity, 0.3)' },
+          '15%': { opacity: 'calc(var(--dada-opacity, 0.3) * 0.4)' },
+          '16%': { opacity: 'var(--dada-opacity, 0.3)' },
+          '45%': { opacity: 'var(--dada-opacity, 0.3)' },
+          '46%': { opacity: 'calc(var(--dada-opacity, 0.3) * 0.6)' },
+          '48%': { opacity: 'var(--dada-opacity, 0.3)' },
+          '78%': { opacity: 'calc(var(--dada-opacity, 0.3) * 0.7)' },
+          '80%': { opacity: 'var(--dada-opacity, 0.3)' },
+        },
+        'dada-tear-reveal': {
+          '0%': { clipPath: 'inset(0 100% 0 0)' },
+          '100%': { clipPath: 'inset(0 0 0 0)' },
+        },
       },
       animation: {
         'soviet-pulse': 'soviet-pulse 6s ease-in-out infinite',
@@ -158,6 +179,10 @@ module.exports = {
         'em-pulse': 'electromagnetic-pulse 2s ease-out infinite',
         'stamp-in': 'stamp-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards',
         'chromatic': 'chromatic-aberration 0.3s steps(4) 1',
+        /* ── Dada / Deconstructivist animations ───────────────── */
+        'dada-drift': 'dada-drift 12s ease-in-out infinite',
+        'dada-flicker': 'dada-flicker 6s step-end infinite',
+        'dada-tear': 'dada-tear-reveal 0.8s ease-out forwards',
       },
     },
   },
