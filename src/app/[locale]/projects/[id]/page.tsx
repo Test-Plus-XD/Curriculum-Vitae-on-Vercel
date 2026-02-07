@@ -162,7 +162,7 @@ export default async function ProjectDetailPage({
                                 {event.title[lang]}
                               </h3>
                               {event.description && (
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
                                   {event.description[lang]}
                                 </p>
                               )}
@@ -201,7 +201,7 @@ export default async function ProjectDetailPage({
         {/* Right: Info sidebar */}
         <div className="space-y-6">
           {/* Tech Stack */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+          <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
             <div className="soviet-shimmer" />
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
               {t('techStack')}
@@ -220,7 +220,7 @@ export default async function ProjectDetailPage({
 
           {/* Repositories */}
           {(project.repo || project.platforms?.some((p) => p.repo)) && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('viewRepo')}
@@ -231,7 +231,7 @@ export default async function ProjectDetailPage({
                     href={project.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     <Github size={16} />
                     <span className="truncate">{project.repo.replace('https://github.com/', '')}</span>
@@ -244,7 +244,7 @@ export default async function ProjectDetailPage({
                     href={plat.repo!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     <Github size={16} />
                     <span className="truncate">{plat.name[lang]}</span>
@@ -257,7 +257,7 @@ export default async function ProjectDetailPage({
 
           {/* Platform Components (PourRice only) */}
           {project.platforms && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('pourRicePlatforms')}
@@ -302,7 +302,7 @@ export default async function ProjectDetailPage({
 
           {/* All Videos */}
           {project.videos.length > 0 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 glow-card">
+            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
               <div className="soviet-shimmer" />
               <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
                 {t('videos')} ({project.videos.length})
@@ -314,11 +314,11 @@ export default async function ProjectDetailPage({
                     href={video.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                   >
                     <Play size={14} className="text-red-600 dark:text-red-400" />
                     <span className="truncate">{video.title[lang]}</span>
-                    <span className="text-xs text-slate-400 flex-shrink-0">{video.date}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0">{video.date}</span>
                   </a>
                 ))}
               </div>

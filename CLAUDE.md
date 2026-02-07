@@ -42,20 +42,24 @@ src/
 │   ├── layout.tsx                # Root layout with Speed Insights
 │   └── globals.css
 ├── components/
-│   ├── Header.tsx                # Nav (CV/Education/Projects) + toggles
-│   ├── Footer.tsx                # Contact links (7 platforms with neon accents)
-│   ├── ProjectCard.tsx           # Project display with glow effects
+│   ├── Header.tsx                # Nav with Framer Motion stagger + GlitchText links
+│   ├── Footer.tsx                # Contact links with stagger animations + neon glow
+│   ├── ProjectCard.tsx           # AnimatedCard-wrapped cards with scan sweep + tilt
+│   ├── AnimatedCard.tsx          # 3D tilt, spotlight tracking, staggered entrance
+│   ├── GlitchText.tsx            # Cyrillic text scramble on hover (CRT effect)
+│   ├── SovietCursorGlow.tsx      # Mouse-following radial glow (spring physics)
+│   ├── PrintButton.tsx           # Soviet-styled print CV action button
 │   ├── ThemeToggle.tsx           # Dark/light mode
 │   ├── LanguageToggle.tsx        # EN/繁體中文
 │   ├── ThemeProvider.tsx         # next-themes wrapper
 │   ├── VideoEmbed.tsx            # Legacy YouTube modal
 │   ├── InlineVideo.tsx           # YouTube embed (thumbnail → fullscreen iframe)
-│   ├── RetroWave.tsx             # Animated SVG mountain range + radar sweep
-│   ├── SovietParticles.tsx       # Floating Soviet-themed particles (stars, gears, sickles)
-│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain background overlay
-│   ├── CosmicStarfield.tsx       # Interactive parallax star field (mouse-responsive)
-│   ├── MorseCodeTicker.tsx       # Animated Morse code strip (Soviet space comms)
-│   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (mission control)
+│   ├── RetroWave.tsx             # Enlarged (440px) mountain range with react-wavify waves
+│   ├── SovietParticles.tsx       # 35 floating particles (stars, gears, sickles)
+│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain + data stream + radar rings
+│   ├── CosmicStarfield.tsx       # 120 stars, 7 nebulae, 3 orbital rings, shooting stars
+│   ├── MorseCodeTicker.tsx       # Dual scrolling Morse code strips (top + bottom)
+│   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (lg+ screens)
 │   └── SovietPropagandaPoster.tsx # Constructivist geometric decorations
 ├── messages/
 │   ├── en.json                   # English translations
@@ -177,19 +181,34 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - `.glow-heading` — Soviet red/orange text shadow with breathing animation
 - `.glow-card` — Angular geometric borders with constructivist corner brackets + shimmer
 - `.soviet-line` / `.soviet-line-animated` — Red-to-orange gradient accent lines
+- `.soviet-link` — Animated gradient underline scan on hover with glow
 - `.soviet-stat` / `.soviet-badge` / `.soviet-filter` — Themed UI elements
 - `.soviet-tech-tag` — Hover effects on tech stack tags
 - `.soviet-ripple` — Click ripple effect on interactive elements
 - `.soviet-glitch` / `.soviet-crt-hover` — CRT glitch effects on hover
+- `.soviet-scan-sweep` — Horizontal scan line sweep on hover
+- `.soviet-holo-scan` — Holographic scanner sweep on interactive elements
+- `.soviet-holo-border` — Animated conic gradient border on hover
+- `.soviet-rgb-split` — RGB channel split glitch on hover (requires `data-text`)
+- `.soviet-spotlight` — Radial glow following cursor position (CSS custom props)
+- `.soviet-magnetic` — Subtle pull towards cursor on hover
+- `.soviet-cursor-blink` — Typewriter cursor blink for terminal elements
+- `.soviet-print-btn` — Soviet-styled action button with gradient background
+- Text selection — Soviet propaganda red/gold highlight with glow
 
 **Atmospheric Components** (hidden on CV page in light mode):
-- `RetroWave` — Animated SVG mountain range with drifting peaks, radar sweep, horizon glow
-- `SovietParticles` — 25 floating particles (stars, dots, diamonds, sickles, gears)
-- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay
-- `CosmicStarfield` — 60 interactive stars with mouse parallax (3 depth layers)
-- `MorseCodeTicker` — Scrolling Morse code strip with Soviet space messages
-- `SovietTelemetry` — Side-panel mission control readout with fluctuating values (xl+ only)
-- `SovietPropagandaPoster` — Corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
+- `RetroWave` — Enlarged (440px) SVG mountain range with react-wavify animated waves, perspective grid, dual glow lines, stronger horizon glow
+- `SovietParticles` — 35 floating particles (stars, dots, diamonds, sickles, gears)
+- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay + holographic stripe overlay + data stream scrolling overlay + concentric radar rings
+- `CosmicStarfield` — 120 interactive stars (3 depth layers, 8× parallax), 7 pulsing nebulae, 3 cosmic orbital rings, cross-sparkle effects, 3 shooting stars
+- `MorseCodeTicker` — Dual scrolling Morse code strips (top + reversed bottom) with Soviet space messages
+- `SovietTelemetry` — Side-panel mission control readout with fluctuating values (lg+ screens)
+- `SovietPropagandaPoster` — Enlarged corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
+- `SovietCursorGlow` — Mouse-following radial glow with spring physics (Atomic Heart polymer glove HUD)
+
+**Interactive Components** (added in PR #7):
+- `GlitchText` — Cyrillic text scramble on hover, inspired by CRT displays and Atomic Heart telemetry
+- `AnimatedCard` — 3D tilt effect with spotlight tracking and staggered entrance animation (wraps ProjectCard)
 
 **Colour Palette**:
   - Soviet red: `#8f0000` (deep crimson)
@@ -240,6 +259,19 @@ npm run build
 - CV page excluded from light-mode effects (`.cv-page` class)
 - All atmospheric components use `usePathname()` to detect CV page
 - Print mode forces light theme with clean output
+
+### Framer Motion Animation System
+- **Header**: Staggered nav item entrance with blur-in, animated active indicator (`layoutId` spring)
+- **Footer**: Staggered contact link entrance, icon neon glow, `whileHover`/`whileTap` micro-interactions
+- **ProjectCard**: Wrapped in `AnimatedCard` for 3D tilt + spotlight; category badge entrance animations; tech tag scale interactions
+- **GlitchText**: Cyrillic character scramble effect on nav links (hover-triggered)
+- **SovietCursorGlow**: Global mouse-following radial glow with Framer Motion spring physics
+
+### Print Support
+- `PrintButton` component on CV landing page (Soviet-styled action button)
+- All retro effects, animations, shadows, and text-shadows disabled in `@media print`
+- Scanlines, corner brackets, and section-header accents hidden
+- Clean black/white output with neutral borders
 
 ## Notes
 - **British English** required (colour, centre, organisation, programme)
