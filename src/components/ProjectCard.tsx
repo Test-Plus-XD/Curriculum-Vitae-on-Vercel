@@ -80,7 +80,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
 
         {/* ---- description ---- */}
         <p className="mt-3 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-          <GlitchText text={project.description[lang]} glitchOnView glitchOnHover={false} speed={4} />
+          <GlitchText text={project.description[lang]} glitchOnView glitchOnHover={false} speed={1.3} />
         </p>
 
         {/* ---- platforms (PourRice only) ---- */}

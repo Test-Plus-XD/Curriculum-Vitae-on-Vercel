@@ -59,7 +59,7 @@ export default function ProjectsPage() {
           text={`${displayed.length} ${locale === 'zh-hk' ? '個項目' : displayed.length === 1 ? 'project' : 'projects'}`}
           glitchOnView
           glitchOnHover={false}
-          speed={8}
+          speed={2.7}
         />
       </p>
 

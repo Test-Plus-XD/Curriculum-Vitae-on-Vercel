@@ -41,46 +41,74 @@ export default function DadaTypography({
   deconstructOnHover = true,
   scatterOnView = false,
 }: DadaTypographyProps) {
-  const [isScattered, setIsScattered] = useState(scatterOnView);
+  const [isScattered, setIsScattered] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
   const hasAligned = useRef(false);
   const isInView = useInView(containerRef, { once: true, margin: '-40px' });
+  const settleTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    return () => {
+      if (settleTimeout.current) clearTimeout(settleTimeout.current);
+    };
   }, []);
+
+  useEffect(() => {
+    if (prefersReduced) {
+      setIsScattered(false);
+      return;
+    }
+    if (!scatterOnView) {
+      if (settleTimeout.current) clearTimeout(settleTimeout.current);
+      settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
+    }
+  }, [prefersReduced, scatterOnView]);
 
   /* Align characters on viewport entry when scatterOnView is enabled */
   useEffect(() => {
+    if (prefersReduced) return;
     if (scatterOnView && isInView && !hasAligned.current) {
       hasAligned.current = true;
-      const timer = setTimeout(() => setIsScattered(false), 120);
-      return () => clearTimeout(timer);
+      if (settleTimeout.current) clearTimeout(settleTimeout.current);
+      settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
     }
-  }, [scatterOnView, isInView]);
+  }, [scatterOnView, isInView, prefersReduced]);
 
   const displacements = useMemo((): CharDisplacement[] => {
+    const intensityBoost = isHovering ? 1.8 : 1;
+    const effectiveIntensity = intensity * intensityBoost;
     return text.split('').map((_, i) => {
       const seed = ((i + 1) * 7919) % 100;
       return {
-        x: ((seed % 11) - 5) * intensity * 3,
-        y: ((seed % 7) - 3) * intensity * 3.5,
-        rotate: ((seed % 13) - 6) * intensity * 6,
-        scale: 1 + ((seed % 5) - 2) * intensity * 0.08,
-        colorShift: ((seed % 9) - 4) * intensity * 10,
+        x: ((seed % 11) - 5) * effectiveIntensity * 3,
+        y: ((seed % 7) - 3) * effectiveIntensity * 3.5,
+        rotate: ((seed % 13) - 6) * effectiveIntensity * 6,
+        scale: 1 + ((seed % 5) - 2) * effectiveIntensity * 0.08,
+        colorShift: ((seed % 9) - 4) * effectiveIntensity * 10,
       };
     });
-  }, [text, intensity]);
+  }, [text, intensity, isHovering]);
 
   const handleMouseEnter = useCallback(() => {
-    if (deconstructOnHover && !prefersReduced) setIsScattered(true);
+    if (deconstructOnHover && !prefersReduced) {
+      setIsHovering(true);
+      setIsScattered(true);
+    }
   }, [deconstructOnHover, prefersReduced]);
 
   const handleMouseLeave = useCallback(() => {
-    setIsScattered(false);
-  }, []);
+    setIsHovering(false);
+    if (prefersReduced) {
+      setIsScattered(false);
+      return;
+    }
+    if (settleTimeout.current) clearTimeout(settleTimeout.current);
+    settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
+  }, [prefersReduced]);
 
   if (!mounted) {
     return <Tag className={className}>{text}</Tag>;
@@ -133,7 +161,7 @@ export default function DadaTypography({
           <motion.span
             key={i}
             className="inline-block origin-center"
-            initial={scatterOnView ? scatteredState : undefined}
+            initial={prefersReduced ? alignedState : scatteredState}
             animate={isScattered ? scatteredState : alignedState}
             transition={{
               type: 'spring',

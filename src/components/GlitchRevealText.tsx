@@ -23,6 +23,7 @@ export default function GlitchRevealText({
   speed = 8,
   glitchOnHover = true,
 }: GlitchRevealTextProps) {
+  const adjustedSpeed = Math.max(1, speed / 3);
   return (
     <GlitchText
       text={text}
@@ -31,7 +32,7 @@ export default function GlitchRevealText({
       glitchOnView
       glitchOnHover={glitchOnHover}
       glitchOnMount={false}
-      speed={speed}
+      speed={adjustedSpeed}
     />
   );
 }

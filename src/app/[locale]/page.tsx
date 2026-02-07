@@ -47,7 +47,7 @@ export default async function LandingPage({
       <header className="border-b-2 border-slate-800 dark:border-slate-200 pb-4 mb-6 print:pb-3 print:mb-4">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <h1 className="text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight print:text-2xl font-title font-light italic glow-heading">
+            <h1 className="text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight print:text-2xl font-title font-light italic glow-heading cv-name-drop">
               {t('placeholders.name')}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">

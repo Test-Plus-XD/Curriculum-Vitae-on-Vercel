@@ -1,0 +1,9 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" fill="#f2ede3"/>
+  <rect x="18" y="22" width="90" height="56" fill="#8f0000" opacity="0.15"/>
+  <rect x="56" y="110" width="120" height="64" fill="#db5b00" opacity="0.18" transform="rotate(-6 116 142)"/>
+  <circle cx="184" cy="64" r="26" fill="#1e1e1e" opacity="0.12"/>
+  <path d="M22 204 L214 204" stroke="#8f0000" stroke-width="3" stroke-dasharray="8 6" opacity="0.35"/>
+  <text x="26" y="64" font-family="serif" font-size="20" fill="#1f1f1f" opacity="0.6">DADA</text>
+  <text x="122" y="158" font-family="serif" font-size="16" fill="#1f1f1f" opacity="0.55">1916</text>
+</svg>
