@@ -7,8 +7,11 @@ import { motion, useReducedMotion, useInView } from 'framer-motion';
  * DadaTypography — Deconstructivist text treatment inspired by
  * Reverse:1999, Dada movement typography, and David Carson's design.
  *
- * Characters can start scattered and align on viewport entry (`scatterOnView`),
- * then re-scatter on hover with spring physics.
+ * Behaviour:
+ * 1. Characters start scattered on page load / viewport entry.
+ * 2. After one frame (~10 ms) they realign with a smooth spring transition.
+ * 3. On mouse hover they scatter again with random offsets.
+ * 4. When the mouse leaves they realign again.
  *
  * Suitable for all titles on education/projects pages.
  */
@@ -33,6 +36,26 @@ interface CharDisplacement {
   colorShift: number;
 }
 
+/** Generate a set of random displacements for each character. */
+function generateDisplacements(
+  length: number,
+  intensity: number,
+  seed: number,
+): CharDisplacement[] {
+  let s = seed;
+  const rand = () => {
+    s = (s * 16807 + 11) % 2147483647;
+    return (s / 2147483647) * 2 - 1; // -1 to 1
+  };
+  return Array.from({ length }, () => ({
+    x: rand() * intensity * 18,
+    y: rand() * intensity * 16,
+    rotate: rand() * intensity * 18,
+    scale: 1 + rand() * intensity * 0.1,
+    colorShift: rand() * intensity * 15,
+  }));
+}
+
 export default function DadaTypography({
   text,
   className = '',
@@ -42,13 +65,18 @@ export default function DadaTypography({
   scatterOnView = false,
 }: DadaTypographyProps) {
   const [isScattered, setIsScattered] = useState(true);
-  const [isHovering, setIsHovering] = useState(false);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
   const hasAligned = useRef(false);
   const isInView = useInView(containerRef, { once: true, margin: '-40px' });
   const settleTimeout = useRef<NodeJS.Timeout | null>(null);
+  const scatterSeed = useRef(42);
+
+  // Displacements use a ref-based seed so hover re-scatter gets new random values
+  const [displacements, setDisplacements] = useState<CharDisplacement[]>(() =>
+    generateDisplacements(text.length, intensity, scatterSeed.current),
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -57,18 +85,25 @@ export default function DadaTypography({
     };
   }, []);
 
+  // Re-generate displacements when text changes
+  useEffect(() => {
+    setDisplacements(generateDisplacements(text.length, intensity, scatterSeed.current));
+  }, [text, intensity]);
+
+  // ── Initial alignment logic ──────────────────────────────────────
   useEffect(() => {
     if (prefersReduced) {
       setIsScattered(false);
       return;
     }
+    // When NOT scatterOnView, scatter on mount then align after a frame
     if (!scatterOnView) {
       if (settleTimeout.current) clearTimeout(settleTimeout.current);
       settleTimeout.current = setTimeout(() => setIsScattered(false), 10);
     }
   }, [prefersReduced, scatterOnView]);
 
-  /* Align characters on viewport entry when scatterOnView is enabled */
+  // ── Align on viewport entry (scatterOnView mode) ────────────────
   useEffect(() => {
     if (prefersReduced) return;
     if (scatterOnView && isInView && !hasAligned.current) {
@@ -78,30 +113,16 @@ export default function DadaTypography({
     }
   }, [scatterOnView, isInView, prefersReduced]);
 
-  const displacements = useMemo((): CharDisplacement[] => {
-    const intensityBoost = isHovering ? 1.8 : 1;
-    const effectiveIntensity = intensity * intensityBoost;
-    return text.split('').map((_, i) => {
-      const seed = ((i + 1) * 7919) % 100;
-      return {
-        x: ((seed % 11) - 5) * effectiveIntensity * 3,
-        y: ((seed % 7) - 3) * effectiveIntensity * 3.5,
-        rotate: ((seed % 13) - 6) * effectiveIntensity * 6,
-        scale: 1 + ((seed % 5) - 2) * effectiveIntensity * 0.08,
-        colorShift: ((seed % 9) - 4) * effectiveIntensity * 10,
-      };
-    });
-  }, [text, intensity, isHovering]);
-
   const handleMouseEnter = useCallback(() => {
     if (deconstructOnHover && !prefersReduced) {
-      setIsHovering(true);
+      // New random seed each hover for unique scatter
+      scatterSeed.current = Date.now() % 2147483647;
+      setDisplacements(generateDisplacements(text.length, intensity * 1.8, scatterSeed.current));
       setIsScattered(true);
     }
-  }, [deconstructOnHover, prefersReduced]);
+  }, [deconstructOnHover, prefersReduced, text.length, intensity]);
 
   const handleMouseLeave = useCallback(() => {
-    setIsHovering(false);
     if (prefersReduced) {
       setIsScattered(false);
       return;
@@ -135,7 +156,7 @@ export default function DadaTypography({
           );
         }
 
-        const d = displacements[i];
+        const d = displacements[i] ?? { x: 0, y: 0, rotate: 0, scale: 1, colorShift: 0 };
 
         const scatteredState = {
           x: d.x,

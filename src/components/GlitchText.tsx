@@ -12,12 +12,12 @@ import { motion, useInView } from 'framer-motion';
  */
 
 const GLITCH_CHARS =
-  'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' +
-  'абвгдежзийклмнопрстуфхцчшщъыьэюя' +
-  'ЀЁЂЃЄЅІЇЈЉЊЋЌЎЏѢѲҖҢҪҜҞѪѴ' +
-  '★☭✶✷✸✹✺✪✦✧●◆▲▼◀▶□■△▽◇◈※‡†§¶' +
-  '⌬⌖⊕⊗⊘⊙⊚⊛⊜⟐⟁⎔⎕⏣⏢⏥' +
-  'Ω∆Σ∞≈≡∴∵⊿⋈⋉⟠⟡';
+  'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ' +
+  'ЁЂЄЅІЇЉЊЋЏ' +
+  '★☭✶✪●◆▲■△◇' +
+  '⌬⌖⊕⊗⊙⏣⎕' +
+  'ΩΣΔΞΨΛЖФЩ' +
+  'КОСМОССПУТНИКМИР';
 
 interface GlitchTextProps {
   text: string;
@@ -37,7 +37,7 @@ export default function GlitchText({
   glitchOnHover = true,
   glitchOnMount = false,
   glitchOnView = false,
-  speed = 30,
+  speed = 10,
 }: GlitchTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const [isGlitching, setIsGlitching] = useState(false);

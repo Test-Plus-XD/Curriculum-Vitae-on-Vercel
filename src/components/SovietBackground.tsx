@@ -70,7 +70,7 @@ export default function SovietBackground() {
         className="absolute inset-0"
         style={{
           background: isDark
-            ? 'radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.5) 100%)'
+            ? 'radial-gradient(ellipse at center, transparent 35%, rgba(10, 12, 18, 0.45) 100%)'
             : 'radial-gradient(ellipse at center, transparent 45%, rgba(143, 0, 0, 0.08) 100%)',
         }}
       />

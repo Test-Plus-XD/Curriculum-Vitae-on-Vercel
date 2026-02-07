@@ -829,6 +829,17 @@ export default function DadaCollage() {
   }, []);
 
   const fragments = useMemo(() => generateFragments(16, 42), []);
+
+  // Randomised positions for scattered typographic text fragments
+  const textPositions = useMemo(
+    () =>
+      DADA_FRAGMENTS.map(() => ({
+        left: 5 + Math.random() * 85,
+        top: 5 + Math.random() * 80,
+      })),
+    [],
+  );
+
   const imageLayouts = useMemo(() => {
     const count = 2 + Math.floor(Math.random() * 2);
     const shuffled = [...DADA_IMAGE_FRAGMENTS].sort(() => Math.random() - 0.5);
@@ -901,7 +912,7 @@ export default function DadaCollage() {
             key={image.src}
             src={image.src}
             alt={image.alt}
-            loading="lazy"
+            loading="eager"
             decoding="async"
             className="dada-image-fragment hidden lg:block"
             style={{
@@ -932,8 +943,8 @@ export default function DadaCollage() {
             key={`text-${i}`}
             className={`dada-scatter ${frag.size} font-title`}
             style={{
-              left: `${8 + (i * 7.2) % 85}%`,
-              top: `${12 + ((i * 13.7 + 5) % 75)}%`,
+              left: `${textPositions[i].left}%`,
+              top: `${textPositions[i].top}%`,
               color: isDark
                 ? i % 3 === 0 ? 'rgba(143, 0, 0, 0.28)' : 'rgba(219, 91, 0, 0.22)'
                 : i % 3 === 0 ? 'rgba(143, 0, 0, 0.12)' : 'rgba(219, 91, 0, 0.08)',

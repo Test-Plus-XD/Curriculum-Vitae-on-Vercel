@@ -13,6 +13,7 @@
     --soviet-gold: #ffa500;
     --soviet-beige: #e3d5c1;
     --soviet-warm-bg: #f5efe6;
+    --soviet-dark-bg: #141821;
   }
 
   /* ── Hide scrollbars globally (content remains scrollable) ─────── */
@@ -109,31 +110,40 @@
 
 /* Brutalist grid + diagonal constructivist lines — dark mode body background */
 .dark body {
-  background-color: #1a1a1a;
+  background-color: #141821;
   background-image:
+    /* Starry night micro-dots — scattered radial dots */
+    radial-gradient(1px 1px at 15% 25%, rgba(255, 200, 120, 0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 42% 68%, rgba(200, 180, 160, 0.14) 50%, transparent 50%),
+    radial-gradient(1.2px 1.2px at 78% 12%, rgba(255, 165, 0, 0.16) 50%, transparent 50%),
+    radial-gradient(0.8px 0.8px at 62% 85%, rgba(180, 160, 140, 0.12) 50%, transparent 50%),
+    radial-gradient(1px 1px at 28% 52%, rgba(219, 91, 0, 0.1) 50%, transparent 50%),
+    radial-gradient(0.6px 0.6px at 88% 38%, rgba(200, 190, 170, 0.12) 50%, transparent 50%),
+    radial-gradient(1px 1px at 5% 72%, rgba(255, 200, 120, 0.1) 50%, transparent 50%),
+    radial-gradient(0.8px 0.8px at 55% 42%, rgba(180, 170, 150, 0.08) 50%, transparent 50%),
     /* Brutalist architectural grid (red) — pulsing via animation */
-    linear-gradient(rgba(143, 0, 0, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 0, 0, 0.18) 1px, transparent 1px),
+    linear-gradient(rgba(143, 0, 0, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 0, 0, 0.14) 1px, transparent 1px),
     /* Diagonal constructivist lines (orange) */
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 80px,
-      rgba(219, 91, 0, 0.09) 80px,
-      rgba(219, 91, 0, 0.09) 81px
+      rgba(219, 91, 0, 0.07) 80px,
+      rgba(219, 91, 0, 0.07) 81px
     ),
     /* Counter-diagonal for cross-hatch */
     repeating-linear-gradient(
       -45deg,
       transparent,
       transparent 120px,
-      rgba(143, 0, 0, 0.06) 120px,
-      rgba(143, 0, 0, 0.06) 121px
+      rgba(143, 0, 0, 0.05) 120px,
+      rgba(143, 0, 0, 0.05) 121px
     ),
     /* Film grain texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
-  background-size: 40px 40px, 40px 40px, auto, auto, auto;
-  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 200px 200px, 300px 300px, 250px 250px, 180px 180px, 220px 220px, 280px 280px, 160px 160px, 240px 240px, 40px 40px, 40px 40px, auto, auto, auto;
+  background-position: 0 0, 50px 30px, 100px 80px, 30px 120px, 150px 50px, 80px 180px, 120px 10px, 200px 100px, 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -145,7 +155,7 @@
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.5) 100%);
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(10, 12, 18, 0.45) 100%);
   pointer-events: none;
   z-index: 998;
 }
