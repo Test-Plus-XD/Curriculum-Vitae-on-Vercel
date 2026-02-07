@@ -27,6 +27,8 @@ interface DadaTypographyProps {
   deconstructOnHover?: boolean;
   /** Start scattered and align when entering viewport (default false) */
   scatterOnView?: boolean;
+  /** Enable RGB channel separation for chromatic aberration effect (default false) */
+  colorShift?: boolean;
 }
 
 interface CharDisplacement {
@@ -35,6 +37,8 @@ interface CharDisplacement {
   rotate: number;
   scale: number;
   colorShift: number;
+  rotateX: number;
+  rotateY: number;
 }
 
 /** Generate a set of random displacements for each character. */
@@ -54,6 +58,8 @@ function generateDisplacements(
     rotate: rand() * intensity * 18,
     scale: 1 + rand() * intensity * 0.1,
     colorShift: rand() * intensity * 15,
+    rotateX: rand() * intensity * 8, // Subtle perspective transform
+    rotateY: rand() * intensity * 8, // Subtle perspective transform
   }));
 }
 
@@ -94,6 +100,7 @@ export default function DadaTypography({
   intensity = 0.7,
   deconstructOnHover = true,
   scatterOnView = false,
+  colorShift = false,
 }: DadaTypographyProps) {
   const [isScattered, setIsScattered] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -104,9 +111,9 @@ export default function DadaTypography({
   const cleanupRef = useRef<(() => void) | null>(null);
   const scatterSeed = useRef(42);
 
-  // Constants for scatter intensity
-  const INITIAL_SCATTER_INTENSITY = 0.25; // 25% intensity for initial scatter
-  const HOVER_SCATTER_MULTIPLIER = 1.8; // 180% intensity for hover scatter
+  // Constants for scatter intensity - updated per requirements
+  const INITIAL_SCATTER_INTENSITY = 0.1; // Decreased from 0.25 to 0.1
+  const HOVER_SCATTER_MULTIPLIER = 2.2; // Increased from 1.8 to 2.2
 
   // Displacements use a ref-based seed so hover re-scatter gets new random values
   // Initial scatter uses reduced intensity for readability
@@ -197,14 +204,27 @@ export default function DadaTypography({
           );
         }
 
-        const d = displacements[i] ?? { x: 0, y: 0, rotate: 0, scale: 1, colorShift: 0 };
+        const d = displacements[i] ?? { x: 0, y: 0, rotate: 0, scale: 1, colorShift: 0, rotateX: 0, rotateY: 0 };
+
+        // Limit initial scatter to maximum 2px shift
+        const maxInitialShift = 2;
+        const isInitialScatter = intensity * INITIAL_SCATTER_INTENSITY < 0.15;
+        const clampedX = isInitialScatter ? Math.max(-maxInitialShift, Math.min(maxInitialShift, d.x)) : d.x;
+        const clampedY = isInitialScatter ? Math.max(-maxInitialShift, Math.min(maxInitialShift, d.y)) : d.y;
+
+        // RGB channel separation for chromatic aberration effect
+        const rgbSeparation = colorShift && isScattered
+          ? `drop-shadow(-1px 0 0 rgba(255, 0, 0, 0.5)) drop-shadow(1px 0 0 rgba(0, 255, 255, 0.5))`
+          : '';
 
         const scatteredState = {
-          x: d.x,
-          y: d.y,
+          x: clampedX,
+          y: clampedY,
           rotate: d.rotate,
+          rotateX: d.rotateX,
+          rotateY: d.rotateY,
           scale: d.scale,
-          filter: `hue-rotate(${d.colorShift}deg)`,
+          filter: `hue-rotate(${d.colorShift}deg) ${rgbSeparation}`,
           textShadow: i % 3 === 0
             ? '-1px 0 rgba(143,0,0,0.4), 1px 0 rgba(255,165,0,0.3)'
             : '0 0 4px rgba(219,91,0,0.25)',
@@ -214,10 +234,17 @@ export default function DadaTypography({
           x: 0,
           y: 0,
           rotate: 0,
+          rotateX: 0,
+          rotateY: 0,
           scale: 1,
           filter: 'hue-rotate(0deg)',
           textShadow: '0 0 0px transparent',
         };
+
+        // Staggered reassembly with wave pattern (center-out)
+        const centerIndex = Math.floor(text.length / 2);
+        const distanceFromCenter = Math.abs(i - centerIndex);
+        const waveDelay = isScattered ? i * 0.02 : distanceFromCenter * 0.015;
 
         return (
           <motion.span
@@ -230,7 +257,7 @@ export default function DadaTypography({
               stiffness: isScattered ? 120 : 280,
               damping: isScattered ? 10 : 18,
               mass: 0.3 + (i % 3) * 0.1,
-              delay: isScattered ? i * 0.02 : i * 0.015,
+              delay: waveDelay,
             }}
             style={{
               display: 'inline-block',
