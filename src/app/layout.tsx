@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
-import { Noto_Serif_Display } from 'next/font/google';
+import { Noto_Serif_Display, Iansui } from 'next/font/google';
 
 /// Noto Serif Display font for elegant titles and headings
 /// Weight: 300 Light, Style: Italic
@@ -11,6 +11,14 @@ const notoSerifDisplay = Noto_Serif_Display({
   weight: ['300'],
   style: ['italic'],
   variable: '--font-title',
+  display: 'swap',
+});
+
+/// Iansui font for Traditional Chinese body text
+const iansui = Iansui({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-zh',
   display: 'swap',
 });
 
@@ -46,7 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className={`${notoSerifDisplay.variable} bg-[#f5efe6] dark:bg-[#1a1a1a] text-slate-800 dark:text-slate-100 transition-colors`}>
+      <body 
+        suppressHydrationWarning={true}
+        className={`${notoSerifDisplay.variable} ${iansui.variable} bg-[#f5efe6] dark:bg-[#1a1a1a] text-slate-800 dark:text-slate-100 transition-colors`}>
         {children}
         <SpeedInsights />
         <Analytics />

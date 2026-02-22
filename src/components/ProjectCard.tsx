@@ -41,7 +41,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
 
   return (
     <AnimatedCard index={index} enableTilt enableSpotlight>
-      <div className="relative group bg-white/90 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer soviet-scan-sweep">
+      <div className="relative group bg-white/90 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-all duration-200 glow-card hover:-translate-y-1 hover:shadow-lg shadow-sm dark:shadow-none dark:hover:shadow-slate-900/50 hover:border-slate-300 dark:hover:border-slate-600 cursor-pointer soviet-scan-sweep">
         {/* Soviet shimmer sweep on hover */}
         <div className="soviet-shimmer" />
 

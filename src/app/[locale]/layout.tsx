@@ -1,4 +1,4 @@
-﻿import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -13,6 +13,9 @@ import SovietTelemetry from '@/components/SovietTelemetry';
 import SovietPropagandaPoster from '@/components/SovietPropagandaPoster';
 import SovietCursorGlow from '@/components/SovietCursorGlow';
 import DadaCollage from '@/components/DadaCollage';
+import EnhancedBackground from '@/components/EnhancedBackground';
+import TemporalMotifs from '@/components/TemporalMotifs';
+import TimeRewindTransition from '@/components/TimeRewindTransition';
 
 const LOCALES = ['en', 'zh-hk'];
 
@@ -40,18 +43,22 @@ export default async function LocaleLayout({
           </div>
 
           <main className="relative z-10 flex-1">
-            {children}
+            <TimeRewindTransition>
+              {children}
+            </TimeRewindTransition>
           </main>
 
           <Footer />
 
           {/* Soviet retro-futuristic atmosphere layers */}
           <SovietBackground />
+          <EnhancedBackground />
           <CosmicStarfield />
           <MorseCodeTicker />
           <SovietTelemetry />
           <SovietPropagandaPoster />
           <DadaCollage />
+          <TemporalMotifs density="medium" />
           <RetroWave />
           <SovietParticles />
           <SovietCursorGlow />

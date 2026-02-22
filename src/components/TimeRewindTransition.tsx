@@ -6,69 +6,18 @@ import { usePageType } from '@/lib/aesthetics';
 
 /**
  * TimeRewindTransition — Page transition wrapper with time-rewind effect.
- * 
- * Creates a "time rewinding" animation when navigating between pages:
- * - Exit: Content scales down, fades out, and blurs
- * - Rewind: Scanline sweep moves upward (reverse direction)
- * - Enter: Content scales up from 0.95 with reverse blur clear
- * 
+ *
+ * Uses `mode="popLayout"` so old and new pages can overlap during transition,
+ * eliminating the double-click issue caused by `mode="wait"`.
+ * No blur on exit to keep navigation feeling snappy.
+ *
  * Inspired by Reverse:1999's temporal distortion aesthetic.
- * 
- * Features:
- * - Only activates on Enhanced pages (projects, education)
- * - CV landing page remains unaffected
- * - Respects prefers-reduced-motion preference
- * - Limited to 400ms duration for responsiveness
- * - Uses GPU-accelerated properties (transform, opacity, filter)
  */
 
 interface TimeRewindTransitionProps {
-    /** Content to wrap with transition effect */
     children: React.ReactNode;
-    /** Transition duration in milliseconds (default: 400ms) */
     duration?: number;
-    /** Whether transitions are enabled (default: true, disabled on CV page) */
     enabled?: boolean;
-}
-
-/**
- * Scanline sweep effect that moves upward during transition
- * Simulates a CRT screen rewinding
- */
-function ScanlineSweep({ isExiting }: { isExiting: boolean }) {
-    const prefersReduced = useReducedMotion();
-
-    // Don't render scanline if reduced motion is preferred
-    if (prefersReduced) {
-        return null;
-    }
-
-    return (
-        <motion.div
-            className="fixed inset-0 pointer-events-none z-[9999]"
-            initial={{ opacity: 0 }}
-            animate={{
-                opacity: isExiting ? 1 : 0,
-            }}
-            transition={{ duration: 0.2 }}
-        >
-            <motion.div
-                className="absolute left-0 right-0 h-1 bg-gradient-to-b from-transparent via-soviet-orange/40 to-transparent"
-                style={{
-                    boxShadow: '0 0 20px rgba(219, 91, 0, 0.6), 0 0 40px rgba(255, 165, 0, 0.3)',
-                    filter: 'blur(2px)',
-                }}
-                initial={{ top: '100%' }}
-                animate={{
-                    top: isExiting ? '-5%' : '100%',
-                }}
-                transition={{
-                    duration: 0.4,
-                    ease: 'easeInOut',
-                }}
-            />
-        </motion.div>
-    );
 }
 
 export default function TimeRewindTransition({
@@ -91,28 +40,25 @@ export default function TimeRewindTransition({
     // Convert duration from milliseconds to seconds for Framer Motion
     const durationInSeconds = duration / 1000;
 
-    // Rewind animation variants
+    // Rewind animation variants — no blur on exit for snappy navigation
     const rewindVariants: Variants = {
         initial: {
             opacity: 0,
-            scale: 0.95,
-            filter: 'blur(4px)',
+            scale: 0.97,
         },
         animate: {
             opacity: 1,
             scale: 1,
-            filter: 'blur(0px)',
             transition: {
                 duration: durationInSeconds,
-                ease: [0.4, 0, 0.2, 1], // cubic-bezier easing
+                ease: [0.4, 0, 0.2, 1],
             },
         },
         exit: {
             opacity: 0,
-            scale: 0.95,
-            filter: 'blur(4px)',
+            scale: 0.97,
             transition: {
-                duration: durationInSeconds,
+                duration: durationInSeconds * 0.6,
                 ease: [0.4, 0, 0.2, 1],
             },
         },
@@ -120,7 +66,7 @@ export default function TimeRewindTransition({
 
     return (
         <>
-            <AnimatePresence mode="wait" initial={false}>
+            <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                     key={pathname}
                     variants={rewindVariants}
@@ -128,17 +74,11 @@ export default function TimeRewindTransition({
                     animate="animate"
                     exit="exit"
                     style={{
-                        // Use GPU-accelerated properties
-                        willChange: 'transform, opacity, filter',
+                        willChange: 'transform, opacity',
                     }}
                 >
                     {children}
                 </motion.div>
-            </AnimatePresence>
-
-            {/* Scanline sweep effect during exit */}
-            <AnimatePresence>
-                {pathname && <ScanlineSweep key={`scanline-${pathname}`} isExiting={true} />}
             </AnimatePresence>
         </>
     );

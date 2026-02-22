@@ -45,6 +45,681 @@
   --animate-dada-tear: dada-tear-reveal 0.8s ease-out forwards;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   ROOT VARIABLES & BASE STYLES — Restored from pre-migration CSS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --font-en: 'LINE Seed JP';
+  --soviet-red: #8f0000;
+  --soviet-orange: #db5b00;
+  --soviet-gold: #ffa500;
+  --soviet-beige: #e3d5c1;
+  --soviet-warm-bg: #f5efe6;
+  --soviet-dark-bg: #141821;
+}
+
+/* ── Hide scrollbars globally (content remains scrollable) ─────── */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-x: hidden;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Locale-aware body fonts ──────────────────────── */
+.locale-en {
+  font-family: var(--font-en), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.locale-zh {
+  font-family: var(--font-zh), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Title font override — always Noto Serif Display ─── */
+.font-title {
+  font-family: 'Noto Serif Display', var(--font-title), serif !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Text Selection — Soviet propaganda red highlight
+   ══════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: rgba(143, 0, 0, 0.35);
+  color: #ffa500;
+  text-shadow: 0 0 8px rgba(219, 91, 0, 0.6);
+}
+.dark ::selection {
+  background: rgba(219, 91, 0, 0.4);
+  color: #ffe0b2;
+  text-shadow: 0 0 12px rgba(255, 165, 0, 0.8), 0 0 24px rgba(143, 0, 0, 0.5);
+}
+::-moz-selection {
+  background: rgba(143, 0, 0, 0.35);
+  color: #ffa500;
+}
+.dark ::-moz-selection {
+  background: rgba(219, 91, 0, 0.4);
+  color: #ffe0b2;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Link Hover/Click Effects — Soviet industrial mechanical activation
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.soviet-link {
+  position: relative;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+.soviet-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, #8f0000, #db5b00, #ffa500);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px rgba(219, 91, 0, 0.4);
+}
+.soviet-link:hover::after {
+  width: 100%;
+}
+.soviet-link:hover {
+  text-shadow: 0 0 8px rgba(219, 91, 0, 0.3);
+}
+.soviet-link:active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+.soviet-link:active::after {
+  background: linear-gradient(90deg, #ffa500, #db5b00, #8f0000);
+  box-shadow: 0 0 12px rgba(255, 165, 0, 0.6);
+}
+.dark .soviet-link:hover {
+  text-shadow: 0 0 12px rgba(219, 91, 0, 0.5), 0 0 24px rgba(143, 0, 0, 0.3);
+}
+.dark .soviet-link::after {
+  box-shadow: 0 0 8px rgba(219, 91, 0, 0.6), 0 0 16px rgba(143, 0, 0, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Soviet Retro-Futuristic Atmosphere — Dark mode body background
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark body {
+  background-color: #141821;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255, 200, 120, 0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 42% 68%, rgba(200, 180, 160, 0.14) 50%, transparent 50%),
+    radial-gradient(1.2px 1.2px at 78% 12%, rgba(255, 165, 0, 0.16) 50%, transparent 50%),
+    radial-gradient(0.8px 0.8px at 62% 85%, rgba(180, 160, 140, 0.12) 50%, transparent 50%),
+    radial-gradient(1px 1px at 28% 52%, rgba(219, 91, 0, 0.1) 50%, transparent 50%),
+    radial-gradient(0.6px 0.6px at 88% 38%, rgba(200, 190, 170, 0.12) 50%, transparent 50%),
+    radial-gradient(1px 1px at 5% 72%, rgba(255, 200, 120, 0.1) 50%, transparent 50%),
+    radial-gradient(0.8px 0.8px at 55% 42%, rgba(180, 170, 150, 0.08) 50%, transparent 50%),
+    linear-gradient(rgba(143, 0, 0, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 0, 0, 0.14) 1px, transparent 1px),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 80px,
+      rgba(219, 91, 0, 0.07) 80px,
+      rgba(219, 91, 0, 0.07) 81px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 120px,
+      rgba(143, 0, 0, 0.05) 120px,
+      rgba(143, 0, 0, 0.05) 121px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 200px 200px, 300px 300px, 250px 250px, 180px 180px, 220px 220px, 280px 280px, 160px 160px, 240px 240px, 40px 40px, 40px 40px, auto, auto, auto;
+  background-position: 0 0, 50px 30px, 100px 80px, 30px 120px, 150px 50px, 80px 180px, 120px 10px, 200px 100px, 0 0, 0 0, 0 0, 0 0, 0 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Vignette & Scanline overlays
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark .scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(10, 12, 18, 0.45) 100%);
+  pointer-events: none;
+  z-index: 998;
+}
+
+.dark .scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+  animation: flicker 8s step-end infinite;
+}
+
+:not(.dark) .scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(143, 0, 0, 0.015) 3px,
+    rgba(143, 0, 0, 0.015) 6px
+  );
+  pointer-events: none;
+  z-index: 999;
+  animation: flicker 12s step-end infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Heading glow — breathing animation
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark .glow-heading {
+  text-shadow:
+    0 0 20px rgba(143, 0, 0, 0.8),
+    0 0 40px rgba(219, 91, 0, 0.45),
+    0 0 80px rgba(143, 0, 0, 0.2),
+    0 0 120px rgba(219, 91, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+
+:not(.dark) :not(.cv-page) .glow-heading {
+  text-shadow:
+    0 0 8px rgba(143, 0, 0, 0.15),
+    0 0 20px rgba(219, 91, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  animation: glow-breathe-light 6s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Constructivist card (angular corners + reactive hover)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark .glow-card {
+  position: relative;
+  border-color: rgba(143, 0, 0, 0.35);
+  box-shadow:
+    0 0 12px rgba(143, 0, 0, 0.15),
+    0 0 30px rgba(143, 0, 0, 0.05),
+    inset 0 0 10px rgba(219, 91, 0, 0.06),
+    4px 4px 0 rgba(0, 0, 0, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.dark .glow-card::before,
+.dark .glow-card::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+.dark .glow-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid rgba(143, 0, 0, 0.5);
+  border-left: 2px solid rgba(143, 0, 0, 0.5);
+}
+.dark .glow-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid rgba(219, 91, 0, 0.4);
+  border-right: 2px solid rgba(219, 91, 0, 0.4);
+}
+
+.dark .glow-card:hover {
+  border-color: rgba(219, 91, 0, 0.7);
+  box-shadow:
+    0 0 30px rgba(143, 0, 0, 0.4),
+    0 0 60px rgba(219, 91, 0, 0.15),
+    0 0 90px rgba(143, 0, 0, 0.06),
+    inset 0 0 20px rgba(219, 91, 0, 0.1),
+    6px 6px 0 rgba(0, 0, 0, 0.3);
+}
+.dark .glow-card:hover::before {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(219, 91, 0, 0.9);
+  filter: drop-shadow(0 0 4px rgba(219, 91, 0, 0.4));
+}
+.dark .glow-card:hover::after {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(143, 0, 0, 0.9);
+  filter: drop-shadow(0 0 4px rgba(143, 0, 0, 0.4));
+}
+
+.dark .glow-card .soviet-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(219, 91, 0, 0.08) 42%,
+    rgba(255, 165, 0, 0.06) 47%,
+    rgba(143, 0, 0, 0.1) 50%,
+    rgba(255, 165, 0, 0.06) 53%,
+    rgba(219, 91, 0, 0.08) 58%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+.dark .glow-card:hover .soviet-shimmer {
+  opacity: 1;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Constructivist card (warm, aged-paper feel, non-CV pages)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:not(.dark) :not(.cv-page) .glow-card {
+  position: relative;
+  border-color: rgba(143, 0, 0, 0.18);
+  box-shadow:
+    0 0 8px rgba(143, 0, 0, 0.06),
+    inset 0 0 6px rgba(219, 91, 0, 0.03),
+    3px 3px 0 rgba(143, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+:not(.dark) :not(.cv-page) .glow-card::before,
+:not(.dark) :not(.cv-page) .glow-card::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+:not(.dark) :not(.cv-page) .glow-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid rgba(143, 0, 0, 0.2);
+  border-left: 2px solid rgba(143, 0, 0, 0.2);
+}
+:not(.dark) :not(.cv-page) .glow-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid rgba(219, 91, 0, 0.15);
+  border-right: 2px solid rgba(219, 91, 0, 0.15);
+}
+
+:not(.dark) :not(.cv-page) .glow-card:hover {
+  border-color: rgba(219, 91, 0, 0.35);
+  box-shadow:
+    0 0 16px rgba(143, 0, 0, 0.1),
+    0 0 30px rgba(219, 91, 0, 0.06),
+    inset 0 0 10px rgba(219, 91, 0, 0.04),
+    4px 4px 0 rgba(143, 0, 0, 0.1);
+}
+:not(.dark) :not(.cv-page) .glow-card:hover::before {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(219, 91, 0, 0.4);
+}
+:not(.dark) :not(.cv-page) .glow-card:hover::after {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(143, 0, 0, 0.35);
+}
+
+:not(.dark) :not(.cv-page) .glow-card .soviet-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(219, 91, 0, 0.03) 45%,
+    rgba(143, 0, 0, 0.04) 50%,
+    rgba(219, 91, 0, 0.03) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+:not(.dark) :not(.cv-page) .glow-card:hover .soviet-shimmer {
+  opacity: 1;
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* ── Soviet accent line (red-to-orange gradient) ─────────────────────── */
+.soviet-line {
+  background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
+}
+.soviet-line-animated {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, transparent, rgba(143,0,0,0.3), transparent);
+}
+.soviet-line-animated::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, #db5b00, #ffa500, transparent);
+  animation: slide-accent 4s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Section headers, badges, filters, stats, timeline
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark .soviet-section-header {
+  position: relative;
+  padding-left: 1rem;
+}
+.dark .soviet-section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #8f0000, #db5b00);
+}
+
+.dark .soviet-badge {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.2), rgba(219, 91, 0, 0.12));
+  border: 1px solid rgba(143, 0, 0, 0.4);
+  color: #e3d5c1;
+  box-shadow: 0 0 8px rgba(143, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+.dark .soviet-badge:hover {
+  box-shadow: 0 0 16px rgba(219, 91, 0, 0.3);
+  border-color: rgba(219, 91, 0, 0.6);
+}
+
+.geometric-accent {
+  position: relative;
+}
+.geometric-accent::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 14px 8px;
+  border-color: transparent transparent #db5b00 transparent;
+  opacity: 0.4;
+}
+
+.dark .soviet-star::before {
+  content: '\2605';
+  color: #8f0000;
+  opacity: 0.5;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+.dark .soviet-filter-active {
+  background: linear-gradient(135deg, #8f0000, #db5b00) !important;
+  color: #e3d5c1 !important;
+  border: 1px solid rgba(219, 91, 0, 0.6);
+  box-shadow: 0 0 16px rgba(143, 0, 0, 0.4), 0 0 32px rgba(219, 91, 0, 0.15), inset 0 0 6px rgba(255, 165, 0, 0.15);
+  text-shadow: 0 0 8px rgba(255, 165, 0, 0.3);
+  transition: all 0.25s ease;
+}
+.dark .soviet-filter {
+  border: 1px solid rgba(143, 0, 0, 0.25);
+  background: rgba(26, 26, 26, 0.8);
+  color: #8c8670;
+  transition: all 0.25s ease;
+}
+.dark .soviet-filter:hover {
+  border-color: rgba(219, 91, 0, 0.5);
+  color: #e3d5c1;
+  background: rgba(143, 0, 0, 0.12);
+  box-shadow: 0 0 12px rgba(143, 0, 0, 0.2);
+  text-shadow: 0 0 4px rgba(219, 91, 0, 0.3);
+}
+
+.dark .soviet-stat {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.1), rgba(26, 26, 26, 0.9));
+  border: 1px solid rgba(143, 0, 0, 0.3);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.dark .soviet-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
+}
+.dark .soviet-stat:hover {
+  border-color: rgba(219, 91, 0, 0.5);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3), 0 0 20px rgba(143, 0, 0, 0.15);
+  transform: translate(-1px, -1px);
+}
+
+.dark .soviet-timeline-line {
+  background: linear-gradient(180deg, #8f0000, #db5b00, transparent);
+}
+
+.soviet-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.soviet-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(219, 91, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s, opacity 0.5s;
+  opacity: 0;
+  pointer-events: none;
+}
+.soviet-ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0s;
+}
+
+.dark .soviet-tech-tag {
+  transition: all 0.2s ease;
+  cursor: default;
+  position: relative;
+}
+.dark .soviet-tech-tag:hover {
+  background: rgba(143, 0, 0, 0.18) !important;
+  border-color: rgba(219, 91, 0, 0.5);
+  color: #e3d5c1 !important;
+  box-shadow: 0 0 12px rgba(143, 0, 0, 0.25), 0 0 4px rgba(219, 91, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.soviet-holo-scan {
+  position: relative;
+  overflow: hidden;
+}
+.soviet-holo-scan::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(219, 91, 0, 0.08),
+    rgba(255, 165, 0, 0.12),
+    rgba(219, 91, 0, 0.08),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.soviet-holo-scan:hover::after {
+  left: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Soviet effects for non-CV pages
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:not(.dark) :not(.cv-page) .soviet-section-header {
+  position: relative;
+  padding-left: 1rem;
+}
+:not(.dark) :not(.cv-page) .soviet-section-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(143, 0, 0, 0.5), rgba(219, 91, 0, 0.4));
+}
+
+:not(.dark) :not(.cv-page) .soviet-badge {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.08), rgba(219, 91, 0, 0.05));
+  border: 1px solid rgba(143, 0, 0, 0.2);
+  color: #8f0000;
+  box-shadow: 0 0 4px rgba(143, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+:not(.dark) :not(.cv-page) .soviet-badge:hover {
+  box-shadow: 0 0 8px rgba(219, 91, 0, 0.12);
+  border-color: rgba(219, 91, 0, 0.35);
+}
+
+:not(.dark) :not(.cv-page) .soviet-stat {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.03), rgba(245, 239, 230, 0.8));
+  border: 1px solid rgba(143, 0, 0, 0.12);
+  box-shadow: 2px 2px 0 rgba(143, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+:not(.dark) :not(.cv-page) .soviet-stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.35), transparent);
+}
+:not(.dark) :not(.cv-page) .soviet-stat:hover {
+  border-color: rgba(219, 91, 0, 0.25);
+  box-shadow: 3px 3px 0 rgba(143, 0, 0, 0.08), 0 0 10px rgba(143, 0, 0, 0.05);
+  transform: translate(-1px, -1px);
+}
+
+:not(.dark) :not(.cv-page) .soviet-timeline-line {
+  background: linear-gradient(180deg, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.3), transparent);
+}
+
+:not(.dark) :not(.cv-page) .soviet-tech-tag {
+  transition: all 0.2s ease;
+  cursor: default;
+}
+:not(.dark) :not(.cv-page) .soviet-tech-tag:hover {
+  background: rgba(143, 0, 0, 0.06) !important;
+  border-color: rgba(219, 91, 0, 0.2);
+  color: #8f0000 !important;
+  box-shadow: 0 0 4px rgba(143, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+:not(.dark) .soviet-filter-active {
+  background: linear-gradient(135deg, rgba(143, 0, 0, 0.85), rgba(219, 91, 0, 0.9)) !important;
+  color: #faf5ef !important;
+  border: 1px solid rgba(219, 91, 0, 0.5);
+  box-shadow: 0 0 8px rgba(143, 0, 0, 0.15), 0 0 16px rgba(219, 91, 0, 0.08);
+  transition: all 0.25s ease;
+}
+:not(.dark) .soviet-filter:hover {
+  border-color: rgba(219, 91, 0, 0.3);
+  color: #8f0000;
+  background: rgba(143, 0, 0, 0.04);
+  box-shadow: 0 0 6px rgba(143, 0, 0, 0.06);
+}
+
+:not(.dark) :not(.cv-page) .soviet-star::before {
+  content: '\2605';
+  color: #8f0000;
+  opacity: 0.3;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+:not(.dark) .soviet-line-animated {
+  opacity: 0.25 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CRT / GLITCH — Interactive text effects
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.dark .soviet-glitch:hover {
+  animation: crt-glitch 0.3s steps(2) 1;
+}
+
+.soviet-crt-hover {
+  transition: all 0.15s ease;
+}
+.soviet-crt-hover:hover {
+  animation: crt-flicker 0.15s steps(3) 1;
+}
+
 /* ── Keyframes ──────────────────────────────────────────────────────── */
 @keyframes soviet-pulse {
 
@@ -190,1229 +865,15 @@
     stroke-dashoffset: 100%;
   }
 
-  5% {
-    opacity: 0.6;
-  }
-
-  15% {
-    opacity: 0;
-    stroke-dashoffset: 0;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes morse-scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes morse-fade-in {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes slow-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes telemetry-blink {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.2;
-  }
-}
-
-@keyframes aurora {
-
-  0%,
-  100% {
-    background-position: 0% 0;
-  }
-
-  50% {
-    background-position: 100% 0;
-  }
-}
-
-@keyframes radar-ping {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-
-  50% {
-    transform: scale(1.8);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
-
-@keyframes holo-stripe {
-  0% {
-    background-position: 0 0;
-  }
-
-  100% {
-    background-position: 0 40px;
-  }
-}
-
-@keyframes scan-sweep-down {
-  0% {
-    top: -5%;
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
-  }
-
-  90% {
-    opacity: 1;
-  }
-
-  100% {
-    top: 105%;
-    opacity: 0;
-  }
-}
-
-@keyframes holo-border-spin {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-
-@keyframes electromagnetic-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(219, 91, 0, 0.4);
-  }
-
-  70% {
-    box-shadow: 0 0 0 10px rgba(219, 91, 0, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(219, 91, 0, 0);
-  }
-}
-
-@keyframes stamp-in {
-  0% {
-    transform: scale(3) rotate(-15deg);
-    opacity: 0;
-  }
-
-  60% {
-    transform: scale(0.95) rotate(0deg);
-    opacity: 1;
-  }
-
-  80% {
-    transform: scale(1.02) rotate(0deg);
-  }
-
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-@keyframes chromatic-aberration {
-  0% {
-    text-shadow: -1px 0 #8f0000, 1px 0 #ffa500;
-  }
-
-  25% {
-    text-shadow: 1px 0 #8f0000, -1px 0 #ffa500;
-  }
-
-  50% {
-    text-shadow: -1px 1px #8f0000, 1px -1px #ffa500;
-  }
-
-  75% {
-    text-shadow: 1px -1px #8f0000, -1px 1px #ffa500;
-  }
-
-  100% {
-    text-shadow: -1px 0 #8f0000, 1px 0 #ffa500;
-  }
-}
-
-@keyframes dada-drift {
-
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(var(--dada-rotate, 0deg));
-  }
-
-  25% {
-    transform: translate(3px, -2px) rotate(calc(var(--dada-rotate, 0deg) + 0.5deg));
-  }
-
-  50% {
-    transform: translate(-2px, 3px) rotate(calc(var(--dada-rotate, 0deg) - 0.3deg));
-  }
-
-  75% {
-    transform: translate(1px, -1px) rotate(calc(var(--dada-rotate, 0deg) + 0.2deg));
-  }
-}
-
-@keyframes dada-flicker {
-
-  0%,
-  100% {
-    opacity: var(--dada-opacity, 0.3);
-  }
-
-  15% {
-    opacity: calc(var(--dada-opacity, 0.3) * 0.4);
-  }
-
-  16% {
-    opacity: var(--dada-opacity, 0.3);
-  }
-
-  45% {
-    opacity: var(--dada-opacity, 0.3);
-  }
-
-  46% {
-    opacity: calc(var(--dada-opacity, 0.3) * 0.6);
-  }
-
-  48% {
-    opacity: var(--dada-opacity, 0.3);
-  }
-
-  78% {
-    opacity: calc(var(--dada-opacity, 0.3) * 0.7);
-  }
-
-  80% {
-    opacity: var(--dada-opacity, 0.3);
-  }
-}
-
-@keyframes dada-tear-reveal {
-  0% {
-    clip-path: inset(0 100% 0 0);
-  }
-
-  100% {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes cv-name-drop {
-  0% {
-    transform: translateY(-100vh);
-  }
-
-  60% {
-    transform: translateY(0);
-  }
-
-  75% {
-    transform: translateY(-14px);
-  }
-
-  88% {
-    transform: translateY(0);
-  }
-
-  95% {
-    transform: translateY(-6px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes crt-glitch {
-  0% {
-    transform: translate(0);
-    filter: hue-rotate(0deg);
-  }
-
-  25% {
-    transform: translate(-2px, 1px);
-    filter: hue-rotate(90deg);
-  }
-
-  50% {
-    transform: translate(2px, -1px);
-    filter: hue-rotate(180deg);
-  }
-
-  75% {
-    transform: translate(-1px, -1px);
-    filter: hue-rotate(270deg);
-  }
-
-  100% {
-    transform: translate(0);
-    filter: hue-rotate(0deg);
-  }
-}
-
-@keyframes crt-flicker {
-  0% {
-    opacity: 1;
-  }
-
-  33% {
+  4% {
     opacity: 0.8;
   }
 
-  66% {
-    opacity: 1;
+  12% {
+    opacity: 0.9;
   }
 
-  100% {
-    opacity: 0.95;
-  }
-}
-
-@layer base {
-
-  /* ── Font loading via CDN (Google Fonts) ──────────────────────── */
-  /* Fonts are loaded in layout.tsx via <link> tags for better performance */
-  /* CSS variables reference these CDN-loaded fonts */
-  :root {
-    --font-en: 'LINE Seed JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-zh: 'Iansui', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  /* ── Hide scrollbars globally (content remains scrollable) ─────── */
-  html,
-  body {
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE / Edge */
-    overflow-x: hidden;
-  }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    display: none;
-    /* Chrome / Safari / Opera */
-  }
-
-  /* ── Locale-aware body fonts ──────────────────────── */
-  .locale-en {
-    font-family: var(--font-en);
-  }
-
-  .locale-zh {
-    font-family: var(--font-zh);
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   Text Selection — Soviet propaganda red highlight
-   ══════════════════════════════════════════════════════════════════════════ */
-
-::selection {
-  background: rgba(143, 0, 0, 0.35);
-  color: #ffa500;
-  text-shadow: 0 0 8px rgba(219, 91, 0, 0.6);
-}
-
-.dark ::selection {
-  background: rgba(219, 91, 0, 0.4);
-  color: #ffe0b2;
-  text-shadow: 0 0 12px rgba(255, 165, 0, 0.8), 0 0 24px rgba(143, 0, 0, 0.5);
-}
-
-::-moz-selection {
-  background: rgba(143, 0, 0, 0.35);
-  color: #ffa500;
-}
-
-.dark ::-moz-selection {
-  background: rgba(219, 91, 0, 0.4);
-  color: #ffe0b2;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   Link Hover/Click Effects — Soviet industrial mechanical activation
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Soviet link underline scan effect */
-.soviet-link {
-  position: relative;
-  text-decoration: none;
-  transition: color 0.25s ease, text-shadow 0.25s ease;
-}
-
-.soviet-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 1.5px;
-  background: linear-gradient(90deg, #8f0000, #db5b00, #ffa500);
-  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 6px rgba(219, 91, 0, 0.4);
-}
-
-.soviet-link:hover::after {
-  width: 100%;
-}
-
-.soviet-link:hover {
-  text-shadow: 0 0 8px rgba(219, 91, 0, 0.3);
-}
-
-.soviet-link:active {
-  transform: scale(0.97);
-  transition: transform 0.08s ease;
-}
-
-.soviet-link:active::after {
-  background: linear-gradient(90deg, #ffa500, #db5b00, #8f0000);
-  box-shadow: 0 0 12px rgba(255, 165, 0, 0.6);
-}
-
-/* Dark mode link glow enhancement */
-.dark .soviet-link:hover {
-  text-shadow: 0 0 12px rgba(219, 91, 0, 0.5), 0 0 24px rgba(143, 0, 0, 0.3);
-}
-
-.dark .soviet-link::after {
-  box-shadow: 0 0 8px rgba(219, 91, 0, 0.6), 0 0 16px rgba(143, 0, 0, 0.3);
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   Soviet Retro-Futuristic Atmosphere — 1960s Space Age Constructivism
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* CRITICAL FIX: Light mode body background — aged paper warm beige */
-/* This was previously missing, causing light mode to fall back to dark background */
-body {
-  background-color: #f5efe6;
-  background-image:
-    /* Subtle warm paper texture dots */
-    radial-gradient(1px 1px at 20% 30%, rgba(143, 0, 0, 0.03) 50%, transparent 50%),
-    radial-gradient(0.8px 0.8px at 60% 70%, rgba(140, 134, 112, 0.025) 50%, transparent 50%),
-    radial-gradient(1px 1px at 80% 20%, rgba(219, 91, 0, 0.02) 50%, transparent 50%),
-    /* Very subtle grid for aged paper feel */
-    linear-gradient(rgba(143, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 0, 0, 0.02) 1px, transparent 1px),
-    /* Film grain texture for vintage aesthetic */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
-  background-size: 180px 180px, 220px 220px, 160px 160px, 50px 50px, 50px 50px, auto;
-  background-position: 0 0, 40px 50px, 80px 20px, 0 0, 0 0, 0 0;
-}
-
-/* Brutalist grid + diagonal constructivist lines — dark mode body background */
-.dark body {
-  background-color: #141821;
-  background-image:
-    /* Starry night micro-dots — scattered radial dots */
-    radial-gradient(1px 1px at 15% 25%, rgba(255, 200, 120, 0.18) 50%, transparent 50%),
-    radial-gradient(1px 1px at 42% 68%, rgba(200, 180, 160, 0.14) 50%, transparent 50%),
-    radial-gradient(1.2px 1.2px at 78% 12%, rgba(255, 165, 0, 0.16) 50%, transparent 50%),
-    radial-gradient(0.8px 0.8px at 62% 85%, rgba(180, 160, 140, 0.12) 50%, transparent 50%),
-    radial-gradient(1px 1px at 28% 52%, rgba(219, 91, 0, 0.1) 50%, transparent 50%),
-    radial-gradient(0.6px 0.6px at 88% 38%, rgba(200, 190, 170, 0.12) 50%, transparent 50%),
-    radial-gradient(1px 1px at 5% 72%, rgba(255, 200, 120, 0.1) 50%, transparent 50%),
-    radial-gradient(0.8px 0.8px at 55% 42%, rgba(180, 170, 150, 0.08) 50%, transparent 50%),
-    /* Brutalist architectural grid (red) — pulsing via animation */
-    linear-gradient(rgba(143, 0, 0, 0.14) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 0, 0, 0.14) 1px, transparent 1px),
-    /* Diagonal constructivist lines (orange) */
-    repeating-linear-gradient(45deg,
-      transparent,
-      transparent 80px,
-      rgba(219, 91, 0, 0.07) 80px,
-      rgba(219, 91, 0, 0.07) 81px),
-    /* Counter-diagonal for cross-hatch */
-    repeating-linear-gradient(-45deg,
-      transparent,
-      transparent 120px,
-      rgba(143, 0, 0, 0.05) 120px,
-      rgba(143, 0, 0, 0.05) 121px),
-    /* Film grain texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  background-size: 200px 200px, 300px 300px, 250px 250px, 180px 180px, 220px 220px, 280px 280px, 160px 160px, 240px 240px, 40px 40px, 40px 40px, auto, auto, auto;
-  background-position: 0 0, 50px 30px, 100px 80px, 30px 120px, 150px 50px, 80px 180px, 120px 10px, 200px 100px, 0 0, 0 0, 0 0, 0 0, 0 0;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DARK MODE — Vignette & Scanline overlays
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Vignette overlay — dark mode only */
-.dark .scanlines::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 35%, rgba(10, 12, 18, 0.45) 100%);
-  pointer-events: none;
-  z-index: 998;
-}
-
-/* Industrial scanline overlay — horizontal */
-.dark .scanlines::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.06) 2px,
-      rgba(0, 0, 0, 0.06) 4px);
-  pointer-events: none;
-  z-index: 999;
-  animation: flicker 8s step-end infinite;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — Subtle scanline & vignette overlays (non-CV pages only)
-   Controlled by SovietBackground component; CSS provides base styling.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Light mode scanlines — very subtle, applied via component z-index management */
-:not(.dark) .scanlines::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(0deg,
-      transparent,
-      transparent 3px,
-      rgba(143, 0, 0, 0.015) 3px,
-      rgba(143, 0, 0, 0.015) 6px);
-  pointer-events: none;
-  z-index: 999;
-  animation: flicker 12s step-end infinite;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DARK MODE — Soviet-style heading glow (breathing animation)
-   ══════════════════════════════════════════════════════════════════════════ */
-.dark .glow-heading {
-  text-shadow:
-    0 0 20px rgba(143, 0, 0, 0.8),
-    0 0 40px rgba(219, 91, 0, 0.45),
-    0 0 80px rgba(143, 0, 0, 0.2),
-    0 0 120px rgba(219, 91, 0, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.5);
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  animation: glow-breathe 4s ease-in-out infinite;
-}
-
-/* ── LIGHT MODE heading glow — subtler warm shadow (non-CV pages) ───── */
-:not(.dark) :not(.cv-page) .glow-heading {
-  text-shadow:
-    0 0 8px rgba(143, 0, 0, 0.15),
-    0 0 20px rgba(219, 91, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.1);
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  animation: glow-breathe-light 6s ease-in-out infinite;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DARK MODE — Constructivist card (angular corners + reactive hover)
-   ══════════════════════════════════════════════════════════════════════════ */
-.dark .glow-card {
-  position: relative;
-  border-color: rgba(143, 0, 0, 0.35);
-  box-shadow:
-    0 0 12px rgba(143, 0, 0, 0.15),
-    0 0 30px rgba(143, 0, 0, 0.05),
-    inset 0 0 10px rgba(219, 91, 0, 0.06),
-    4px 4px 0 rgba(0, 0, 0, 0.25);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-/* Corner brackets — constructivist angular decorations */
-.dark .glow-card::before,
-.dark .glow-card::after {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  pointer-events: none;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-.dark .glow-card::before {
-  top: -1px;
-  left: -1px;
-  border-top: 2px solid rgba(143, 0, 0, 0.5);
-  border-left: 2px solid rgba(143, 0, 0, 0.5);
-}
-
-.dark .glow-card::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 2px solid rgba(219, 91, 0, 0.4);
-  border-right: 2px solid rgba(219, 91, 0, 0.4);
-}
-
-.dark .glow-card:hover {
-  border-color: rgba(219, 91, 0, 0.7);
-  box-shadow:
-    0 0 30px rgba(143, 0, 0, 0.4),
-    0 0 60px rgba(219, 91, 0, 0.15),
-    0 0 90px rgba(143, 0, 0, 0.06),
-    inset 0 0 20px rgba(219, 91, 0, 0.1),
-    6px 6px 0 rgba(0, 0, 0, 0.3);
-}
-
-.dark .glow-card:hover::before {
-  width: 28px;
-  height: 28px;
-  border-color: rgba(219, 91, 0, 0.9);
-  filter: drop-shadow(0 0 4px rgba(219, 91, 0, 0.4));
-}
-
-.dark .glow-card:hover::after {
-  width: 28px;
-  height: 28px;
-  border-color: rgba(143, 0, 0, 0.9);
-  filter: drop-shadow(0 0 4px rgba(143, 0, 0, 0.4));
-}
-
-/* Shimmer sweep on card hover — dark mode */
-.dark .glow-card .soviet-shimmer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(105deg,
-      transparent 35%,
-      rgba(219, 91, 0, 0.08) 42%,
-      rgba(255, 165, 0, 0.06) 47%,
-      rgba(143, 0, 0, 0.1) 50%,
-      rgba(255, 165, 0, 0.06) 53%,
-      rgba(219, 91, 0, 0.08) 58%,
-      transparent 65%);
-  background-size: 200% 100%;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.dark .glow-card:hover .soviet-shimmer {
-  opacity: 1;
-  animation: shimmer 1.8s linear infinite;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — Constructivist card (warm, aged-paper feel, non-CV pages)
-   ══════════════════════════════════════════════════════════════════════════ */
-:not(.dark) :not(.cv-page) .glow-card {
-  position: relative;
-  border-color: rgba(143, 0, 0, 0.18);
-  box-shadow:
-    0 0 8px rgba(143, 0, 0, 0.06),
-    inset 0 0 6px rgba(219, 91, 0, 0.03),
-    3px 3px 0 rgba(143, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-/* Corner brackets — light mode */
-:not(.dark) :not(.cv-page) .glow-card::before,
-:not(.dark) :not(.cv-page) .glow-card::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  pointer-events: none;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-:not(.dark) :not(.cv-page) .glow-card::before {
-  top: -1px;
-  left: -1px;
-  border-top: 2px solid rgba(143, 0, 0, 0.2);
-  border-left: 2px solid rgba(143, 0, 0, 0.2);
-}
-
-:not(.dark) :not(.cv-page) .glow-card::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 2px solid rgba(219, 91, 0, 0.15);
-  border-right: 2px solid rgba(219, 91, 0, 0.15);
-}
-
-:not(.dark) :not(.cv-page) .glow-card:hover {
-  border-color: rgba(219, 91, 0, 0.35);
-  box-shadow:
-    0 0 16px rgba(143, 0, 0, 0.1),
-    0 0 30px rgba(219, 91, 0, 0.06),
-    inset 0 0 10px rgba(219, 91, 0, 0.04),
-    4px 4px 0 rgba(143, 0, 0, 0.1);
-}
-
-:not(.dark) :not(.cv-page) .glow-card:hover::before {
-  width: 20px;
-  height: 20px;
-  border-color: rgba(219, 91, 0, 0.4);
-}
-
-:not(.dark) :not(.cv-page) .glow-card:hover::after {
-  width: 20px;
-  height: 20px;
-  border-color: rgba(143, 0, 0, 0.35);
-}
-
-/* Shimmer sweep on card hover — light mode */
-:not(.dark) :not(.cv-page) .glow-card .soviet-shimmer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(105deg,
-      transparent 40%,
-      rgba(219, 91, 0, 0.03) 45%,
-      rgba(143, 0, 0, 0.04) 50%,
-      rgba(219, 91, 0, 0.03) 55%,
-      transparent 60%);
-  background-size: 200% 100%;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  z-index: 0;
-}
-
-:not(.dark) :not(.cv-page) .glow-card:hover .soviet-shimmer {
-  opacity: 1;
-  animation: shimmer 2.5s linear infinite;
-}
-
-/* ── Soviet accent line (red-to-orange gradient) ─────────────────────── */
-.soviet-line {
-  background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
-}
-
-/* Animated accent line variant */
-.soviet-line-animated {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(90deg, transparent, rgba(143, 0, 0, 0.3), transparent);
-}
-
-.soviet-line-animated::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, #db5b00, #ffa500, transparent);
-  animation: slide-accent 4s linear infinite;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   DARK MODE — Section headers, badges, filters, stats, timeline
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Soviet section header — bold divider with angular accent ────────── */
-.dark .soviet-section-header {
-  position: relative;
-  padding-left: 1rem;
-}
-
-.dark .soviet-section-header::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, #8f0000, #db5b00);
-}
-
-/* ── Soviet badge — angular tag styling with glow ────────────────────── */
-.dark .soviet-badge {
-  background: linear-gradient(135deg, rgba(143, 0, 0, 0.2), rgba(219, 91, 0, 0.12));
-  border: 1px solid rgba(143, 0, 0, 0.4);
-  color: #e3d5c1;
-  box-shadow: 0 0 8px rgba(143, 0, 0, 0.15);
-  transition: all 0.25s ease;
-}
-
-.dark .soviet-badge:hover {
-  box-shadow: 0 0 16px rgba(219, 91, 0, 0.3);
-  border-color: rgba(219, 91, 0, 0.6);
-}
-
-/* ── Constructivist geometric accent (for decorative elements) ───────── */
-.geometric-accent {
-  position: relative;
-}
-
-.geometric-accent::before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 8px 14px 8px;
-  border-color: transparent transparent #db5b00 transparent;
-  opacity: 0.4;
-}
-
-/* ── Soviet star decorative element ──────────────────────────────────── */
-.dark .soviet-star::before {
-  content: '\2605';
-  color: #8f0000;
-  opacity: 0.5;
-  font-size: 0.75rem;
-  margin-right: 0.5rem;
-}
-
-/* ── Propaganda-style filter buttons — dark mode ─────────────────────── */
-.dark .soviet-filter-active {
-  background: linear-gradient(135deg, #8f0000, #db5b00) !important;
-  color: #e3d5c1 !important;
-  border: 1px solid rgba(219, 91, 0, 0.6);
-  box-shadow: 0 0 16px rgba(143, 0, 0, 0.4), 0 0 32px rgba(219, 91, 0, 0.15), inset 0 0 6px rgba(255, 165, 0, 0.15);
-  text-shadow: 0 0 8px rgba(255, 165, 0, 0.3);
-  transition: all 0.25s ease;
-}
-
-.dark .soviet-filter {
-  border: 1px solid rgba(143, 0, 0, 0.25);
-  background: rgba(26, 26, 26, 0.8);
-  color: #8c8670;
-  transition: all 0.25s ease;
-}
-
-.dark .soviet-filter:hover {
-  border-color: rgba(219, 91, 0, 0.5);
-  color: #e3d5c1;
-  background: rgba(143, 0, 0, 0.12);
-  box-shadow: 0 0 12px rgba(143, 0, 0, 0.2);
-  text-shadow: 0 0 4px rgba(219, 91, 0, 0.3);
-}
-
-/* ── Soviet stat card — dark mode ────────────────────────────────────── */
-.dark .soviet-stat {
-  background: linear-gradient(135deg, rgba(143, 0, 0, 0.1), rgba(26, 26, 26, 0.9));
-  border: 1px solid rgba(143, 0, 0, 0.3);
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.dark .soviet-stat::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #8f0000, #db5b00, transparent);
-}
-
-.dark .soviet-stat:hover {
-  border-color: rgba(219, 91, 0, 0.5);
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3), 0 0 20px rgba(143, 0, 0, 0.15);
-  transform: translate(-1px, -1px);
-}
-
-/* ── Soviet timeline line — dark mode ────────────────────────────────── */
-.dark .soviet-timeline-line {
-  background: linear-gradient(180deg, #8f0000, #db5b00, transparent);
-}
-
-/* ── Soviet click ripple effect ──────────────────────────────────────── */
-.soviet-ripple {
-  position: relative;
-  overflow: hidden;
-}
-
-.soviet-ripple::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: radial-gradient(circle, rgba(219, 91, 0, 0.3) 0%, transparent 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.5s, height 0.5s, opacity 0.5s;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.soviet-ripple:active::after {
-  width: 300px;
-  height: 300px;
-  opacity: 1;
-  transition: width 0s, height 0s, opacity 0s;
-}
-
-/* ── Tech tag hover — Soviet style (dark mode) ───────────────────────── */
-.dark .soviet-tech-tag {
-  transition: all 0.2s ease;
-  cursor: default;
-  position: relative;
-}
-
-.dark .soviet-tech-tag:hover {
-  background: rgba(143, 0, 0, 0.18) !important;
-  border-color: rgba(219, 91, 0, 0.5);
-  color: #e3d5c1 !important;
-  box-shadow: 0 0 12px rgba(143, 0, 0, 0.25), 0 0 4px rgba(219, 91, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-/* ── Holographic scanner sweep — appears on interactive elements ──── */
-.soviet-holo-scan {
-  position: relative;
-  overflow: hidden;
-}
-
-.soviet-holo-scan::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(219, 91, 0, 0.08),
-      rgba(255, 165, 0, 0.12),
-      rgba(219, 91, 0, 0.08),
-      transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-
-.soviet-holo-scan:hover::after {
-  left: 100%;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — Soviet effects for non-CV pages
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Light mode section header ───────────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-section-header {
-  position: relative;
-  padding-left: 1rem;
-}
-
-:not(.dark) :not(.cv-page) .soviet-section-header::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, rgba(143, 0, 0, 0.5), rgba(219, 91, 0, 0.4));
-}
-
-/* ── Light mode Soviet badge ─────────────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-badge {
-  background: linear-gradient(135deg, rgba(143, 0, 0, 0.08), rgba(219, 91, 0, 0.05));
-  border: 1px solid rgba(143, 0, 0, 0.2);
-  color: #8f0000;
-  box-shadow: 0 0 4px rgba(143, 0, 0, 0.06);
-  transition: all 0.25s ease;
-}
-
-:not(.dark) :not(.cv-page) .soviet-badge:hover {
-  box-shadow: 0 0 8px rgba(219, 91, 0, 0.12);
-  border-color: rgba(219, 91, 0, 0.35);
-}
-
-/* ── Light mode Soviet stat card ─────────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-stat {
-  background: linear-gradient(135deg, rgba(143, 0, 0, 0.03), rgba(245, 239, 230, 0.8));
-  border: 1px solid rgba(143, 0, 0, 0.12);
-  box-shadow: 2px 2px 0 rgba(143, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-:not(.dark) :not(.cv-page) .soviet-stat::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.35), transparent);
-}
-
-:not(.dark) :not(.cv-page) .soviet-stat:hover {
-  border-color: rgba(219, 91, 0, 0.25);
-  box-shadow: 3px 3px 0 rgba(143, 0, 0, 0.08), 0 0 10px rgba(143, 0, 0, 0.05);
-  transform: translate(-1px, -1px);
-}
-
-/* ── Light mode Soviet timeline line ─────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-timeline-line {
-  background: linear-gradient(180deg, rgba(143, 0, 0, 0.4), rgba(219, 91, 0, 0.3), transparent);
-}
-
-/* ── Light mode tech tag hover ───────────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-tech-tag {
-  transition: all 0.2s ease;
-  cursor: default;
-}
-
-:not(.dark) :not(.cv-page) .soviet-tech-tag:hover {
-  background: rgba(143, 0, 0, 0.06) !important;
-  border-color: rgba(219, 91, 0, 0.2);
-  color: #8f0000 !important;
-  box-shadow: 0 0 4px rgba(143, 0, 0, 0.08);
-  transform: translateY(-1px);
-}
-
-/* ── Light mode Soviet filter buttons ────────────────────────────────── */
-:not(.dark) .soviet-filter-active {
-  background: linear-gradient(135deg, rgba(143, 0, 0, 0.85), rgba(219, 91, 0, 0.9)) !important;
-  color: #faf5ef !important;
-  border: 1px solid rgba(219, 91, 0, 0.5);
-  box-shadow: 0 0 8px rgba(143, 0, 0, 0.15), 0 0 16px rgba(219, 91, 0, 0.08);
-  transition: all 0.25s ease;
-}
-
-:not(.dark) .soviet-filter:hover {
-  border-color: rgba(219, 91, 0, 0.3);
-  color: #8f0000;
-  background: rgba(143, 0, 0, 0.04);
-  box-shadow: 0 0 6px rgba(143, 0, 0, 0.06);
-}
-
-/* ── Light mode Soviet star ──────────────────────────────────────────── */
-:not(.dark) :not(.cv-page) .soviet-star::before {
-  content: '\2605';
-  color: #8f0000;
-  opacity: 0.3;
-  font-size: 0.75rem;
-  margin-right: 0.5rem;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — Header & Footer accent lines (visible in light mode too)
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Show header accent line in light mode too (subtler) */
-:not(.dark) .soviet-line-animated {
-  opacity: 0.25 !important;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   CRT / GLITCH — Interactive text effects
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* CRT text glitch on hover — dark mode */
-.dark .soviet-glitch:hover {
-  animation: crt-glitch 0.3s steps(2) 1;
-}
-
-/* CRT flicker on interactive elements */
-.soviet-crt-hover {
-  transition: all 0.15s ease;
-}
-
-.soviet-crt-hover:hover {
-  animation: crt-flicker 0.15s steps(3) 1;
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   Animation keyframes (referenced by Tailwind + direct CSS)
-   ══════════════════════════════════════════════════════════════════════════ */
-
-@keyframes glow-breathe {
-
-  0%,
-  100% {
-    text-shadow: 0 0 20px rgba(143, 0, 0, 0.8), 0 0 40px rgba(219, 91, 0, 0.4), 0 0 80px rgba(143, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  50% {
-    text-shadow: 0 0 35px rgba(143, 0, 0, 1), 0 0 70px rgba(219, 91, 0, 0.6), 0 0 120px rgba(143, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-}
-
-@keyframes glow-breathe-light {
-
-  0%,
-  100% {
-    text-shadow: 0 0 8px rgba(143, 0, 0, 0.15), 0 0 20px rgba(219, 91, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  50% {
-    text-shadow: 0 0 12px rgba(143, 0, 0, 0.22), 0 0 30px rgba(219, 91, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-}
-
-@keyframes flicker {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  92% {
-    opacity: 1;
-  }
-
-  93% {
-    opacity: 0.85;
-  }
-
-  94% {
-    opacity: 1;
-  }
-
-  96% {
-    opacity: 0.92;
-  }
-
-  97% {
-    opacity: 1;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes slide-accent {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes crt-glitch {
-  0% {
-    transform: translate(0);
-    filter: hue-rotate(0deg);
-  }
-
-  25% {
-    transform: translate(-2px, 1px);
-    filter: hue-rotate(90deg);
-  }
-
-  50% {
-    transform: translate(2px, -1px);
-    filter: hue-rotate(180deg);
-  }
-
-  75% {
-    transform: translate(-1px, -1px);
-    filter: hue-rotate(270deg);
-  }
-
-  100% {
-    transform: translate(0);
-    filter: hue-rotate(0deg);
-  }
-}
-
-@keyframes crt-flicker {
-  0% {
-    opacity: 1;
-  }
-
-  33% {
-    opacity: 0.8;
-  }
-
-  66% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.95;
-  }
-}
-
-@keyframes twinkle {
-
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes shooting-star {
-  0% {
-    opacity: 0;
-    stroke-dashoffset: 100%;
-  }
-
-  5% {
-    opacity: 0.6;
-  }
-
-  15% {
+  22% {
     opacity: 0;
     stroke-dashoffset: 0;
   }
@@ -2045,7 +1506,7 @@ body {
     transform: translate(0, 0) rotate(var(--dada-rotate, 0deg));
   }
 
-  25% {
+   25% {
     transform: translate(3px, -2px) rotate(calc(var(--dada-rotate, 0deg) + 0.5deg));
   }
 
@@ -2094,16 +1555,6 @@ body {
   }
 }
 
-@keyframes dada-typewriter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
 @keyframes dada-tear-reveal {
   0% {
     clip-path: inset(0 100% 0 0);
@@ -2111,5 +1562,120 @@ body {
 
   100% {
     clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes dada-typewriter {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes cv-name-drop {
+  0% { transform: translateY(-100vh); }
+  60% { transform: translateY(0); }
+  75% { transform: translateY(-14px); }
+  88% { transform: translateY(0); }
+  95% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes crt-glitch {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  25% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+  50% { transform: translate(2px, -1px); filter: hue-rotate(180deg); }
+  75% { transform: translate(-1px, -1px); filter: hue-rotate(270deg); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 1; }
+  33% { opacity: 0.8; }
+  66% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Mobile performance — reduce compositing layers and heavy effects
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .dark .scanlines::after {
+    opacity: 0.3;
+    animation: none;
+  }
+  :not(.dark) .scanlines::after {
+    display: none;
+  }
+  .dark .scanlines::before {
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.35) 100%);
+  }
+  .soviet-spotlight::before {
+    display: none;
+  }
+  .soviet-scan-sweep::before {
+    display: none;
+  }
+  .soviet-shimmer {
+    display: none;
+  }
+  .dark .glow-card {
+    box-shadow: 0 0 6px rgba(143, 0, 0, 0.1), 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+  .dark .glow-card::before,
+  .dark .glow-card::after {
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Printer-friendly overrides — all retro effects disabled
+   ══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  body,
+  .dark {
+    background: white !important;
+    background-image: none !important;
+    color: #1e293b !important;
+  }
+  .print\:hidden,
+  [data-print="hidden"] {
+    display: none !important;
+  }
+  .border-slate-200,
+  .border-slate-800 {
+    border-color: #cbd5e1 !important;
+  }
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+  }
+  .scanlines::before,
+  .scanlines::after {
+    display: none !important;
+  }
+  .glow-card {
+    border-color: #cbd5e1 !important;
+  }
+  .glow-card::before,
+  .glow-card::after {
+    display: none !important;
+  }
+  .soviet-section-header::before {
+    display: none !important;
+  }
+  .dada-torn-edge {
+    clip-path: none !important;
+  }
+  .dada-fragment,
+  .dada-stamp,
+  .dada-scatter,
+  .dada-diagonal::before,
+  .dada-noise::after,
+  .dada-redact::after {
+    display: none !important;
+  }
+  .dada-tilt:hover,
+  .dada-cutout {
+    transform: none !important;
   }
 }

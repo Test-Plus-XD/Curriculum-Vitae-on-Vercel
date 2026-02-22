@@ -90,8 +90,8 @@ export default function CosmicStarfield() {
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: 0.6 + Math.random() * 3.5,
-      baseOpacity: 0.1 + Math.random() * 0.7,
+      size: 0.3 + Math.random() * 0.8,
+      baseOpacity: 0.08 + Math.random() * 0.3,
       twinkleSpeed: 1.5 + Math.random() * 6,
       layer: i % 3,
     }));
@@ -100,7 +100,7 @@ export default function CosmicStarfield() {
   /// Nebulae — pulsing coloured fog for cosmic atmosphere
   const nebulae = useMemo<Nebula[]>(() => {
     const colors = ['#8f0000', '#db5b00', '#ffa500', '#6b0000', '#ff7700'];
-    return Array.from({ length: 7 }, (_, i) => ({
+    return Array.from({ length: isMobile ? 2 : 4 }, (_, i) => ({
       id: i,
       x: 10 + Math.random() * 80,
       y: 5 + Math.random() * 90,
@@ -108,23 +108,23 @@ export default function CosmicStarfield() {
       ry: 50 + Math.random() * 80,
       rotation: Math.random() * 360,
       color: colors[i % 5],
-      opacity: 0.012 + Math.random() * 0.025,
+      opacity: 0.008 + Math.random() * 0.015,
       pulseSpeed: 6 + Math.random() * 8,
     }));
-  }, []);
+  }, [isMobile]);
 
   /// Cosmic orbital rings — warped elliptical paths inspired by Reverse:1999
   const cosmicRings = useMemo<CosmicRing[]>(() => {
-    return Array.from({ length: 3 }, (_, i) => ({
+    return Array.from({ length: isMobile ? 0 : 2 }, (_, i) => ({
       id: i,
       cx: 20 + Math.random() * 60,
       cy: 20 + Math.random() * 60,
       r: 80 + i * 60,
       rotation: Math.random() * 360,
       speed: 40 + i * 20,
-      color: i === 0 ? '#8f0000' : i === 1 ? '#db5b00' : '#ffa500',
+      color: i === 0 ? '#8f0000' : '#db5b00',
     }));
-  }, []);
+  }, [isMobile]);
 
   /// Shooting stars with curved paths — 12 trails with quadratic bezier curves
   /// Each path uses Q command for smooth arcs simulating orbital trajectories
@@ -138,7 +138,7 @@ export default function CosmicStarfield() {
         width: 1.4, 
         dasharray: '220', 
         delay: 0, 
-        duration: 8 
+        duration: 4 
       },
       /// Trail 2 — steep curved descent
       { 
@@ -147,7 +147,7 @@ export default function CosmicStarfield() {
         width: 1.2, 
         dasharray: '180', 
         delay: 3, 
-        duration: 10 
+        duration: 5 
       },
       /// Trail 3 — reverse arc from right to left
       { 
@@ -156,7 +156,7 @@ export default function CosmicStarfield() {
         width: 1.5, 
         dasharray: '200', 
         delay: 7, 
-        duration: 14 
+        duration: 7 
       },
       /// Trail 4 — wide sweeping arc
       { 
@@ -165,7 +165,7 @@ export default function CosmicStarfield() {
         width: 1.6, 
         dasharray: '240', 
         delay: 2, 
-        duration: 9 
+        duration: 4.5 
       },
       /// Trail 5 — gentle upward curve (ascending satellite)
       { 
@@ -174,7 +174,7 @@ export default function CosmicStarfield() {
         width: 1.3, 
         dasharray: '190', 
         delay: 5, 
-        duration: 12 
+        duration: 6 
       },
       /// Trail 6 — sharp parabolic arc
       { 
@@ -183,7 +183,7 @@ export default function CosmicStarfield() {
         width: 1.2, 
         dasharray: '160', 
         delay: 8, 
-        duration: 11 
+        duration: 5.5 
       },
       /// Trail 7 — diagonal sweeping trajectory
       { 
@@ -192,52 +192,7 @@ export default function CosmicStarfield() {
         width: 1.5, 
         dasharray: '210', 
         delay: 1, 
-        duration: 13 
-      },
-      /// Trail 8 — gentle S-curve (complex orbital path)
-      { 
-        id: 7, 
-        path: 'M 25 12 Q 45 28 50 48', 
-        width: 1.4, 
-        dasharray: '170', 
-        delay: 4, 
-        duration: 10 
-      },
-      /// Trail 9 — steep downward parabola
-      { 
-        id: 8, 
-        path: 'M 85 8 Q 70 25 55 52', 
-        width: 1.7, 
-        dasharray: '200', 
-        delay: 6, 
-        duration: 11 
-      },
-      /// Trail 10 — wide horizontal arc
-      { 
-        id: 9, 
-        path: 'M 10 18 Q 50 22 90 28', 
-        width: 1.3, 
-        dasharray: '230', 
-        delay: 9, 
-        duration: 15 
-      },
-      /// Trail 11 — tight curved descent
-      { 
-        id: 10, 
-        path: 'M 75 6 Q 65 18 58 35', 
-        width: 1.8, 
-        dasharray: '150', 
-        delay: 3.5, 
-        duration: 9 
-      },
-      /// Trail 12 — ascending arc with gentle curve
-      { 
-        id: 11, 
-        path: 'M 12 45 Q 40 42 75 65', 
-        width: 1.5, 
-        dasharray: '195', 
-        delay: 7.5, 
-        duration: 12 
+        duration: 6.5 
       },
     ];
   }, []);
@@ -254,14 +209,14 @@ export default function CosmicStarfield() {
   const displayStars = isMobile ? stars.slice(0, 25) : stars;
 
   return (
-    <div className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden" aria-hidden="true">
-      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <div className="pointer-events-none fixed inset-0 z-[1] overflow-hidden print:hidden" aria-hidden="true">
+      <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="star-glow">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.0" />
           </filter>
           <filter id="star-glow-bright">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
           </filter>
           <filter id="nebula-blur">
             <feGaussianBlur in="SourceGraphic" stdDeviation="50" />
@@ -282,6 +237,7 @@ export default function CosmicStarfield() {
             fill={n.color}
             opacity={n.opacity}
             filter="url(#nebula-blur)"
+            vectorEffect="non-scaling-size"
             transform={`rotate(${n.rotation} ${n.x * 10} ${n.y * 10})`}
             style={{
               animation: `twinkle ${n.pulseSpeed}s ease-in-out infinite`,
@@ -304,6 +260,7 @@ export default function CosmicStarfield() {
             opacity="0.12"
             strokeDasharray="6 12"
             filter="url(#ring-glow)"
+            vectorEffect="non-scaling-stroke"
             style={{
               transformOrigin: `${ring.cx}% ${ring.cy}%`,
               animation: `slow-rotate ${ring.speed}s linear infinite`,
@@ -320,15 +277,16 @@ export default function CosmicStarfield() {
           const glowFilter = star.layer === 2 ? 'url(#star-glow-bright)' : 'url(#star-glow)';
 
           return (
-            <g key={star.id}>
+            <g key={star.id} style={{ pointerEvents: 'none', mixBlendMode: 'screen' }}>
               {/* Star glow — larger halo for atmospheric effect */}
               <circle
                 cx={`${star.x}%`}
                 cy={`${star.y}%`}
-                r={star.size * (star.layer === 2 ? 3.5 : 2.5)}
+                r={star.size * (star.layer === 2 ? 1.5 : 1.2)}
                 fill={isDark ? '#ffa500' : '#8f0000'}
-                opacity={star.baseOpacity * 0.35}
+                opacity={star.baseOpacity * 0.15}
                 filter={glowFilter}
+                vectorEffect="non-scaling-size"
                 style={{
                   transform: `translate(${tx}px, ${ty}px)`,
                   transition: 'transform 0.3s ease-out',
@@ -346,6 +304,7 @@ export default function CosmicStarfield() {
                   : (star.layer === 0 ? '#8f0000' : star.layer === 1 ? '#a04000' : '#db5b00')
                 }
                 opacity={star.baseOpacity}
+                vectorEffect="non-scaling-size"
                 style={{
                   transform: `translate(${tx}px, ${ty}px)`,
                   transition: 'transform 0.3s ease-out',
@@ -363,6 +322,7 @@ export default function CosmicStarfield() {
                     stroke={isDark ? '#ffa500' : '#db5b00'}
                     strokeWidth="0.4"
                     opacity={star.baseOpacity * 0.5}
+                    vectorEffect="non-scaling-stroke"
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
@@ -377,6 +337,7 @@ export default function CosmicStarfield() {
                     stroke={isDark ? '#ffa500' : '#db5b00'}
                     strokeWidth="0.4"
                     opacity={star.baseOpacity * 0.5}
+                    vectorEffect="non-scaling-stroke"
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
@@ -392,23 +353,43 @@ export default function CosmicStarfield() {
 
         {/* Shooting star / satellite trails — 12 curved paths for natural orbital motion */}
         {shootingStars.map((ss) => (
-          <path
-            key={`trail-${ss.id}`}
-            d={ss.path}
-            stroke={isDark
-              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
-              : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
-            }
-            strokeWidth={ss.width}
-            strokeDasharray={ss.dasharray}
-            fill="none"
-            opacity="0"
-            style={{ 
-              animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
-              /// Stroke line cap set to round for smoother trail appearance
-              strokeLinecap: 'round',
-            }}
-          />
+          <g key={`trail-group-${ss.id}`}>
+            {/* Outer glow trail — wider, softer for visibility */}
+            <path
+              d={ss.path}
+              stroke={isDark
+                ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+              }
+              strokeWidth={ss.width * 2}
+              strokeDasharray={ss.dasharray}
+              fill="none"
+              opacity="0"
+              filter="url(#star-glow)"
+              vectorEffect="non-scaling-stroke"
+              style={{
+                animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
+                strokeLinecap: 'round',
+              }}
+            />
+            {/* Core trail — bright and sharp */}
+            <path
+              d={ss.path}
+              stroke={isDark
+                ? (ss.id % 3 === 0 ? '#ff8c00' : ss.id % 3 === 1 ? '#ffb347' : '#db5b00')
+                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+              }
+              strokeWidth={ss.width * 1.5}
+              strokeDasharray={ss.dasharray}
+              fill="none"
+              opacity="0"
+              vectorEffect="non-scaling-stroke"
+              style={{
+                animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
+                strokeLinecap: 'round',
+              }}
+            />
+          </g>
         ))}
       </svg>
     </div>

@@ -7,7 +7,7 @@ Bilingual (Traditional Chinese / British English) CV website built with Next.js 
 
 ## Critical Requirements
 1. **Bilingual Support**: All content in EN and ZH-HK with language toggle
-2. **Dark Mode**: System preference detection + manual toggle
+2. **Light Mode Default**: Defaults to light theme; manual toggle in header (Moon icon = switch to dark)
 3. **Responsive**: Mobile-first, test on both desktop and mobile
 4. **Academic Focus**: Education and projects are primary; work experience is secondary (brief)
 5. **British English**: Use colour, centre, organisation, programme throughout
@@ -17,14 +17,16 @@ Bilingual (Traditional Chinese / British English) CV website built with Next.js 
 - Next.js 16.1.6+ (App Router)
 - React 19
 - TypeScript 5
-- Tailwind CSS 3.4.6
+- Tailwind CSS 4.1.0 (upgraded from v3; PostCSS via `@tailwindcss/postcss`, no `tailwind.config.js`)
 - next-intl 4.0.0 (i18n)
 - next-themes 0.4.0 (dark mode)
 - lucide-react 0.460.0 (icons)
 - framer-motion 12.33.0 (animation library — installed)
 - react-wavify (retro wave animation — installed)
+- zod ^4.3.6 (runtime validation for aesthetics module)
 - @vercel/speed-insights + @vercel/analytics
 - Vercel deployment
+- vitest + @testing-library/react + fast-check (dev — `npm test`)
 
 ## File Structure
 ```
@@ -62,12 +64,18 @@ src/
 │   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (lg+ screens)
 │   ├── SovietPropagandaPoster.tsx # Constructivist geometric decorations
 │   ├── DadaCollage.tsx           # Floating Dada collage fragments, stamps, scattered text
-│   └── DadaTypography.tsx        # Deconstructed text with per-character displacement on hover
+│   ├── DadaTypography.tsx        # Deconstructed text with per-character displacement on hover
+│   ├── EnhancedBackground.tsx    # Parallax layered background (grain, scanlines, sepia) for enhanced pages
+│   ├── DeconstructedGrid.tsx     # Grid with random tilt/offset per item (deconstructivist layout)
+│   ├── TimeRewindTransition.tsx  # Page transition with scale+blur+scanline sweep (Reverse:1999)
+│   ├── TemporalMotifs.tsx        # Floating SVG motifs (clocks, triangles, gears, stars)
+│   └── RetroFuturisticCard.tsx   # Card with layered shadows, corner brackets, shimmer, holo border
 ├── messages/
 │   ├── en.json                   # English translations
 │   └── zh-hk.json                # Traditional Chinese translations
 └── lib/
     ├── projects.ts               # Project data with all links
+    ├── aesthetics.ts              # Page type classification (cv vs enhanced) + config
     ├── timeline.ts               # Timeline data and utilities
     └── videos.ts                 # Video data organised by type
 ```
@@ -148,18 +156,22 @@ All video data is stored in `src/lib/projects.ts` and `src/lib/timeline.ts`.
 - Various assignment and final project demonstrations
 
 ## Font System
-Three Google Fonts are used with locale-aware switching:
+Three Google Fonts with a strict priority hierarchy:
 
-| Font | Usage | Weight/Style | CSS Variable |
-|------|-------|--------------|--------------|
-| **Iansui** | Chinese (繁體中文) body text | 400 | `--font-zh` |
-| **LINE Seed JP** | English body text | 400 | `--font-en` |
-| **Noto Serif Display** | Titles & headings | 300 Italic | `--font-title` |
+| Priority | Font | Usage | Weight/Style | CSS Variable |
+|----------|------|-------|--------------|--------------|
+| **1 (Highest)** | **Noto Serif Display** | Names, card/grid titles, section headings | 300 Italic | `--font-title` |
+| **2** | **Iansui** | Chinese (繁體中文) body text | 400 | `--font-zh` |
+| **2** | **LINE Seed JP** | English body text | 400 | `--font-en` |
 
 **Implementation**:
-- Fonts loaded in `src/app/layout.tsx` via `next/font/google`
+- **Iansui** loaded via `next/font/google` (primary — injects `--font-zh` CSS variable with optimised loading)
+- **LINE Seed JP** + **Noto Serif Display** loaded via CDN `<link>` tags (not available in `next/font/google`)
+- Iansui CDN `<link>` also present as fallback
 - Locale-specific classes (`.locale-en`, `.locale-zh`) switch body font automatically
-- Use `font-title` class for elegant headings with retro glow effect
+- `.font-title` class **overrides** locale font with `!important` — always renders Noto Serif Display regardless of language
+- Body text uses locale-specific fonts; headings/titles always use Noto Serif Display
+- Apply `font-title` to: names (h1), section headings (h2), card titles, stat numbers, semester headers
 
 ## Styling Guidelines
 
@@ -196,6 +208,10 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - `.soviet-magnetic` — Subtle pull towards cursor on hover
 - `.soviet-cursor-blink` — Typewriter cursor blink for terminal elements
 - `.soviet-print-btn` — Soviet-styled action button with gradient background
+- `.retro-card` / `.retro-card-glow-*` — RetroFuturisticCard base + glow levels (low/medium/high)
+- `.retro-card-holographic` — Holographic rotating border effect on RetroFuturisticCard
+- `.corner-bracket-*` — Animated corner bracket decorations (tl/tr/bl/br) for RetroFuturisticCard
+- `.retro-shimmer` / `.retro-shimmer-active` — Shimmer sweep inside RetroFuturisticCard
 - Text selection — Soviet propaganda red/gold highlight with glow
 
 **Dada / Deconstructivist Effects** (Reverse:1999 inspired):
@@ -213,17 +229,22 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - `RetroWave` — Enlarged (440px) SVG mountain range with react-wavify animated waves, perspective grid, dual glow lines, stronger horizon glow
 - `SovietParticles` — 35 floating particles (stars, dots, diamonds, sickles, gears)
 - `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay + holographic stripe overlay + data stream scrolling overlay + concentric radar rings
-- `CosmicStarfield` — 120 interactive stars (3 depth layers, 8× parallax), 7 pulsing nebulae, 3 cosmic orbital rings, cross-sparkle effects, 3 shooting stars
+- `CosmicStarfield` — 50 interactive stars (3 depth layers, 8× parallax), 7 pulsing nebulae, 3 cosmic orbital rings, cross-sparkle effects, 7 shooting star trails with dual-layer glow (outer halo + bright core); halo intensity intentionally reduced (stdDeviation 1.0/1.5, opacity ×0.15)
 - `MorseCodeTicker` — Dual scrolling Morse code strips (top + reversed bottom) with Soviet space messages
 - `SovietTelemetry` — Side-panel mission control readout with fluctuating values (lg+ screens)
 - `SovietPropagandaPoster` — Enlarged corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
 - `SovietCursorGlow` — Mouse-following radial glow with spring physics (Atomic Heart polymer glove HUD)
 - `DadaCollage` — Floating Dada collage fragments (torn paper, diagonal slashes, ink stamps, scattered typographic text), inspired by Reverse:1999 / Tzara / Heartfield
 - `DadaTypography` — Per-character deconstructed text displacement on hover with spring physics (used on education/projects headings)
+- `EnhancedBackground` — Multi-layer parallax background (film grain, scanlines, diagonal lines, vignette, temporal distortion) for enhanced pages only; light mode uses sepia/aged-paper textures; **parallax uses CSS custom properties (`--parallax-slow/med/fast`) not React state — no re-renders on scroll**
+- `TemporalMotifs` — Floating SVG decorative motifs (clocks, triangles, gears, stars) with drift + flicker animations, parallax scroll, density control (sparse/medium/dense); **scroll offset uses CSS custom property (`--motif-scroll`) with RAF throttling — no re-renders on scroll**
 
-**Interactive Components** (added in PR #7):
+**Interactive / Layout Components**:
 - `GlitchText` — Cyrillic text scramble on hover, inspired by CRT displays and Atomic Heart telemetry
 - `AnimatedCard` — 3D tilt effect with spotlight tracking and staggered entrance animation (wraps ProjectCard)
+- `TimeRewindTransition` — Page transition wrapper with scale-down (0.97) effect (Reverse:1999 time-rewind); uses `AnimatePresence mode="popLayout"` so navigation is never blocked; only activates on enhanced pages, respects `prefers-reduced-motion`
+- `DeconstructedGrid` — CSS Grid with seeded random tilt (-1.5° to +1.5°) and vertical offset per item; used on projects page for deconstructivist layout
+- `RetroFuturisticCard` — Card component with layered Soviet box-shadows, animated corner brackets, shimmer sweep, optional holographic rotating border; used on education stats
 
 **Colour Palette**:
   - Soviet red: `#8f0000` (deep crimson)
@@ -241,12 +262,13 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 - Brutalist architecture influence
 - 1960s Soviet space race imagery
 - Constructivist typography principles
-- Analog tech aesthetic (CRT, Morse code, telemetry, radar)
+- Analogue tech aesthetic (CRT, Morse code, telemetry, radar)
 - Dada/Deconstructivist accents: collage fragments, torn edges, scattered typography, ink stamps, slight tilts (Reverse:1999 / Tzara)
 - Interactive elements respond to mouse/hover/click
 
 ### General Styling
 - Tailwind CSS utility classes throughout
+- **Tailwind v4**: Uses `@import "tailwindcss"` + `@theme { }` syntax in `globals.css` (no `tailwind.config.js`); custom CSS goes *after* the `@theme { }` block
 - Dark mode: `dark:` prefix for all colour variations
 - Print overrides: All retro effects disabled, clean black/white output
 - Mobile-first responsive design
@@ -257,6 +279,8 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 npm install
 npm run dev
 npm run build
+npm test          # Vitest (unit tests for aesthetics module)
+npm run test:ui   # Vitest UI browser interface
 ```
 
 ## Key Features

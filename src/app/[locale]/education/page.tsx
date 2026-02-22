@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
 import RetroWave from '@/components/RetroWave';
+import RetroFuturisticCard from '@/components/RetroFuturisticCard';
 import DadaTypography from '@/components/DadaTypography';
 import DadaScatterLayout from '@/components/DadaScatterLayout';
 import GlitchRevealText from '@/components/GlitchRevealText';
@@ -100,7 +101,7 @@ export default async function EducationPage({
       </div>
 
       {/* Institution Card */}
-      <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-soviet-red/40 glow-card">
+      <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-soviet-red/40 shadow-sm dark:shadow-none glow-card">
         <div className="soviet-shimmer" />
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
@@ -175,14 +176,14 @@ export default async function EducationPage({
             {/* Course cards — scattered entrance, then align into grid */}
             <DadaScatterLayout
               className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3"
-              stagger={0.05}
-              delay={0.1 + semIndex * 0.15}
-              intensity={0.4}
+              stagger={0.03}
+              delay={0.05 + semIndex * 0.08}
+              intensity={0.2}
             >
               {sem.courses.map((course) => (
                 <div
                   key={course.code}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
                 >
                   <div className="soviet-shimmer" />
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
@@ -208,38 +209,41 @@ export default async function EducationPage({
         ))}
       </div>
 
-      {/* Summary stats — scattered entrance */}
-      <DadaScatterLayout
-        className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
-        stagger={0.08}
-        delay={0.3}
-        intensity={0.7}
-      >
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-1.5deg' } as React.CSSProperties}>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {locale === 'zh-hk' ? '總課程數' : 'Total Courses'}
-          </p>
-        </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '1.2deg' } as React.CSSProperties}>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{SEMESTERS.length}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {locale === 'zh-hk' ? '學期' : 'Semesters'}
-          </p>
-        </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '-0.8deg' } as React.CSSProperties}>
-          <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.7</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {locale === 'zh-hk' ? '大一 GPA' : 'Year 1 GPA'}
-          </p>
-        </div>
-        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 text-center soviet-stat dada-tilt" style={{ '--dada-hover-rotate': '1.8deg' } as React.CSSProperties}>
-          <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
-          </p>
-        </div>
-      </DadaScatterLayout>
+      {/* Summary stats — RetroFuturisticCard with scattered entrance */}
+      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
+          <div className="p-4 text-center">
+            <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {locale === 'zh-hk' ? '總課程數' : 'Total Courses'}
+            </p>
+          </div>
+        </RetroFuturisticCard>
+        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
+          <div className="p-4 text-center">
+            <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{SEMESTERS.length}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {locale === 'zh-hk' ? '學期' : 'Semesters'}
+            </p>
+          </div>
+        </RetroFuturisticCard>
+        <RetroFuturisticCard glowIntensity="high" cornerBrackets holographicBorder>
+          <div className="p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.7</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {locale === 'zh-hk' ? '大一 GPA' : 'Year 1 GPA'}
+            </p>
+          </div>
+        </RetroFuturisticCard>
+        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
+          <div className="p-4 text-center">
+            <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
+            </p>
+          </div>
+        </RetroFuturisticCard>
+      </div>
     </div>
   );
 }

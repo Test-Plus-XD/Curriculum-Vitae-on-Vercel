@@ -16,7 +16,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { usePageType } from '@/lib/aesthetics';
 
 export interface TemporalMotifsProps {
@@ -70,9 +70,9 @@ function generateMotifs(
             type,
             x: seededRandom(i * 10 + 1) * 100,
             y: seededRandom(i * 10 + 2) * 100,
-            size: 2 + seededRandom(i * 10 + 3) * 2, // 2-4rem
+            size: 3 + seededRandom(i * 10 + 3) * 3, // 3-6rem
             rotation: seededRandom(i * 10 + 4) * 360,
-            opacity: 0.15 + seededRandom(i * 10 + 5) * 0.15, // 0.15-0.3
+            opacity: 0.25 + seededRandom(i * 10 + 5) * 0.25, // 0.25-0.5
             animationDelay: seededRandom(i * 10 + 6) * 8, // 0-8s
         });
     }
@@ -210,39 +210,53 @@ export const TemporalMotifs: React.FC<TemporalMotifsProps> = ({
     className = '',
 }) => {
     const pageType = usePageType();
-    const [scrollY, setScrollY] = useState(0);
     const [motifInstances, setMotifInstances] = useState<MotifInstance[]>([]);
-
-    // Only show on enhanced pages
-    if (pageType !== 'enhanced') {
-        return null;
-    }
+    const containerRef = useRef<HTMLDivElement>(null);
+    const rafRef = useRef<number | undefined>(undefined);
 
     // Generate motifs on mount
     useEffect(() => {
         setMotifInstances(generateMotifs(density, motifs));
     }, [density, motifs]);
 
-    // Handle scroll for parallax effect
+    // Parallax via CSS custom property — no React re-renders
+    const updateParallax = useCallback(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        el.style.setProperty('--motif-scroll', `${window.scrollY}`);
+    }, []);
+
     useEffect(() => {
         if (!animate) return;
 
         const handleScroll = () => {
-            setScrollY(window.scrollY);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            rafRef.current = requestAnimationFrame(updateParallax);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [animate]);
+        updateParallax();
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
+    }, [animate, updateParallax]);
+
+    // Only show on enhanced pages
+    if (pageType !== 'enhanced') {
+        return null;
+    }
 
     return (
         <div
+            ref={containerRef}
             className={`fixed inset-0 pointer-events-none overflow-hidden z-0 ${className}`}
             aria-hidden="true"
+            style={{ ['--motif-scroll' as string]: '0' }}
         >
             {motifInstances.map((motif) => {
-                // Calculate parallax offset (subtle movement based on scroll)
-                const parallaxOffset = animate ? (scrollY * 0.05 * (motif.y / 100)) : 0;
+                // Parallax factor per motif based on position
+                const parallaxFactor = 0.05 * (motif.y / 100);
 
                 return (
                     <div
@@ -254,9 +268,10 @@ export const TemporalMotifs: React.FC<TemporalMotifsProps> = ({
                             width: `${motif.size}rem`,
                             height: `${motif.size}rem`,
                             opacity: motif.opacity,
-                            transform: `translateY(${parallaxOffset}px) rotate(${motif.rotation}deg)`,
+                            transform: animate
+                                ? `translateY(calc(var(--motif-scroll) * ${parallaxFactor}px)) rotate(${motif.rotation}deg)`
+                                : `rotate(${motif.rotation}deg)`,
                             pointerEvents: 'none',
-                            // CSS custom properties for animations
                             ['--dada-rotate' as string]: `${motif.rotation}deg`,
                             ['--dada-opacity' as string]: motif.opacity,
                         }}
