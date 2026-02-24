@@ -111,9 +111,9 @@ export default function DadaTypography({
   const cleanupRef = useRef<(() => void) | null>(null);
   const scatterSeed = useRef(42);
 
-  // Constants for scatter intensity - updated per requirements
-  const INITIAL_SCATTER_INTENSITY = 0.1; // Decreased from 0.25 to 0.1
-  const HOVER_SCATTER_MULTIPLIER = 2.2; // Increased from 1.8 to 2.2
+  // Based on commit 53971b9 values; initial factor halved per request
+  const INITIAL_SCATTER_INTENSITY = 0.125;
+  const HOVER_SCATTER_MULTIPLIER = 1.8;
 
   // Displacements use a ref-based seed so hover re-scatter gets new random values
   // Initial scatter uses reduced intensity for readability
@@ -241,11 +241,6 @@ export default function DadaTypography({
           textShadow: '0 0 0px transparent',
         };
 
-        // Staggered reassembly with wave pattern (center-out)
-        const centerIndex = Math.floor(text.length / 2);
-        const distanceFromCenter = Math.abs(i - centerIndex);
-        const waveDelay = isScattered ? i * 0.02 : distanceFromCenter * 0.015;
-
         return (
           <motion.span
             key={i}
@@ -257,7 +252,7 @@ export default function DadaTypography({
               stiffness: isScattered ? 120 : 280,
               damping: isScattered ? 10 : 18,
               mass: 0.3 + (i % 3) * 0.1,
-              delay: waveDelay,
+              delay: isScattered ? i * 0.02 : i * 0.015,
             }}
             style={{
               display: 'inline-block',

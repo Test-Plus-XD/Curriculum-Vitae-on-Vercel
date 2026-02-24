@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { usePageType } from '@/lib/aesthetics';
 
@@ -65,20 +65,15 @@ export default function TimeRewindTransition({
     };
 
     return (
-        <>
-            <AnimatePresence mode="sync" initial={false}>
-                <motion.div
-                    key={pathname}
-                    variants={rewindVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    style={{}}
-
-                >
-                    {children}
-                </motion.div>
-            </AnimatePresence>
-        </>
+        <motion.div
+            key={pathname}
+            variants={rewindVariants}
+            initial="initial"
+            animate="animate"
+            style={{}}
+        >
+            {children}
+        </motion.div>
     );
 }
+

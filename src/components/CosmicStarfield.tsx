@@ -38,8 +38,10 @@ interface CosmicRing {
 
 interface ShootingStar {
   id: number;
-  /// SVG path data with quadratic bezier curves for natural arcs
-  path: string;
+  x1: string;
+  y1: string;
+  x2: string;
+  y2: string;
   width: number;
   dasharray: string;
   delay: number;
@@ -126,47 +128,16 @@ export default function CosmicStarfield() {
     }));
   }, [isMobile]);
 
-  /// Shooting stars with curved paths — 12 trails with quadratic bezier curves
-  /// Each path uses Q command for smooth arcs simulating orbital trajectories
-  /// Thicker strokes (1.2-1.8px) for better visibility
+  /// Shooting star trails from commit 53971b9
   const shootingStars = useMemo<ShootingStar[]>(() => {
     return [
-      /// Trail 1 — gentle downward arc from top-left
-      {
-        id: 0,
-        path: 'M 0 20 Q 40 25 100 35',
-        width: 1.4,
-        dasharray: '60 160',
-        delay: 0,
-        duration: 4
-      },
-      /// Trail 2 — steep curved descent
-      {
-        id: 1,
-        path: 'M 15 5 Q 50 20 85 45',
-        width: 1.2,
-        dasharray: '50 140',
-        delay: 3,
-        duration: 5
-      },
-      /// Trail 3 — reverse arc from right to left
-      {
-        id: 2,
-        path: 'M 70 10 Q 50 30 30 60',
-        width: 1.5,
-        dasharray: '55 150',
-        delay: 7,
-        duration: 7
-      },
-      /// Trail 4 — wide sweeping arc
-      {
-        id: 3,
-        path: 'M 90 15 Q 60 35 10 50',
-        width: 1.6,
-        dasharray: '65 180',
-        delay: 2,
-        duration: 4.5
-      },
+      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8 },
+      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
+      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
+      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9 },
+      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
+      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
+      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
     ];
   }, []);
 
@@ -285,67 +256,56 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Circular sparkle glow for bright near-layer stars — desktop only for performance */}
+              {/* Cross sparkle for bright near-layer stars — desktop only */}
               {star.layer === 2 && star.baseOpacity > 0.5 && !isMobile && (
-                <circle
-                  cx={`${star.x}%`}
-                  cy={`${star.y}%`}
-                  r={star.size * 2.5}
-                  fill={isDark ? '#ffa500' : '#db5b00'}
-                  opacity={star.baseOpacity * 0.3}
-                  filter="url(#star-glow-bright)"
-                  vectorEffect="non-scaling-size"
-                  style={{
-                    transform: `translate(${tx}px, ${ty}px)`,
-                    transition: 'transform 0.3s ease-out',
-                    animation: `twinkle ${star.twinkleSpeed * 0.7}s ease-in-out infinite`,
-                    animationDelay: `${star.id * 0.08}s`,
-                  }}
-                />
+                <>
+                  <line
+                    x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
+                    x2={`${star.x}%`} y2={`${star.y + 0.3}%`}
+                    stroke={isDark ? '#ffa500' : '#db5b00'}
+                    strokeWidth="0.4"
+                    opacity={star.baseOpacity * 0.5}
+                    style={{
+                      transform: `translate(${tx}px, ${ty}px)`,
+                      transition: 'transform 0.3s ease-out',
+                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
+                      animationDelay: `${star.id * 0.08}s`,
+                    }}
+                  />
+                  <line
+                    x1={`${star.x - 0.15}%`} y1={`${star.y}%`}
+                    x2={`${star.x + 0.15}%`} y2={`${star.y}%`}
+                    stroke={isDark ? '#ffa500' : '#db5b00'}
+                    strokeWidth="0.4"
+                    opacity={star.baseOpacity * 0.5}
+                    style={{
+                      transform: `translate(${tx}px, ${ty}px)`,
+                      transition: 'transform 0.3s ease-out',
+                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
+                      animationDelay: `${star.id * 0.08}s`,
+                    }}
+                  />
+                </>
               )}
             </g>
           );
         })}
 
-        {/* Shooting star / satellite trails — 12 curved paths for natural orbital motion */}
+        {/* Multiple shooting star / satellite trails — 7 trails */}
         {shootingStars.map((ss) => (
-          <g key={`trail-group-${ss.id}`}>
-            {/* Outer glow trail — wider, softer for visibility */}
-            <path
-              d={ss.path}
-              stroke={isDark
-                ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
-                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
-              }
-              strokeWidth={ss.width * 2}
-              strokeDasharray={ss.dasharray}
-              fill="none"
-              opacity="0"
-              filter="url(#star-glow)"
-              vectorEffect="non-scaling-stroke"
-              style={{
-                animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
-                strokeLinecap: 'round',
-              }}
-            />
-            {/* Core trail — bright and sharp */}
-            <path
-              d={ss.path}
-              stroke={isDark
-                ? (ss.id % 3 === 0 ? '#ff8c00' : ss.id % 3 === 1 ? '#ffb347' : '#db5b00')
-                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
-              }
-              strokeWidth={ss.width * 1.5}
-              strokeDasharray={ss.dasharray}
-              fill="none"
-              opacity="0"
-              vectorEffect="non-scaling-stroke"
-              style={{
-                animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`,
-                strokeLinecap: 'round',
-              }}
-            />
-          </g>
+          <line
+            key={`trail-${ss.id}`}
+            x1={ss.x1} y1={ss.y1}
+            x2={ss.x2} y2={ss.y2}
+            stroke={isDark
+              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+              : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+            }
+            strokeWidth={ss.width}
+            strokeDasharray={ss.dasharray}
+            opacity="0"
+            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite` }}
+          />
         ))}
       </svg>
     </div>

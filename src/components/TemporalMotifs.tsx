@@ -26,6 +26,8 @@ export interface TemporalMotifsProps {
     className?: string;
 }
 
+const DEFAULT_MOTIFS: MotifType[] = ['clock', 'triangle', 'gear', 'star'];
+
 interface MotifInstance {
     id: string;
     type: 'clock' | 'triangle' | 'gear' | 'star';
@@ -205,7 +207,7 @@ const MotifSVG: React.FC<{ type: string; className?: string }> = ({ type, classN
  */
 export const TemporalMotifs: React.FC<TemporalMotifsProps> = ({
     density = 'medium',
-    motifs = ['clock', 'triangle', 'gear', 'star'],
+    motifs = DEFAULT_MOTIFS,
     animate = true,
     className = '',
 }) => {
