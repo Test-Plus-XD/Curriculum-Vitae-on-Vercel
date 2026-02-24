@@ -19,9 +19,11 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { usePageType } from '@/lib/aesthetics';
 
+type MotifType = 'clock' | 'triangle' | 'gear' | 'star';
+
 export interface TemporalMotifsProps {
     density?: 'sparse' | 'medium' | 'dense';
-    motifs?: ('clock' | 'triangle' | 'gear' | 'star')[];
+    motifs?: MotifType[];
     animate?: boolean;
     className?: string;
 }
@@ -30,7 +32,7 @@ const DEFAULT_MOTIFS: MotifType[] = ['clock', 'triangle', 'gear', 'star'];
 
 interface MotifInstance {
     id: string;
-    type: 'clock' | 'triangle' | 'gear' | 'star';
+    type: MotifType;
     x: number; // percentage
     y: number; // percentage
     size: number; // rem
@@ -52,7 +54,7 @@ function seededRandom(seed: number): number {
  */
 function generateMotifs(
     density: 'sparse' | 'medium' | 'dense',
-    allowedTypes: ('clock' | 'triangle' | 'gear' | 'star')[]
+    allowedTypes: MotifType[]
 ): MotifInstance[] {
     const counts = {
         sparse: 3,
