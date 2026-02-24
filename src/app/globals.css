@@ -867,20 +867,12 @@ body::-webkit-scrollbar {
   }
 
   5% {
-    opacity: 0.9;
+    opacity: 0.6;
   }
 
-  25% {
-    opacity: 0.8;
-  }
-
-  40% {
-    opacity: 0.5;
-    stroke-dashoffset: -20%;
-  }
-
-  50% {
+  15% {
     opacity: 0;
+    stroke-dashoffset: 0;
   }
 
   100% {
