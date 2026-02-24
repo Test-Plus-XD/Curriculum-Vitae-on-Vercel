@@ -132,27 +132,27 @@ export default function CosmicStarfield() {
   /// Shooting-star trails keep 53971b9 base set with subtle curved-arc variation
   const shootingStars = useMemo<ShootingStar[]>(() => {
     const baseTrails: ShootingStar[] = [
-      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', curve: -5, width: 0.8, dasharray: '200', delay: 0, duration: 8 },
-      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', curve: -4, width: 0.5, dasharray: '150', delay: 3, duration: 10 },
-      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', curve: 5, width: 0.6, dasharray: '180', delay: 7, duration: 14 },
-      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', curve: 6, width: 0.7, dasharray: '220', delay: 2, duration: 9 },
-      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', curve: -3, width: 0.4, dasharray: '160', delay: 5, duration: 12 },
-      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', curve: 4, width: 0.5, dasharray: '140', delay: 8, duration: 11 },
-      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', curve: -6, width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', curve: -0.8, width: 0.8, dasharray: '200', delay: 0, duration: 8 },
+      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', curve: -0.6, width: 0.5, dasharray: '150', delay: 3, duration: 10 },
+      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', curve: 0.9, width: 0.6, dasharray: '180', delay: 7, duration: 14 },
+      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', curve: 1.0, width: 0.7, dasharray: '220', delay: 2, duration: 9 },
+      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', curve: -0.5, width: 0.4, dasharray: '160', delay: 5, duration: 12 },
+      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', curve: 0.7, width: 0.5, dasharray: '140', delay: 8, duration: 11 },
+      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', curve: -0.9, width: 0.6, dasharray: '190', delay: 1, duration: 13 },
     ];
 
-    const dashPresets = ['22 10 8 12 4 16', '28 12 6 10 4 14', '18 9 10 13 6 12', '24 11 7 9 5 16'];
+    const dashPresets = ['14 34 8 42 4 48', '16 36 6 46 4 52', '12 30 10 40 5 50', '18 38 7 44 4 56'];
 
     return baseTrails.map((trail) => {
       const durationJitter = 0.45 + Math.random() * 0.28;
       const delayJitter = Math.random() * 1.15;
-      const curveJitter = -1.3 + Math.random() * 2.6;
+      const curveJitter = -0.35 + Math.random() * 0.7;
 
       return {
         ...trail,
         dasharray: dashPresets[Math.floor(Math.random() * dashPresets.length)],
         curve: Number((trail.curve + curveJitter).toFixed(2)),
-        width: Number((Math.max(0.16, trail.width * 0.45)).toFixed(2)),
+        width: Number((Math.max(0.1, trail.width * 0.3)).toFixed(2)),
         duration: Number((trail.duration * durationJitter).toFixed(2)),
         delay: Number((trail.delay + delayJitter).toFixed(2)),
       };
@@ -236,7 +236,6 @@ export default function CosmicStarfield() {
           const parallaxFactor = (star.layer + 1) * (isMobile ? 2 : 8);
           const tx = mouse.x * parallaxFactor;
           const ty = mouse.y * parallaxFactor;
-          const glowFilter = star.layer === 2 ? 'url(#star-glow-bright)' : 'url(#star-glow)';
 
           return (
             <g key={star.id} style={{ pointerEvents: 'none', mixBlendMode: 'screen' }}>
@@ -246,8 +245,7 @@ export default function CosmicStarfield() {
                 cy={`${star.y}%`}
                 r={star.size * (star.layer === 2 ? 1.5 : 1.2)}
                 fill={isDark ? '#ffa500' : '#8f0000'}
-                opacity={star.baseOpacity * 0.15}
-                filter={glowFilter}
+                opacity={star.baseOpacity * 0.08}
                 vectorEffect="non-scaling-size"
                 style={{
                   transform: `translate(${tx}px, ${ty}px)`,
@@ -281,7 +279,7 @@ export default function CosmicStarfield() {
                     x1={`${star.x}%`} y1={`${star.y - 0.22}%`}
                     x2={`${star.x}%`} y2={`${star.y + 0.22}%`}
                     stroke={isDark ? '#ffca62' : '#db5b00'}
-                    strokeWidth="0.12"
+                    strokeWidth="0.08"
                     strokeLinecap="round"
                     opacity={star.baseOpacity * 0.65}
                     style={{
@@ -295,7 +293,7 @@ export default function CosmicStarfield() {
                     x1={`${star.x - 0.22}%`} y1={`${star.y}%`}
                     x2={`${star.x + 0.22}%`} y2={`${star.y}%`}
                     stroke={isDark ? '#ffca62' : '#db5b00'}
-                    strokeWidth="0.12"
+                    strokeWidth="0.08"
                     strokeLinecap="round"
                     opacity={star.baseOpacity * 0.65}
                     style={{
@@ -308,7 +306,7 @@ export default function CosmicStarfield() {
                   <circle
                     cx={`${star.x}%`}
                     cy={`${star.y}%`}
-                    r={0.08}
+                    r={0.05}
                     fill={isDark ? '#ffd277' : '#db5b00'}
                     opacity={star.baseOpacity * 0.65}
                     style={{
