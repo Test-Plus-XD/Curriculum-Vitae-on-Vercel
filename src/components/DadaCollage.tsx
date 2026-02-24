@@ -833,7 +833,7 @@ export default function DadaCollage() {
     setMounted(true);
   }, []);
 
-  const fragments = useMemo(() => generateFragments(16, 42), []);
+  const fragments = useMemo(() => generateFragments(10, 42), []);
 
   // Randomised positions for scattered typographic text fragments
   const textPositions = useMemo(
@@ -880,7 +880,7 @@ export default function DadaCollage() {
 
   return (
     <motion.div
-      className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden"
+      className="print:hidden fixed inset-0 pointer-events-none z-[7] overflow-hidden"
       aria-hidden="true"
       variants={containerVariants}
       initial="hidden"
@@ -943,8 +943,8 @@ export default function DadaCollage() {
           />
         ))}
 
-        {/* ── Scattered typographic fragments ────────────────────── */}
-        {DADA_FRAGMENTS.map((frag, i) => (
+        {/* ── Scattered typographic fragments (limited for GPU performance) ── */}
+        {DADA_FRAGMENTS.slice(0, 8).map((frag, i) => (
           <motion.div
             key={`text-${i}`}
             className={`dada-scatter ${frag.size} font-title`}
@@ -978,8 +978,8 @@ export default function DadaCollage() {
         ))}
       </motion.div>
 
-      {/* ── Dada ink stamps — bureaucratic absurdist seals ────────── */}
-      {STAMPS.map((stamp, i) => (
+      {/* ── Dada ink stamps — bureaucratic absurdist seals (limited for GPU performance) ── */}
+      {STAMPS.slice(0, 2).map((stamp, i) => (
         <motion.div
           key={`stamp-${i}`}
           className="absolute hidden lg:block"

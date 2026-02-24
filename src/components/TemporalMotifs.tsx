@@ -250,7 +250,7 @@ export const TemporalMotifs: React.FC<TemporalMotifsProps> = ({
     return (
         <div
             ref={containerRef}
-            className={`fixed inset-0 pointer-events-none overflow-hidden z-0 ${className}`}
+            className={`fixed inset-0 pointer-events-none overflow-hidden z-[4] ${className}`}
             aria-hidden="true"
             style={{ ['--motif-scroll' as string]: '0' }}
         >

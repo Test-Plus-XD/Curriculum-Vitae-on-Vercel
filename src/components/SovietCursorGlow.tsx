@@ -57,7 +57,7 @@ export default function SovietCursorGlow() {
   return (
     <motion.div
       ref={glowRef}
-      className="print:hidden fixed pointer-events-none z-[997] hidden lg:block"
+      className="print:hidden fixed pointer-events-none z-[60] hidden lg:block"
       aria-hidden="true"
       style={{
         x: springX,

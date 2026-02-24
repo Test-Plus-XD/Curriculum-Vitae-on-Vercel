@@ -21,10 +21,10 @@ export default function RetroWave() {
   useEffect(() => {
     setMounted(true);
 
-    // Slow horizontal drift animation
+    // Slow horizontal drift animation (reduced frequency for GPU optimisation)
     const interval = setInterval(() => {
-      setOffset((prev) => (prev + 0.3) % 200);
-    }, 50);
+      setOffset((prev) => (prev + 0.6) % 200);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -41,7 +41,7 @@ export default function RetroWave() {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-0 overflow-hidden">
+    <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-[2] overflow-hidden">
       {/* Glowing horizon line — responsive positioning */}
       <div
         className="absolute left-0 right-0 h-[2px] sm:h-[3px] bottom-[220px] sm:bottom-[320px] lg:bottom-[420px]"

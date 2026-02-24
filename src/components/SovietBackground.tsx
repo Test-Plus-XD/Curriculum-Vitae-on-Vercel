@@ -87,31 +87,6 @@ export default function SovietBackground() {
         />
       )}
 
-      {/* Pulsing grid animation overlay — dark mode only */}
-      {isDark && (
-        <div
-          className="absolute inset-0 animate-soviet-pulse"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(143, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(143, 0, 0, 0.1) 1px, transparent 1px)',
-            backgroundSize: '80px 80px',
-          }}
-        />
-      )}
-
-      {/* Data stream overlay — vertical scrolling lines (Atomic Heart telemetry) */}
-      {isDark && (
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              'repeating-linear-gradient(180deg, transparent, transparent 8px, rgba(219, 91, 0, 0.008) 8px, rgba(219, 91, 0, 0.008) 9px)',
-            backgroundSize: '200px 200px',
-            animation: 'data-stream 20s linear infinite',
-          }}
-        />
-      )}
-
       {/* Concentric radar rings — bottom-right corner accent */}
       {isDark && (
         <div

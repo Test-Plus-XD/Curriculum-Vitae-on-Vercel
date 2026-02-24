@@ -5,7 +5,11 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { usePageType } from '@/lib/aesthetics';
 
 /**
- * EnhancedBackground — Layered background effects for Enhanced pages
+ * EnhancedBackground — Parallax background effects unique to Enhanced pages.
+ *
+ * Only renders layers that do NOT duplicate SovietBackground
+ * (grid, diagonals, grain, vignette, scanlines are already handled there).
+ * Provides parallax-moving textures and aged-paper effects.
  *
  * Uses CSS custom properties for parallax instead of React state to avoid
  * re-renders on every scroll frame. Only updates the DOM via CSS variables.
@@ -28,7 +32,6 @@ export default function EnhancedBackground() {
         const y = window.scrollY;
         el.style.setProperty('--parallax-slow', `${y * 0.15}px`);
         el.style.setProperty('--parallax-med', `${y * 0.25}px`);
-        el.style.setProperty('--parallax-fast', `${y * 0.35}px`);
     }, []);
 
     useEffect(() => {
@@ -54,15 +57,15 @@ export default function EnhancedBackground() {
     return (
         <div
             ref={containerRef}
-            className="print:hidden fixed inset-0 pointer-events-none z-0"
+            className="print:hidden fixed inset-0 pointer-events-none z-[1]"
             aria-hidden="true"
         >
             {/* ═══════════════════════════════════════════════════════════
-          DARK MODE LAYERS
+          DARK MODE — unique parallax layers only
           ═══════════════════════════════════════════════════════════ */}
             {isDark && (
                 <>
-                    {/* Layer 1: Base film grain texture (slowest parallax) */}
+                    {/* Parallax film grain texture (slow) */}
                     <div
                         className="absolute inset-0 opacity-40"
                         style={{
@@ -72,47 +75,7 @@ export default function EnhancedBackground() {
                         }}
                     />
 
-                    {/* Layer 2: Scanline overlay (medium parallax) */}
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            transform: 'translateY(var(--parallax-med, 0px))',
-                            backgroundImage: `repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.08) 2px,
-                rgba(0, 0, 0, 0.08) 4px
-              )`,
-                            animation: 'flicker 8s step-end infinite',
-                        }}
-                    />
-
-                    {/* Layer 3: Diagonal constructivist lines (fast parallax) */}
-                    <div
-                        className="absolute inset-0 opacity-60"
-                        style={{
-                            transform: 'translateY(var(--parallax-fast, 0px))',
-                            backgroundImage: `
-                repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 100px,
-                  rgba(219, 91, 0, 0.04) 100px,
-                  rgba(219, 91, 0, 0.04) 101px
-                ),
-                repeating-linear-gradient(
-                  -45deg,
-                  transparent,
-                  transparent 140px,
-                  rgba(143, 0, 0, 0.03) 140px,
-                  rgba(143, 0, 0, 0.03) 141px
-                )
-              `,
-                        }}
-                    />
-
-                    {/* Layer 4: Subtle pattern overlay (static) */}
+                    {/* Subtle colour pools (static, no duplicate) */}
                     <div
                         className="absolute inset-0 opacity-30"
                         style={{
@@ -124,15 +87,7 @@ export default function EnhancedBackground() {
                         }}
                     />
 
-                    {/* Layer 5: Vignette overlay (static) */}
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10, 12, 18, 0.5) 100%)',
-                        }}
-                    />
-
-                    {/* Layer 6: Temporal distortion effect (animated) */}
+                    {/* Temporal distortion lines (animated, unique to enhanced) */}
                     <div
                         className="absolute inset-0 opacity-20"
                         style={{
@@ -152,11 +107,11 @@ export default function EnhancedBackground() {
             )}
 
             {/* ═══════════════════════════════════════════════════════════
-          LIGHT MODE LAYERS
+          LIGHT MODE — unique parallax layers only
           ═══════════════════════════════════════════════════════════ */}
             {!isDark && (
                 <>
-                    {/* Layer 1: Aged paper base texture (slowest parallax) */}
+                    {/* Parallax aged paper texture (slow) */}
                     <div
                         className="absolute inset-0 opacity-70"
                         style={{
@@ -166,7 +121,7 @@ export default function EnhancedBackground() {
                         }}
                     />
 
-                    {/* Layer 2: Sepia tone overlay (medium parallax) */}
+                    {/* Sepia tone overlay (medium parallax) */}
                     <div
                         className="absolute inset-0"
                         style={{
@@ -182,54 +137,7 @@ export default function EnhancedBackground() {
                         }}
                     />
 
-                    {/* Layer 3: Subtle scanlines (fast parallax) */}
-                    <div
-                        className="absolute inset-0 opacity-60"
-                        style={{
-                            transform: 'translateY(var(--parallax-fast, 0px))',
-                            backgroundImage: `repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 3px,
-                rgba(143, 0, 0, 0.02) 3px,
-                rgba(143, 0, 0, 0.02) 6px
-              )`,
-                            animation: 'flicker 12s step-end infinite',
-                        }}
-                    />
-
-                    {/* Layer 4: Diagonal vintage lines (static) */}
-                    <div
-                        className="absolute inset-0 opacity-50"
-                        style={{
-                            backgroundImage: `
-                repeating-linear-gradient(
-                  45deg,
-                  transparent,
-                  transparent 120px,
-                  rgba(143, 0, 0, 0.025) 120px,
-                  rgba(143, 0, 0, 0.025) 121px
-                ),
-                repeating-linear-gradient(
-                  -45deg,
-                  transparent,
-                  transparent 160px,
-                  rgba(219, 91, 0, 0.02) 160px,
-                  rgba(219, 91, 0, 0.02) 161px
-                )
-              `,
-                        }}
-                    />
-
-                    {/* Layer 5: Warm vignette (static) */}
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background: 'radial-gradient(ellipse at center, transparent 40%, rgba(143, 0, 0, 0.08) 100%)',
-                        }}
-                    />
-
-                    {/* Layer 6: Aged document spots (static) */}
+                    {/* Aged document spots (static) */}
                     <div
                         className="absolute inset-0 opacity-25"
                         style={{
@@ -241,43 +149,8 @@ export default function EnhancedBackground() {
               `,
                         }}
                     />
-
-                    {/* Layer 7: Subtle paper texture overlay (animated) */}
-                    <div
-                        className="absolute inset-0 opacity-15"
-                        style={{
-                            backgroundImage: `
-                repeating-linear-gradient(
-                  90deg,
-                  transparent,
-                  transparent 80px,
-                  rgba(143, 0, 0, 0.015) 80px,
-                  rgba(143, 0, 0, 0.015) 81px
-                )
-              `,
-                            animation: 'dada-drift 25s ease-in-out infinite',
-                        }}
-                    />
                 </>
             )}
-
-            {/* ═══════════════════════════════════════════════════════════
-          SHARED LAYERS (Both modes)
-          ═══════════════════════════════════════════════════════════ */}
-
-            {/* Temporal distortion grid (very subtle, animated) */}
-            <div
-                className="absolute inset-0"
-                style={{
-                    opacity: isDark ? 0.08 : 0.04,
-                    backgroundImage: `
-            linear-gradient(rgba(143, 0, 0, ${isDark ? 0.12 : 0.06}) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(143, 0, 0, ${isDark ? 0.12 : 0.06}) 1px, transparent 1px)
-          `,
-                    backgroundSize: '60px 60px',
-                    animation: 'soviet-pulse 8s ease-in-out infinite',
-                }}
-            />
         </div>
     );
 }

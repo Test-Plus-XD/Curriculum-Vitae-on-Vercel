@@ -49,7 +49,7 @@ export default function SovietTelemetry() {
           return (base + fluctuation).toFixed(TELEMETRY_DATA[i].value.includes('.') ? 1 : 0);
         })
       );
-    }, 800);
+    }, 2500);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -66,7 +66,7 @@ export default function SovietTelemetry() {
 
   return (
     <div
-      className="print:hidden fixed right-0 top-1/2 -translate-y-1/2 pointer-events-none z-[3] hidden lg:block"
+      className="print:hidden fixed right-0 top-1/2 -translate-y-1/2 pointer-events-none z-[9] hidden lg:block"
       aria-hidden="true"
     >
       <div
