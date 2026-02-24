@@ -30,7 +30,7 @@ export default function SovietParticles() {
   }, []);
 
   const particles = useMemo<Particle[]>(() => {
-    return Array.from({ length: 35 }, (_, i) => ({
+    return Array.from({ length: 20 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       size: 3 + Math.random() * 5,

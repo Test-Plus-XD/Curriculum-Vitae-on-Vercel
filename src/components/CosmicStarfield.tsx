@@ -82,10 +82,10 @@ export default function CosmicStarfield() {
     };
   }, []);
 
-  /// Star count reduced to 50 instead of 120 for better mobile performance
+  /// Star count reduced to 35 for better GPU performance
   /// Each star has depth layering for parallax scrolling effect
   const stars = useMemo<Star[]>(() => {
-    const count = 50;
+    const count = isMobile ? 18 : 35;
     return Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -95,12 +95,12 @@ export default function CosmicStarfield() {
       twinkleSpeed: 1.5 + Math.random() * 6,
       layer: i % 3,
     }));
-  }, []);
+  }, [isMobile]);
 
   /// Nebulae — pulsing coloured fog for cosmic atmosphere
   const nebulae = useMemo<Nebula[]>(() => {
     const colors = ['#8f0000', '#db5b00', '#ffa500', '#6b0000', '#ff7700'];
-    return Array.from({ length: isMobile ? 2 : 4 }, (_, i) => ({
+    return Array.from({ length: isMobile ? 1 : 2 }, (_, i) => ({
       id: i,
       x: 10 + Math.random() * 80,
       y: 5 + Math.random() * 90,
@@ -115,7 +115,7 @@ export default function CosmicStarfield() {
 
   /// Cosmic orbital rings — warped elliptical paths inspired by Reverse:1999
   const cosmicRings = useMemo<CosmicRing[]>(() => {
-    return Array.from({ length: isMobile ? 0 : 2 }, (_, i) => ({
+    return Array.from({ length: isMobile ? 0 : 1 }, (_, i) => ({
       id: i,
       cx: 20 + Math.random() * 60,
       cy: 20 + Math.random() * 60,
@@ -132,67 +132,40 @@ export default function CosmicStarfield() {
   const shootingStars = useMemo<ShootingStar[]>(() => {
     return [
       /// Trail 1 — gentle downward arc from top-left
-      { 
-        id: 0, 
-        path: 'M 0 20 Q 40 25 100 35', 
-        width: 1.4, 
-        dasharray: '220', 
-        delay: 0, 
-        duration: 4 
+      {
+        id: 0,
+        path: 'M 0 20 Q 40 25 100 35',
+        width: 1.4,
+        dasharray: '60 160',
+        delay: 0,
+        duration: 4
       },
       /// Trail 2 — steep curved descent
-      { 
-        id: 1, 
-        path: 'M 15 5 Q 50 20 85 45', 
-        width: 1.2, 
-        dasharray: '180', 
-        delay: 3, 
-        duration: 5 
+      {
+        id: 1,
+        path: 'M 15 5 Q 50 20 85 45',
+        width: 1.2,
+        dasharray: '50 140',
+        delay: 3,
+        duration: 5
       },
       /// Trail 3 — reverse arc from right to left
-      { 
-        id: 2, 
-        path: 'M 70 10 Q 50 30 30 60', 
-        width: 1.5, 
-        dasharray: '200', 
-        delay: 7, 
-        duration: 7 
+      {
+        id: 2,
+        path: 'M 70 10 Q 50 30 30 60',
+        width: 1.5,
+        dasharray: '55 150',
+        delay: 7,
+        duration: 7
       },
       /// Trail 4 — wide sweeping arc
-      { 
-        id: 3, 
-        path: 'M 90 15 Q 60 35 10 50', 
-        width: 1.6, 
-        dasharray: '240', 
-        delay: 2, 
-        duration: 4.5 
-      },
-      /// Trail 5 — gentle upward curve (ascending satellite)
-      { 
-        id: 4, 
-        path: 'M 5 40 Q 35 35 80 70', 
-        width: 1.3, 
-        dasharray: '190', 
-        delay: 5, 
-        duration: 6 
-      },
-      /// Trail 6 — sharp parabolic arc
-      { 
-        id: 5, 
-        path: 'M 60 5 Q 40 15 20 35', 
-        width: 1.2, 
-        dasharray: '160', 
-        delay: 8, 
-        duration: 5.5 
-      },
-      /// Trail 7 — diagonal sweeping trajectory
-      { 
-        id: 6, 
-        path: 'M 40 8 Q 65 30 95 55', 
-        width: 1.5, 
-        dasharray: '210', 
-        delay: 1, 
-        duration: 6.5 
+      {
+        id: 3,
+        path: 'M 90 15 Q 60 35 10 50',
+        width: 1.6,
+        dasharray: '65 180',
+        delay: 2,
+        duration: 4.5
       },
     ];
   }, []);
@@ -312,40 +285,23 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Cross sparkle for bright near-layer stars — desktop only for performance */}
+              {/* Circular sparkle glow for bright near-layer stars — desktop only for performance */}
               {star.layer === 2 && star.baseOpacity > 0.5 && !isMobile && (
-                <>
-                  {/* Vertical sparkle line */}
-                  <line
-                    x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
-                    x2={`${star.x}%`} y2={`${star.y + 0.3}%`}
-                    stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.4"
-                    opacity={star.baseOpacity * 0.5}
-                    vectorEffect="non-scaling-stroke"
-                    style={{
-                      transform: `translate(${tx}px, ${ty}px)`,
-                      transition: 'transform 0.3s ease-out',
-                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
-                      animationDelay: `${star.id * 0.08}s`,
-                    }}
-                  />
-                  {/* Horizontal sparkle line */}
-                  <line
-                    x1={`${star.x - 0.15}%`} y1={`${star.y}%`}
-                    x2={`${star.x + 0.15}%`} y2={`${star.y}%`}
-                    stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.4"
-                    opacity={star.baseOpacity * 0.5}
-                    vectorEffect="non-scaling-stroke"
-                    style={{
-                      transform: `translate(${tx}px, ${ty}px)`,
-                      transition: 'transform 0.3s ease-out',
-                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
-                      animationDelay: `${star.id * 0.08}s`,
-                    }}
-                  />
-                </>
+                <circle
+                  cx={`${star.x}%`}
+                  cy={`${star.y}%`}
+                  r={star.size * 2.5}
+                  fill={isDark ? '#ffa500' : '#db5b00'}
+                  opacity={star.baseOpacity * 0.3}
+                  filter="url(#star-glow-bright)"
+                  vectorEffect="non-scaling-size"
+                  style={{
+                    transform: `translate(${tx}px, ${ty}px)`,
+                    transition: 'transform 0.3s ease-out',
+                    animation: `twinkle ${star.twinkleSpeed * 0.7}s ease-in-out infinite`,
+                    animationDelay: `${star.id * 0.08}s`,
+                  }}
+                />
               )}
             </g>
           );

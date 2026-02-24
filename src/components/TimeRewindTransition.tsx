@@ -66,16 +66,15 @@ export default function TimeRewindTransition({
 
     return (
         <>
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence mode="sync" initial={false}>
                 <motion.div
                     key={pathname}
                     variants={rewindVariants}
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    style={{
-                        willChange: 'transform, opacity',
-                    }}
+                    style={{}}
+
                 >
                     {children}
                 </motion.div>

@@ -21,10 +21,10 @@ export default function RetroWave() {
   useEffect(() => {
     setMounted(true);
 
-    // Slow horizontal drift animation
+    // Slow horizontal drift animation (reduced frequency for GPU optimisation)
     const interval = setInterval(() => {
-      setOffset((prev) => (prev + 0.3) % 200);
-    }, 50);
+      setOffset((prev) => (prev + 0.6) % 200);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

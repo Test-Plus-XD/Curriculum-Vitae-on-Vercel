@@ -49,7 +49,7 @@ export default function SovietTelemetry() {
           return (base + fluctuation).toFixed(TELEMETRY_DATA[i].value.includes('.') ? 1 : 0);
         })
       );
-    }, 800);
+    }, 2500);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

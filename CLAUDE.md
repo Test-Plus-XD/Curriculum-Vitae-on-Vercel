@@ -17,7 +17,7 @@ Bilingual (Traditional Chinese / British English) CV website built with Next.js 
 - Next.js 16.1.6+ (App Router)
 - React 19
 - TypeScript 5
-- Tailwind CSS 4.1.0 (upgraded from v3; PostCSS via `@tailwindcss/postcss`, no `tailwind.config.js`)
+- Tailwind CSS 4.1.0 (upgraded from v3; PostCSS via `@tailwindcss/postcss`, no `tailwind.config.js`; dark mode via `@custom-variant dark` in globals.css)
 - next-intl 4.0.0 (i18n)
 - next-themes 0.4.0 (dark mode)
 - lucide-react 0.460.0 (icons)
@@ -57,15 +57,15 @@ src/
 │   ├── VideoEmbed.tsx            # Legacy YouTube modal
 │   ├── InlineVideo.tsx           # YouTube embed (thumbnail → fullscreen iframe)
 │   ├── RetroWave.tsx             # Enlarged (440px) mountain range with react-wavify waves
-│   ├── SovietParticles.tsx       # 35 floating particles (stars, gears, sickles)
-│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain + data stream + radar rings
-│   ├── CosmicStarfield.tsx       # 120 stars, 7 nebulae, 3 orbital rings, shooting stars
+│   ├── SovietParticles.tsx       # 20 floating particles (stars, gears, sickles)
+│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain + holographic stripe + radar rings
+│   ├── CosmicStarfield.tsx       # 35 stars (18 mobile), 2 nebulae, 1 orbital ring, 4 shooting stars
 │   ├── MorseCodeTicker.tsx       # Dual scrolling Morse code strips (top + bottom)
 │   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (lg+ screens)
 │   ├── SovietPropagandaPoster.tsx # Constructivist geometric decorations
 │   ├── DadaCollage.tsx           # Floating Dada collage fragments, stamps, scattered text
 │   ├── DadaTypography.tsx        # Deconstructed text with per-character displacement on hover
-│   ├── EnhancedBackground.tsx    # Parallax layered background (grain, scanlines, sepia) for enhanced pages
+│   ├── EnhancedBackground.tsx    # Parallax layered background (grain, sepia, aged spots) for enhanced pages; no duplicate layers
 │   ├── DeconstructedGrid.tsx     # Grid with random tilt/offset per item (deconstructivist layout)
 │   ├── TimeRewindTransition.tsx  # Page transition with scale+blur+scanline sweep (Reverse:1999)
 │   ├── TemporalMotifs.tsx        # Floating SVG motifs (clocks, triangles, gears, stars)
@@ -227,22 +227,22 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 
 **Atmospheric Components** (hidden on CV page in light mode):
 - `RetroWave` — Enlarged (440px) SVG mountain range with react-wavify animated waves, perspective grid, dual glow lines, stronger horizon glow
-- `SovietParticles` — 35 floating particles (stars, dots, diamonds, sickles, gears)
-- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay + holographic stripe overlay + data stream scrolling overlay + concentric radar rings
-- `CosmicStarfield` — 50 interactive stars (3 depth layers, 8× parallax), 7 pulsing nebulae, 3 cosmic orbital rings, cross-sparkle effects, 7 shooting star trails with dual-layer glow (outer halo + bright core); halo intensity intentionally reduced (stdDeviation 1.0/1.5, opacity ×0.15)
+- `SovietParticles` — 20 floating particles (stars, dots, diamonds, sickles, gears)
+- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay + holographic stripe overlay + concentric radar rings (pulsing grid and data stream removed for GPU optimisation)
+- `CosmicStarfield` — 35 interactive stars / 18 on mobile (3 depth layers, 8× parallax), 2 pulsing nebulae, 1 cosmic orbital ring, circular sparkle glow effects, 4 shooting star trails with dual-layer glow (outer halo + bright core); halo intensity intentionally reduced (stdDeviation 1.0/1.5, opacity ×0.15)
 - `MorseCodeTicker` — Dual scrolling Morse code strips (top + reversed bottom) with Soviet space messages
 - `SovietTelemetry` — Side-panel mission control readout with fluctuating values (lg+ screens)
 - `SovietPropagandaPoster` — Enlarged corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
 - `SovietCursorGlow` — Mouse-following radial glow with spring physics (Atomic Heart polymer glove HUD)
 - `DadaCollage` — Floating Dada collage fragments (torn paper, diagonal slashes, ink stamps, scattered typographic text), inspired by Reverse:1999 / Tzara / Heartfield
 - `DadaTypography` — Per-character deconstructed text displacement on hover with spring physics (used on education/projects headings)
-- `EnhancedBackground` — Multi-layer parallax background (film grain, scanlines, diagonal lines, vignette, temporal distortion) for enhanced pages only; light mode uses sepia/aged-paper textures; **parallax uses CSS custom properties (`--parallax-slow/med/fast`) not React state — no re-renders on scroll**
+- `EnhancedBackground` — Parallax background (film grain, sepia, aged spots, temporal distortion) for enhanced pages only; light mode uses sepia/aged-paper textures; scanlines/diagonals/vignette removed (handled by SovietBackground); **parallax uses CSS custom properties (`--parallax-slow/med`) not React state — no re-renders on scroll**
 - `TemporalMotifs` — Floating SVG decorative motifs (clocks, triangles, gears, stars) with drift + flicker animations, parallax scroll, density control (sparse/medium/dense); **scroll offset uses CSS custom property (`--motif-scroll`) with RAF throttling — no re-renders on scroll**
 
 **Interactive / Layout Components**:
 - `GlitchText` — Cyrillic text scramble on hover, inspired by CRT displays and Atomic Heart telemetry
 - `AnimatedCard` — 3D tilt effect with spotlight tracking and staggered entrance animation (wraps ProjectCard)
-- `TimeRewindTransition` — Page transition wrapper with scale-down (0.97) effect (Reverse:1999 time-rewind); uses `AnimatePresence mode="popLayout"` so navigation is never blocked; only activates on enhanced pages, respects `prefers-reduced-motion`
+- `TimeRewindTransition` — Page transition wrapper with scale-down (0.97) effect (Reverse:1999 time-rewind); uses `AnimatePresence mode="sync"` so navigation is never blocked; only activates on enhanced pages, respects `prefers-reduced-motion`
 - `DeconstructedGrid` — CSS Grid with seeded random tilt (-1.5° to +1.5°) and vertical offset per item; used on projects page for deconstructivist layout
 - `RetroFuturisticCard` — Card component with layered Soviet box-shadows, animated corner brackets, shimmer sweep, optional holographic rotating border; used on education stats
 
@@ -268,8 +268,8 @@ Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofu
 
 ### General Styling
 - Tailwind CSS utility classes throughout
-- **Tailwind v4**: Uses `@import "tailwindcss"` + `@theme { }` syntax in `globals.css` (no `tailwind.config.js`); custom CSS goes *after* the `@theme { }` block
-- Dark mode: `dark:` prefix for all colour variations
+- **Tailwind v4**: Uses `@import "tailwindcss"` + `@custom-variant dark (&:where(.dark, .dark *))` + `@theme { }` syntax in `globals.css` (no `tailwind.config.js`); custom CSS goes *after* the `@theme { }` block
+- Dark mode: `dark:` prefix for all colour variations (class-based via `@custom-variant dark`, toggled by next-themes on `<html>`)
 - Print overrides: All retro effects disabled, clean black/white output
 - Mobile-first responsive design
 - Accent colours: Blue (blue-600/blue-400) for links
