@@ -42,6 +42,7 @@ interface ShootingStar {
   y1: string;
   x2: string;
   y2: string;
+  curve: number;
   width: number;
   dasharray: string;
   delay: number;
@@ -128,25 +129,30 @@ export default function CosmicStarfield() {
     }));
   }, [isMobile]);
 
-  /// Shooting star trails from commit 53971b9 with slight per-mount randomisation
+  /// Shooting-star trails keep 53971b9 base set with subtle curved-arc variation
   const shootingStars = useMemo<ShootingStar[]>(() => {
     const baseTrails: ShootingStar[] = [
-      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8 },
-      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
-      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
-      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9 },
-      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
-      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
-      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', curve: -5, width: 0.8, dasharray: '200', delay: 0, duration: 8 },
+      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', curve: -4, width: 0.5, dasharray: '150', delay: 3, duration: 10 },
+      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', curve: 5, width: 0.6, dasharray: '180', delay: 7, duration: 14 },
+      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', curve: 6, width: 0.7, dasharray: '220', delay: 2, duration: 9 },
+      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', curve: -3, width: 0.4, dasharray: '160', delay: 5, duration: 12 },
+      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', curve: 4, width: 0.5, dasharray: '140', delay: 8, duration: 11 },
+      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', curve: -6, width: 0.6, dasharray: '190', delay: 1, duration: 13 },
     ];
 
+    const dashPresets = ['22 10 8 12 4 16', '28 12 6 10 4 14', '18 9 10 13 6 12', '24 11 7 9 5 16'];
+
     return baseTrails.map((trail) => {
-      const durationJitter = 0.6 + Math.random() * 0.3; // thinner/faster feel
-      const delayJitter = Math.random() * 1.25;
+      const durationJitter = 0.45 + Math.random() * 0.28;
+      const delayJitter = Math.random() * 1.15;
+      const curveJitter = -1.3 + Math.random() * 2.6;
 
       return {
         ...trail,
-        width: Math.max(0.25, trail.width * 0.8),
+        dasharray: dashPresets[Math.floor(Math.random() * dashPresets.length)],
+        curve: Number((trail.curve + curveJitter).toFixed(2)),
+        width: Number((Math.max(0.16, trail.width * 0.45)).toFixed(2)),
         duration: Number((trail.duration * durationJitter).toFixed(2)),
         delay: Number((trail.delay + delayJitter).toFixed(2)),
       };
@@ -268,34 +274,47 @@ export default function CosmicStarfield() {
                   animationDelay: `${star.id * 0.08}s`,
                 }}
               />
-              {/* Cross sparkle for bright near-layer stars — desktop only */}
+              {/* Cross glint with tiny sparkle core — avoids rectangular appearance */}
               {star.layer === 2 && star.baseOpacity > 0.5 && !isMobile && (
                 <>
                   <line
-                    x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
-                    x2={`${star.x}%`} y2={`${star.y + 0.3}%`}
-                    stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.25"
+                    x1={`${star.x}%`} y1={`${star.y - 0.22}%`}
+                    x2={`${star.x}%`} y2={`${star.y + 0.22}%`}
+                    stroke={isDark ? '#ffca62' : '#db5b00'}
+                    strokeWidth="0.12"
                     strokeLinecap="round"
-                    opacity={star.baseOpacity * 0.45}
+                    opacity={star.baseOpacity * 0.65}
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
-                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
+                      animation: `twinkle ${star.twinkleSpeed * 0.9}s ease-in-out infinite`,
                       animationDelay: `${star.id * 0.08}s`,
                     }}
                   />
                   <line
-                    x1={`${star.x - 0.15}%`} y1={`${star.y}%`}
-                    x2={`${star.x + 0.15}%`} y2={`${star.y}%`}
-                    stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.25"
+                    x1={`${star.x - 0.22}%`} y1={`${star.y}%`}
+                    x2={`${star.x + 0.22}%`} y2={`${star.y}%`}
+                    stroke={isDark ? '#ffca62' : '#db5b00'}
+                    strokeWidth="0.12"
                     strokeLinecap="round"
-                    opacity={star.baseOpacity * 0.45}
+                    opacity={star.baseOpacity * 0.65}
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
-                      animation: `twinkle ${star.twinkleSpeed}s ease-in-out infinite`,
+                      animation: `twinkle ${star.twinkleSpeed * 0.9}s ease-in-out infinite`,
+                      animationDelay: `${star.id * 0.08}s`,
+                    }}
+                  />
+                  <circle
+                    cx={`${star.x}%`}
+                    cy={`${star.y}%`}
+                    r={0.08}
+                    fill={isDark ? '#ffd277' : '#db5b00'}
+                    opacity={star.baseOpacity * 0.65}
+                    style={{
+                      transform: `translate(${tx}px, ${ty}px)`,
+                      transition: 'transform 0.3s ease-out',
+                      animation: `twinkle ${star.twinkleSpeed * 0.9}s ease-in-out infinite`,
                       animationDelay: `${star.id * 0.08}s`,
                     }}
                   />
@@ -305,22 +324,33 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Multiple shooting star / satellite trails — 7 trails */}
-        {shootingStars.map((ss) => (
-          <line
-            key={`trail-${ss.id}`}
-            x1={ss.x1} y1={ss.y1}
-            x2={ss.x2} y2={ss.y2}
-            stroke={isDark
-              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
-              : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
-            }
-            strokeWidth={ss.width}
-            strokeDasharray={ss.dasharray}
-            opacity="0"
-            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`, strokeLinecap: 'round' }}
-          />
-        ))}
+        {/* Shooting-star trails — curved segmented arc style */}
+        {shootingStars.map((ss) => {
+          const x1 = parseFloat(ss.x1);
+          const y1 = parseFloat(ss.y1);
+          const x2 = parseFloat(ss.x2);
+          const y2 = parseFloat(ss.y2);
+          const cx = (x1 + x2) / 2;
+          const cy = (y1 + y2) / 2 + ss.curve;
+          const path = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+
+          return (
+            <path
+              key={`trail-${ss.id}`}
+              d={path}
+              fill="none"
+              stroke={isDark
+                ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+              }
+              strokeWidth={ss.width}
+              strokeDasharray={ss.dasharray}
+              opacity="0"
+              vectorEffect="non-scaling-stroke"
+              style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`, strokeLinecap: 'round' }}
+            />
+          );
+        })}
       </svg>
     </div>
   );
