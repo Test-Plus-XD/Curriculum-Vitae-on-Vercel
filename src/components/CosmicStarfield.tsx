@@ -128,9 +128,9 @@ export default function CosmicStarfield() {
     }));
   }, [isMobile]);
 
-  /// Shooting star trails from commit 53971b9
+  /// Shooting star trails from commit 53971b9 with slight per-mount randomisation
   const shootingStars = useMemo<ShootingStar[]>(() => {
-    return [
+    const baseTrails: ShootingStar[] = [
       { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8 },
       { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
       { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
@@ -139,6 +139,18 @@ export default function CosmicStarfield() {
       { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
       { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
     ];
+
+    return baseTrails.map((trail) => {
+      const durationJitter = 0.6 + Math.random() * 0.3; // thinner/faster feel
+      const delayJitter = Math.random() * 1.25;
+
+      return {
+        ...trail,
+        width: Math.max(0.25, trail.width * 0.8),
+        duration: Number((trail.duration * durationJitter).toFixed(2)),
+        delay: Number((trail.delay + delayJitter).toFixed(2)),
+      };
+    });
   }, []);
 
   if (!mounted) return null;
@@ -263,8 +275,9 @@ export default function CosmicStarfield() {
                     x1={`${star.x}%`} y1={`${star.y - 0.3}%`}
                     x2={`${star.x}%`} y2={`${star.y + 0.3}%`}
                     stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.4"
-                    opacity={star.baseOpacity * 0.5}
+                    strokeWidth="0.25"
+                    strokeLinecap="round"
+                    opacity={star.baseOpacity * 0.45}
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
@@ -276,8 +289,9 @@ export default function CosmicStarfield() {
                     x1={`${star.x - 0.15}%`} y1={`${star.y}%`}
                     x2={`${star.x + 0.15}%`} y2={`${star.y}%`}
                     stroke={isDark ? '#ffa500' : '#db5b00'}
-                    strokeWidth="0.4"
-                    opacity={star.baseOpacity * 0.5}
+                    strokeWidth="0.25"
+                    strokeLinecap="round"
+                    opacity={star.baseOpacity * 0.45}
                     style={{
                       transform: `translate(${tx}px, ${ty}px)`,
                       transition: 'transform 0.3s ease-out',
@@ -304,7 +318,7 @@ export default function CosmicStarfield() {
             strokeWidth={ss.width}
             strokeDasharray={ss.dasharray}
             opacity="0"
-            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite` }}
+            style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`, strokeLinecap: 'round' }}
           />
         ))}
       </svg>
