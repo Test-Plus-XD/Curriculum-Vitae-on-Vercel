@@ -57,7 +57,7 @@ export default function EnhancedBackground() {
     return (
         <div
             ref={containerRef}
-            className="print:hidden fixed inset-0 pointer-events-none z-0"
+            className="print:hidden fixed inset-0 pointer-events-none z-[1]"
             aria-hidden="true"
         >
             {/* ═══════════════════════════════════════════════════════════

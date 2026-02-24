@@ -50,7 +50,7 @@ export default function SovietParticles() {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <div className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden">
+    <div className="print:hidden fixed inset-0 pointer-events-none z-[5] overflow-hidden">
       {particles.map((p) => (
         <div
           key={p.id}

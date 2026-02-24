@@ -28,7 +28,7 @@ export default function SovietPropagandaPoster() {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <div className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden" aria-hidden="true">
+    <div className="print:hidden fixed inset-0 pointer-events-none z-[6] overflow-hidden" aria-hidden="true">
       {/* Top-left constructivist corner bracket — larger, more prominent */}
       <svg
         className="absolute top-16 left-4 w-20 h-20 opacity-30"

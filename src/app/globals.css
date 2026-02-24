@@ -195,7 +195,7 @@ body::-webkit-scrollbar {
   inset: 0;
   background: radial-gradient(ellipse at center, transparent 35%, rgba(10, 12, 18, 0.45) 100%);
   pointer-events: none;
-  z-index: 40;
+  z-index: 15;
 }
 
 .dark .scanlines::after {
@@ -210,7 +210,7 @@ body::-webkit-scrollbar {
     rgba(0, 0, 0, 0.06) 4px
   );
   pointer-events: none;
-  z-index: 41;
+  z-index: 16;
   animation: flicker 8s step-end infinite;
 }
 
@@ -226,7 +226,7 @@ body::-webkit-scrollbar {
     rgba(143, 0, 0, 0.015) 6px
   );
   pointer-events: none;
-  z-index: 41;
+  z-index: 16;
   animation: flicker 12s step-end infinite;
 }
 

@@ -64,7 +64,7 @@ export default function MorseCodeTicker() {
   return (
     <>
       {/* Top ticker */}
-      <div className="print:hidden fixed top-12 left-0 right-0 pointer-events-none z-[2] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
+      <div className="print:hidden fixed top-12 left-0 right-0 pointer-events-none z-[8] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
         <div
           className="whitespace-nowrap font-mono text-[10px] tracking-[0.3em] animate-morse-scroll"
           style={{
@@ -75,7 +75,7 @@ export default function MorseCodeTicker() {
         </div>
       </div>
       {/* Bottom ticker — reversed direction */}
-      <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-[2] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
+      <div className="print:hidden fixed bottom-0 left-0 right-0 pointer-events-none z-[8] overflow-hidden h-5 opacity-0 animate-morse-fade-in" aria-hidden="true">
         <div
           className="whitespace-nowrap font-mono text-[10px] tracking-[0.3em]"
           style={{

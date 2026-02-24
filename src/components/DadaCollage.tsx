@@ -880,7 +880,7 @@ export default function DadaCollage() {
 
   return (
     <motion.div
-      className="print:hidden fixed inset-0 pointer-events-none z-[1] overflow-hidden"
+      className="print:hidden fixed inset-0 pointer-events-none z-[7] overflow-hidden"
       aria-hidden="true"
       variants={containerVariants}
       initial="hidden"
