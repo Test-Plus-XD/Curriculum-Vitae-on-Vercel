@@ -23,8 +23,24 @@ const iansui = Iansui({
 });
 
 export const metadata: Metadata = {
-  title: 'NG Yu Ham Baldwin | Software Developer',
-  description: 'Bilingual CV — NG Yu Ham Baldwin 吳宇涵. Software Developer portfolio and academic CV.',
+  title: 'NG Yu Ham Baldwin | Software Developer Portfolio',
+  description:
+    'NG Yu Ham Baldwin (吳宇涵) — Software Developer and Computer Science student at HKMU. ' +
+    'Bilingual portfolio showcasing iOS, Flutter, web, and game projects with a Soviet retro-futuristic aesthetic. ' +
+    'Available in English and Traditional Chinese.',
+  keywords: [
+    'NG Yu Ham Baldwin', '吳宇涵', 'Software Developer', 'Computer Science',
+    'HKMU', 'Hong Kong', 'Portfolio', 'iOS', 'Flutter', 'Next.js',
+    'Full Stack', 'Mobile Development', 'CV', 'Resume',
+  ],
+  openGraph: {
+    title: 'NG Yu Ham Baldwin | Software Developer Portfolio',
+    description:
+      'Bilingual portfolio of NG Yu Ham Baldwin — CS student and Software Developer. ' +
+      'Projects span iOS, Flutter, web, and games, presented in a unique Soviet retro-futuristic interface.',
+    type: 'website',
+    locale: 'en_GB',
+  },
 };
 
 export const viewport = {

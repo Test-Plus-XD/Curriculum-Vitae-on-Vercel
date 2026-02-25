@@ -1,15 +1,16 @@
-# CV Website on Vercel
+# NG Yu Ham Baldwin — Software Developer Portfolio
 
-A bilingual (Traditional Chinese / British English) professional CV website built with Next.js 16+ (App Router) for Vercel deployment.
+A bilingual (Traditional Chinese / British English) portfolio and CV website for **NG Yu Ham Baldwin (吳宇涵)**, a Computer Science student and Software Developer based in Hong Kong. Built with Next.js 16+ App Router and deployed on Vercel, the site presents academic achievements, personal projects, and work experience through a distinctive **Soviet retro-futuristic** interface inspired by 1960s Soviet space-age graphics, Russian constructivism, and retrofuturistic games such as *Atomic Heart* and *Reverse:1999*.
 
 ## Features
 
-- **Bilingual Support**: Full EN and ZH-HK translations with language toggle
-- **Dark Mode**: System preference detection + manual toggle
-- **Responsive Design**: Mobile-first, optimised for both desktop and mobile
-- **Print-Friendly**: Landing page CV optimised for printing
-- **Performance Monitoring**: Vercel Speed Insights integration
-- **Project Showcase**: Individual project pages with development timelines and YouTube video thumbnails
+- **Bilingual**: Full EN and ZH-HK (Traditional Chinese) content with one-click language toggle
+- **Soviet Retro-Futuristic Aesthetic**: Constructivist geometry, film-grain textures, CRT glitch effects, Dada collage accents, parallax star fields, and animated shooting-star trails across all non-CV pages
+- **Academic Focus**: Detailed Education page with GPA, semester breakdowns, and 19 bilingual course listings; Projects page with category filtering and per-project development timelines
+- **Dark / Light Modes**: System preference detection + manual toggle; full Soviet effects in dark mode, subtler aged-paper palette in light mode
+- **Print-Friendly CV**: Landing page designed for clean black-and-white printing — all visual effects are suppressed via `@media print`
+- **Interactive Animations**: Framer Motion stagger entrances, 3D card tilt, Cyrillic GlitchText scramble, mouse-following cursor glow, and time-rewind page transitions
+- **Performance Monitoring**: Vercel Speed Insights + Analytics integration
 
 ## Pages
 
@@ -22,12 +23,14 @@ A bilingual (Traditional Chinese / British English) professional CV website buil
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.1.6+ (App Router)
-- **Styling**: Tailwind CSS
-- **i18n**: next-intl
+- **Framework**: Next.js 16.1.6+ (App Router), React 19, TypeScript 5
+- **Styling**: Tailwind CSS v4.1 (`@theme` block, no `tailwind.config.js`, PostCSS via `@tailwindcss/postcss`)
+- **Animations**: Framer Motion 12, react-wavify
+- **i18n**: next-intl 4
 - **Icons**: lucide-react
 - **Themes**: next-themes
-- **Analytics**: @vercel/speed-insights
+- **Analytics**: @vercel/speed-insights + @vercel/analytics
+- **Testing**: Vitest + @testing-library/react + fast-check
 - **Deployment**: Vercel
 
 ## Quick Start
