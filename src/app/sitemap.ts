@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://ngallion.com'; // Update to your actual domain
+const BASE_URL = 'https://www.test-plus.work';
 
 const projectIds = [
   'pourrice',
