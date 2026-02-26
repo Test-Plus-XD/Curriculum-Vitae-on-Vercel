@@ -42,7 +42,6 @@ interface ShootingStar {
   y1: string;
   x2: string;
   y2: string;
-  curve: number;
   width: number;
   dasharray: string;
   delay: number;
@@ -129,35 +128,16 @@ export default function CosmicStarfield() {
     }));
   }, [isMobile]);
 
-  /// Shooting-star trails keep 53971b9 base set with subtle curved-arc variation
-  const shootingStars = useMemo<ShootingStar[]>(() => {
-    const baseTrails: ShootingStar[] = [
-      { id: 0, x1: '0%', y1: '20%', x2: '100%', y2: '35%', curve: -0.8, width: 0.8, dasharray: '200', delay: 0, duration: 8 },
-      { id: 1, x1: '15%', y1: '5%', x2: '85%', y2: '45%', curve: -0.6, width: 0.5, dasharray: '150', delay: 3, duration: 10 },
-      { id: 2, x1: '70%', y1: '10%', x2: '30%', y2: '60%', curve: 0.9, width: 0.6, dasharray: '180', delay: 7, duration: 14 },
-      { id: 3, x1: '90%', y1: '15%', x2: '10%', y2: '50%', curve: 1.0, width: 0.7, dasharray: '220', delay: 2, duration: 9 },
-      { id: 4, x1: '5%', y1: '40%', x2: '80%', y2: '70%', curve: -0.5, width: 0.4, dasharray: '160', delay: 5, duration: 12 },
-      { id: 5, x1: '60%', y1: '5%', x2: '20%', y2: '35%', curve: 0.7, width: 0.5, dasharray: '140', delay: 8, duration: 11 },
-      { id: 6, x1: '40%', y1: '8%', x2: '95%', y2: '55%', curve: -0.9, width: 0.6, dasharray: '190', delay: 1, duration: 13 },
-    ];
-
-    const dashPresets = ['14 34 8 42 4 48', '16 36 6 46 4 52', '12 30 10 40 5 50', '18 38 7 44 4 56'];
-
-    return baseTrails.map((trail) => {
-      const durationJitter = 0.45 + Math.random() * 0.28;
-      const delayJitter = Math.random() * 1.15;
-      const curveJitter = -0.35 + Math.random() * 0.7;
-
-      return {
-        ...trail,
-        dasharray: dashPresets[Math.floor(Math.random() * dashPresets.length)],
-        curve: Number((trail.curve + curveJitter).toFixed(2)),
-        width: Number((Math.max(0.1, trail.width * 0.3)).toFixed(2)),
-        duration: Number((trail.duration * durationJitter).toFixed(2)),
-        delay: Number((trail.delay + delayJitter).toFixed(2)),
-      };
-    });
-  }, []);
+  /// Shooting-star trails — straight-line style restored from 53971b9 baseline values
+  const shootingStars = useMemo<ShootingStar[]>(() => [
+    { id: 0, x1: '0%',  y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8  },
+    { id: 1, x1: '15%', y1: '5%',  x2: '85%',  y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
+    { id: 2, x1: '70%', y1: '10%', x2: '30%',  y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
+    { id: 3, x1: '90%', y1: '15%', x2: '10%',  y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9  },
+    { id: 4, x1: '5%',  y1: '40%', x2: '80%',  y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
+    { id: 5, x1: '60%', y1: '5%',  x2: '20%',  y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
+    { id: 6, x1: '40%', y1: '8%',  x2: '95%',  y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+  ], []);
 
   if (!mounted) return null;
 
@@ -175,10 +155,10 @@ export default function CosmicStarfield() {
       <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="star-glow">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.0" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
           </filter>
           <filter id="star-glow-bright">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" />
           </filter>
           <filter id="nebula-blur">
             <feGaussianBlur in="SourceGraphic" stdDeviation="50" />
@@ -186,6 +166,17 @@ export default function CosmicStarfield() {
           <filter id="ring-glow">
             <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
           </filter>
+          {/* Radial gradients for star fading effect — fade from colour at centre to transparent at edge */}
+          <radialGradient id="star-fade-dark" gradientUnits="objectBoundingBox" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#ffa500" stopOpacity="0.9" />
+            <stop offset="40%"  stopColor="#db5b00" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#8f0000" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="star-fade-light" gradientUnits="objectBoundingBox" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#8f0000" stopOpacity="0.7" />
+            <stop offset="40%"  stopColor="#a04000" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#db5b00" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         {/* Nebula clouds — larger, pulsing coloured fog for cosmic atmosphere */}
@@ -239,13 +230,13 @@ export default function CosmicStarfield() {
 
           return (
             <g key={star.id} style={{ pointerEvents: 'none', mixBlendMode: 'screen' }}>
-              {/* Star glow — larger halo for atmospheric effect */}
+              {/* Star glow — wide radial-gradient halo that fades to transparent at edge */}
               <circle
                 cx={`${star.x}%`}
                 cy={`${star.y}%`}
-                r={star.size * (star.layer === 2 ? 1.5 : 1.2)}
-                fill={isDark ? '#ffa500' : '#8f0000'}
-                opacity={star.baseOpacity * 0.08}
+                r={star.size * (star.layer === 2 ? 3.5 : 2.5)}
+                fill={isDark ? 'url(#star-fade-dark)' : 'url(#star-fade-light)'}
+                opacity={star.baseOpacity * 0.3}
                 vectorEffect="non-scaling-size"
                 style={{
                   transform: `translate(${tx}px, ${ty}px)`,
@@ -322,33 +313,28 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Shooting-star trails — curved segmented arc style */}
-        {shootingStars.map((ss) => {
-          const x1 = parseFloat(ss.x1);
-          const y1 = parseFloat(ss.y1);
-          const x2 = parseFloat(ss.x2);
-          const y2 = parseFloat(ss.y2);
-          const cx = (x1 + x2) / 2;
-          const cy = (y1 + y2) / 2 + ss.curve;
-          const path = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-
-          return (
-            <path
-              key={`trail-${ss.id}`}
-              d={path}
-              fill="none"
-              stroke={isDark
-                ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
-                : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
-              }
-              strokeWidth={ss.width}
-              strokeDasharray={ss.dasharray}
-              opacity="0"
-              vectorEffect="non-scaling-stroke"
-              style={{ animation: `shooting-star ${ss.duration}s ease-in-out ${ss.delay}s infinite`, strokeLinecap: 'round' }}
-            />
-          );
-        })}
+        {/* Shooting-star trails — straight lines, 53971b9 values, Tailwind v4 CSS-var animation */}
+        {shootingStars.map((ss) => (
+          <line
+            key={`trail-${ss.id}`}
+            x1={ss.x1} y1={ss.y1}
+            x2={ss.x2} y2={ss.y2}
+            stroke={isDark
+              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+              : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
+            }
+            strokeWidth={ss.width}
+            strokeDasharray={ss.dasharray}
+            strokeLinecap="round"
+            opacity="0"
+            vectorEffect="non-scaling-stroke"
+            className="animate-shooting-star"
+            style={{
+              '--ss-duration': `${ss.duration}s`,
+              '--ss-delay': `${ss.delay}s`,
+            } as React.CSSProperties}
+          />
+        ))}
       </svg>
     </div>
   );

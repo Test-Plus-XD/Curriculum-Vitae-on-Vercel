@@ -28,7 +28,7 @@
   --animate-radar-sweep: radar-sweep 12s linear infinite;
   --animate-float-up: float-up 15s linear infinite;
   --animate-twinkle: twinkle 4s ease-in-out infinite;
-  --animate-shooting-star: shooting-star 8s ease-in-out infinite;
+  --animate-shooting-star: shooting-star var(--ss-duration, 8s) ease-in-out var(--ss-delay, 0s) infinite;
   --animate-morse-scroll: morse-scroll 30s linear infinite;
   --animate-morse-fade-in: morse-fade-in 2s ease-out forwards;
   --animate-slow-rotate: slow-rotate 60s linear infinite;

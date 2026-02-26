@@ -23,8 +23,52 @@ const iansui = Iansui({
 });
 
 export const metadata: Metadata = {
-  title: 'NG Yu Ham Baldwin | Software Developer',
-  description: 'Bilingual CV — NG Yu Ham Baldwin 吳宇涵. Software Developer portfolio and academic CV.',
+  title: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
+  description:
+    'Professional portfolio and CV of NG Yu Ham Baldwin (吳宇涵), a full-stack software developer and Computer Science student at HKCT. ' +
+    'Bilingual (EN/繁體中文) showcase of iOS, Flutter, web applications, game development, and backend projects. ' +
+    'Features real-time collaboration tools, AI-powered solutions, and cross-platform mobile applications with a distinctive Soviet retro-futuristic design aesthetic.',
+  keywords: [
+    'NG Yu Ham Baldwin', '吳宇涵', 'Software Developer', 'Full Stack Developer',
+    'Computer Science', 'HKCT', 'Hong Kong Developer', 'Portfolio',
+    'iOS Development', 'Swift', 'Flutter Development', 'Dart',
+    'Web Development', 'Next.js', 'React', 'TypeScript',
+    'Mobile Development', 'Game Development', 'Backend Development', 'Node.js', 'Express',
+    'Firebase', 'Cloud Development', 'CV', 'Resume', 'Résumé',
+    'Computer Science Portfolio', 'Tech Portfolio', 'Developer CV',
+  ],
+  authors: [{ name: 'NG Yu Ham Baldwin', url: 'https://www.test-plus.work' }],
+  creator: 'NG Yu Ham Baldwin',
+  openGraph: {
+    title: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
+    description:
+      'Full-stack software developer portfolio. Bilingual (English/繁體中文) showcase of iOS, Flutter, web, and game projects. ' +
+      'Final Year Project: Pour Rice — cross-platform restaurant discovery platform with AI assistance. ' +
+      'Academic focus with practical development experience across multiple platforms and technologies.',
+    type: 'website',
+    locale: 'en_GB',
+    alternateLocale: ['zh_HK'],
+    url: 'https://www.test-plus.work',
+    siteName: 'NG Yu Ham Baldwin Portfolio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://www.test-plus.work',
+    languages: {
+      'en': 'https://www.test-plus.work/en',
+      'zh-HK': 'https://www.test-plus.work/zh-HK',
+    },
+  },
 };
 
 export const viewport = {
