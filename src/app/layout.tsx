@@ -23,23 +23,51 @@ const iansui = Iansui({
 });
 
 export const metadata: Metadata = {
-  title: 'NG Yu Ham Baldwin | Software Developer Portfolio',
+  title: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
   description:
-    'NG Yu Ham Baldwin (吳宇涵) — Software Developer and Computer Science student at HKMU. ' +
-    'Bilingual portfolio showcasing iOS, Flutter, web, and game projects with a Soviet retro-futuristic aesthetic. ' +
-    'Available in English and Traditional Chinese.',
+    'Professional portfolio and CV of NG Yu Ham Baldwin (吳宇涵), a full-stack software developer and Computer Science student at HKMU. ' +
+    'Bilingual (EN/繁體中文) showcase of iOS, Flutter, web applications, game development, and backend projects. ' +
+    'Features real-time collaboration tools, AI-powered solutions, and cross-platform mobile applications with a distinctive Soviet retro-futuristic design aesthetic.',
   keywords: [
-    'NG Yu Ham Baldwin', '吳宇涵', 'Software Developer', 'Computer Science',
-    'HKMU', 'Hong Kong', 'Portfolio', 'iOS', 'Flutter', 'Next.js',
-    'Full Stack', 'Mobile Development', 'CV', 'Resume',
+    'NG Yu Ham Baldwin', '吳宇涵', 'Software Developer', 'Full Stack Developer',
+    'Computer Science', 'HKMU', 'Hong Kong Developer', 'Portfolio',
+    'iOS Development', 'Swift', 'Flutter Development', 'Dart',
+    'Web Development', 'Next.js', 'React', 'TypeScript',
+    'Mobile Development', 'Game Development', 'Backend Development', 'Node.js', 'Express',
+    'Firebase', 'Cloud Development', 'CV', 'Resume', 'Résumé',
+    'Computer Science Portfolio', 'Tech Portfolio', 'Developer CV',
   ],
+  authors: [{ name: 'NG Yu Ham Baldwin', url: 'https://ngallion.com' }],
+  creator: 'NG Yu Ham Baldwin',
   openGraph: {
-    title: 'NG Yu Ham Baldwin | Software Developer Portfolio',
+    title: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
     description:
-      'Bilingual portfolio of NG Yu Ham Baldwin — CS student and Software Developer. ' +
-      'Projects span iOS, Flutter, web, and games, presented in a unique Soviet retro-futuristic interface.',
+      'Full-stack software developer portfolio. Bilingual (English/繁體中文) showcase of iOS, Flutter, web, and game projects. ' +
+      'Final Year Project: Pour Rice — cross-platform restaurant discovery platform with AI assistance. ' +
+      'Academic focus with practical development experience across multiple platforms and technologies.',
     type: 'website',
     locale: 'en_GB',
+    alternateLocale: ['zh_HK'],
+    url: 'https://ngallion.com',
+    siteName: 'NG Yu Ham Baldwin Portfolio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://ngallion.com',
+    languages: {
+      'en': 'https://ngallion.com/en',
+      'zh-HK': 'https://ngallion.com/zh-HK',
+    },
   },
 };
 
