@@ -142,7 +142,7 @@ export default function CosmicStarfield() {
       // V0 — gentle top arc, left to right
       id: 0,
       d: 'M 5,12 Q 50,4 95,32',
-      dasharray: '175 6 3 5 2 5 1 5 1 800',
+      dasharray: '203 800',
       duration: 4,
       delay: 0,
       opacity: 0.65,
@@ -151,7 +151,7 @@ export default function CosmicStarfield() {
       // V1 — steep right-to-left arc
       id: 1,
       d: 'M 82,8 Q 60,38 18,52',
-      dasharray: '120 6 3 5 1 5 1 800',
+      dasharray: '141 800',
       duration: 3,
       delay: 5,
       opacity: 0.70,
@@ -160,7 +160,7 @@ export default function CosmicStarfield() {
       // V2 — shallow, wide arc, fast
       id: 2,
       d: 'M 10,25 Q 46,17 88,42',
-      dasharray: '105 6 2 5 1 5 1 800',
+      dasharray: '125 800',
       duration: 2.5,
       delay: 9,
       opacity: 0.60,
@@ -169,7 +169,7 @@ export default function CosmicStarfield() {
       // V3 — deep curved arc, long duration
       id: 3,
       d: 'M 20,5 Q 68,48 90,28',
-      dasharray: '200 7 3 6 2 6 1 6 1 800',
+      dasharray: '232 800',
       duration: 5,
       delay: 2,
       opacity: 0.55,
@@ -178,7 +178,7 @@ export default function CosmicStarfield() {
       // V4 — short right-side track with moderate arc
       id: 4,
       d: 'M 55,8 Q 73,30 95,46',
-      dasharray: '95 5 2 4 1 4 1 800',
+      dasharray: '112 800',
       duration: 3.5,
       delay: 7,
       opacity: 0.65,
@@ -187,7 +187,7 @@ export default function CosmicStarfield() {
       // V5 — steep right-to-left lower arc
       id: 5,
       d: 'M 85,15 Q 48,57 15,65',
-      dasharray: '150 6 3 5 2 5 1 5 1 800',
+      dasharray: '178 800',
       duration: 4.5,
       delay: 12,
       opacity: 0.60,
@@ -196,7 +196,7 @@ export default function CosmicStarfield() {
       // V6 — long, gentle full-width arc, slow and subtle
       id: 6,
       d: 'M 3,45 Q 48,30 92,58',
-      dasharray: '215 7 3 6 2 6 1 6 1 800',
+      dasharray: '247 800',
       duration: 6,
       delay: 3,
       opacity: 0.50,

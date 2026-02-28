@@ -150,6 +150,49 @@ body::-webkit-scrollbar {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   Universal link effect — applies soviet-link styles to all <a> elements
+   that do not already carry the .soviet-link class or opt out with
+   .no-link-effect (e.g. stretched card overlay links).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+a:not(.soviet-link):not(.no-link-effect) {
+  position: relative;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+a:not(.soviet-link):not(.no-link-effect)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, #8f0000, #db5b00, #ffa500);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px rgba(219, 91, 0, 0.4);
+}
+a:not(.soviet-link):not(.no-link-effect):hover::after {
+  width: 100%;
+}
+a:not(.soviet-link):not(.no-link-effect):hover {
+  text-shadow: 0 0 8px rgba(219, 91, 0, 0.3);
+}
+a:not(.soviet-link):not(.no-link-effect):active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+a:not(.soviet-link):not(.no-link-effect):active::after {
+  background: linear-gradient(90deg, #ffa500, #db5b00, #8f0000);
+  box-shadow: 0 0 12px rgba(255, 165, 0, 0.6);
+}
+.dark a:not(.soviet-link):not(.no-link-effect):hover {
+  text-shadow: 0 0 12px rgba(219, 91, 0, 0.5), 0 0 24px rgba(143, 0, 0, 0.3);
+}
+.dark a:not(.soviet-link):not(.no-link-effect)::after {
+  box-shadow: 0 0 8px rgba(219, 91, 0, 0.6), 0 0 16px rgba(143, 0, 0, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Soviet Retro-Futuristic Atmosphere — Dark mode body background
    ══════════════════════════════════════════════════════════════════════════ */
 

@@ -195,7 +195,7 @@ export default async function ProjectDetailPage({
                               href={event.videoUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="mt-3 inline-flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 hover:underline"
+                              className="mt-3 inline-flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400"
                             >
                               <Play size={14} />
                               {locale === 'zh-hk' ? '觀看影片' : 'Watch Video'}

@@ -51,7 +51,7 @@ export default function ProjectCard({ project, index = 0 }: Props) {
             {/* Stretched link — covers entire card */}
             <Link
               href={`/${locale}/projects/${project.id}`}
-              className="text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
+              className="no-link-effect text-base font-semibold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors after:absolute after:inset-0 after:content-[''] font-title italic"
             >
               <DadaTypography text={project.title[lang]} as="span" intensity={0.4} scatterOnView />
             </Link>

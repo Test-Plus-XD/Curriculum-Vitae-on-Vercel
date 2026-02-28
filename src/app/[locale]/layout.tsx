@@ -1,8 +1,10 @@
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import LocaleSetter from '@/components/LocaleSetter';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import RetroWave from '@/components/RetroWave';
 import SovietParticles from '@/components/SovietParticles';
@@ -18,6 +20,22 @@ import TemporalMotifs from '@/components/TemporalMotifs';
 import TimeRewindTransition from '@/components/TimeRewindTransition';
 
 const LOCALES = ['en', 'zh-hk'];
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: {
+      template: locale === 'zh-hk' ? '%s | 吳宇涵' : '%s | NG Yu Ham Baldwin',
+    },
+    openGraph: {
+      locale: locale === 'zh-hk' ? 'zh_HK' : 'en_GB',
+    },
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -37,6 +55,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
         <div suppressHydrationWarning className={`min-h-screen flex flex-col scanlines ${locale === 'zh-hk' ? 'locale-zh' : 'locale-en'}`}>
+          <LocaleSetter />
           {/* Sticky nav — hidden on print */}
           <div className="print:hidden">
             <Header />
