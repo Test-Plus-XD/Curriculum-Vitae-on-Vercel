@@ -128,78 +128,74 @@ export default function CosmicStarfield() {
     }));
   }, [isMobile, pathname]);
 
-  /// Shooting-star comet trails — 7 variants with curved quadratic Bezier paths.
-  /// Each trail uses a complex strokeDasharray to simulate the visual pattern:
-  ///   _____ __. _.. ...
-  /// (long solid head → medium dash → short dash → micro-dots)
-  ///
-  /// All paths cross the x=27–73% visible range on portrait mobile
-  /// (xMidYMid slice clips roughly 27% off each side on a 9:16 screen).
-  /// pathLength="1000" normalises animation; CSS custom props drive duration/delay/opacity.
-  /// strokeWidth is consistent at 0.6 across all variants.
+  /// Shooting-star comet trails — 7 variants with curved/arc-biased paths.
+  /// Visual intent per variant: one connected lead line + only dot clusters at the tail (pattern sum = 1000 to avoid unintended repeats):
+  ///   _______._.....
+  /// Width is fixed at 0.6 for consistency; speed, arc, start point and head/tail lengths vary.
+  /// The paths are designed to remain visible on mobile with `xMidYMid slice` cropping.
   const shootingStars = useMemo<ShootingStar[]>(() => [
     {
-      // V0 — gentle top arc, left to right
+      // V0 — fast upper-left sweep, gentle arc
       id: 0,
-      d: 'M 5,12 Q 50,4 95,32',
-      dasharray: '203 800',
-      duration: 4,
+      d: 'M 8,11 Q 38,2 94,26',
+      dasharray: '330 12 1 8 1 8 1 8 1 630',
+      duration: 2.2,
       delay: 0,
-      opacity: 0.65,
+      opacity: 0.7,
     },
     {
-      // V1 — steep right-to-left arc
+      // V1 — right-to-left descending arc
       id: 1,
-      d: 'M 82,8 Q 60,38 18,52',
-      dasharray: '141 800',
-      duration: 3,
-      delay: 5,
-      opacity: 0.70,
-    },
-    {
-      // V2 — shallow, wide arc, fast
-      id: 2,
-      d: 'M 10,25 Q 46,17 88,42',
-      dasharray: '125 800',
+      d: 'M 92,9 Q 68,30 18,54',
+      dasharray: '305 12 1 8 1 8 1 9 1 654',
       duration: 2.5,
-      delay: 9,
-      opacity: 0.60,
+      delay: 1.3,
+      opacity: 0.66,
     },
     {
-      // V3 — deep curved arc, long duration
+      // V2 — shallow center orbit, very fast
+      id: 2,
+      d: 'M 14,24 Q 49,14 88,35',
+      dasharray: '280 11 1 8 1 8 1 8 1 681',
+      duration: 1.9,
+      delay: 2.7,
+      opacity: 0.62,
+    },
+    {
+      // V3 — deep curvature with long connected head
       id: 3,
-      d: 'M 20,5 Q 68,48 90,28',
-      dasharray: '232 800',
-      duration: 5,
-      delay: 2,
-      opacity: 0.55,
+      d: 'M 18,5 Q 66,50 90,30',
+      dasharray: '360 14 1 9 1 9 1 9 1 595',
+      duration: 2.9,
+      delay: 0.8,
+      opacity: 0.58,
     },
     {
-      // V4 — short right-side track with moderate arc
+      // V4 — short top-right launch into mid frame
       id: 4,
-      d: 'M 55,8 Q 73,30 95,46',
-      dasharray: '112 800',
-      duration: 3.5,
-      delay: 7,
+      d: 'M 60,7 Q 79,24 96,45',
+      dasharray: '265 11 1 8 1 8 1 8 1 696',
+      duration: 2.1,
+      delay: 3.5,
       opacity: 0.65,
     },
     {
-      // V5 — steep right-to-left lower arc
+      // V5 — low orbit, right-to-left
       id: 5,
-      d: 'M 85,15 Q 48,57 15,65',
-      dasharray: '178 800',
-      duration: 4.5,
-      delay: 12,
-      opacity: 0.60,
+      d: 'M 86,18 Q 52,58 13,68',
+      dasharray: '320 12 1 8 1 8 1 8 1 640',
+      duration: 2.7,
+      delay: 4.2,
+      opacity: 0.61,
     },
     {
-      // V6 — long, gentle full-width arc, slow and subtle
+      // V6 — long lower arc across viewport
       id: 6,
-      d: 'M 3,45 Q 48,30 92,58',
-      dasharray: '247 800',
-      duration: 6,
-      delay: 3,
-      opacity: 0.50,
+      d: 'M 5,48 Q 48,30 94,60',
+      dasharray: '390 15 1 9 1 9 1 9 1 564',
+      duration: 3.2,
+      delay: 5.1,
+      opacity: 0.56,
     },
   ], []);
 
@@ -378,7 +374,7 @@ export default function CosmicStarfield() {
         })}
 
         {/* Shooting-star comet trails — curved quadratic Bezier paths with dot-tail dasharray.
-            dashoffset travels 400 → -1050 across pathLength="1000", giving a full enter-exit sweep.
+            dashoffset travels 300 → -700 (one 1000-unit cycle), so each trail shows a single motif per pass.
             CSS class animate-comet-trail reads --ct-duration / --ct-delay / --ct-opacity. */}
         {shootingStars.map((ss) => (
           <path
