@@ -374,7 +374,7 @@ export default function CosmicStarfield() {
         })}
 
         {/* Shooting-star comet trails — curved quadratic Bezier paths with dot-tail dasharray.
-            dashoffset travels 400 → -1050 across pathLength="1000", giving a full enter-exit sweep.
+            dashoffset travels 300 → -700 (one 1000-unit cycle), so each trail shows a single motif per pass.
             CSS class animate-comet-trail reads --ct-duration / --ct-delay / --ct-opacity. */}
         {shootingStars.map((ss) => (
           <path
