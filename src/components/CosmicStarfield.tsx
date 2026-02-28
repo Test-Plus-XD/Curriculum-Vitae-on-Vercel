@@ -138,7 +138,7 @@ export default function CosmicStarfield() {
       // V0 — fast upper-left sweep, gentle arc
       id: 0,
       d: 'M 8,11 Q 38,2 94,26',
-      dasharray: '220 16 1 9 1 9 1 9 1 734',
+      dasharray: '320 14 1 8 1 8 1 8 1 638',
       duration: 2.2,
       delay: 0,
       opacity: 0.7,
@@ -147,7 +147,7 @@ export default function CosmicStarfield() {
       // V1 — right-to-left descending arc
       id: 1,
       d: 'M 92,9 Q 68,30 18,54',
-      dasharray: '196 14 1 9 1 9 1 10 1 768',
+      dasharray: '300 13 1 8 1 8 1 9 1 658',
       duration: 2.5,
       delay: 1.3,
       opacity: 0.66,
@@ -156,7 +156,7 @@ export default function CosmicStarfield() {
       // V2 — shallow center orbit, very fast
       id: 2,
       d: 'M 14,24 Q 49,14 88,35',
-      dasharray: '166 12 1 8 1 8 1 8 1 804',
+      dasharray: '270 12 1 8 1 8 1 8 1 699',
       duration: 1.9,
       delay: 2.7,
       opacity: 0.62,
@@ -165,7 +165,7 @@ export default function CosmicStarfield() {
       // V3 — deep curvature with long connected head
       id: 3,
       d: 'M 18,5 Q 66,50 90,30',
-      dasharray: '248 18 1 10 1 10 1 10 1 710',
+      dasharray: '350 16 1 9 1 9 1 9 1 613',
       duration: 2.9,
       delay: 0.8,
       opacity: 0.58,
@@ -174,7 +174,7 @@ export default function CosmicStarfield() {
       // V4 — short top-right launch into mid frame
       id: 4,
       d: 'M 60,7 Q 79,24 96,45',
-      dasharray: '152 12 1 8 1 8 1 8 1 817',
+      dasharray: '255 12 1 8 1 8 1 8 1 714',
       duration: 2.1,
       delay: 3.5,
       opacity: 0.65,
@@ -183,7 +183,7 @@ export default function CosmicStarfield() {
       // V5 — low orbit, right-to-left
       id: 5,
       d: 'M 86,18 Q 52,58 13,68',
-      dasharray: '208 15 1 9 1 9 1 9 1 756',
+      dasharray: '310 14 1 8 1 8 1 8 1 654',
       duration: 2.7,
       delay: 4.2,
       opacity: 0.61,
@@ -192,7 +192,7 @@ export default function CosmicStarfield() {
       // V6 — long lower arc across viewport
       id: 6,
       d: 'M 5,48 Q 48,30 94,60',
-      dasharray: '260 20 1 10 1 10 1 10 1 696',
+      dasharray: '380 18 1 9 1 9 1 9 1 571',
       duration: 3.2,
       delay: 5.1,
       opacity: 0.56,
