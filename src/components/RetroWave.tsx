@@ -69,7 +69,7 @@ export default function RetroWave() {
       {/* Animated wave layer using react-wavify — responsive positioning */}
       <div className="absolute left-0 right-0 bottom-[180px] sm:bottom-[280px] lg:bottom-[380px]" style={{ height: '60px' }}>
         <Wave
-          fill={isDark ? 'rgba(143, 0, 0, 0.12)' : 'rgba(143, 0, 0, 0.05)'}
+          fill={isDark ? 'rgba(143, 0, 0, 0.38)' : 'rgba(143, 0, 0, 0.18)'}
           paused={false}
           style={{ display: 'flex', height: '60px' }}
           options={{
@@ -82,7 +82,7 @@ export default function RetroWave() {
       </div>
       <div className="absolute left-0 right-0 bottom-[170px] sm:bottom-[270px] lg:bottom-[370px]" style={{ height: '50px' }}>
         <Wave
-          fill={isDark ? 'rgba(219, 91, 0, 0.08)' : 'rgba(219, 91, 0, 0.035)'}
+          fill={isDark ? 'rgba(219, 91, 0, 0.25)' : 'rgba(219, 91, 0, 0.12)'}
           paused={false}
           style={{ display: 'flex', height: '50px' }}
           options={{

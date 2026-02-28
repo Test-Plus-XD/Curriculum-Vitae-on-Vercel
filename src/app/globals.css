@@ -28,7 +28,7 @@
   --animate-radar-sweep: radar-sweep 12s linear infinite;
   --animate-float-up: float-up 15s linear infinite;
   --animate-twinkle: twinkle 4s ease-in-out infinite;
-  --animate-shooting-star: shooting-star var(--ss-duration, 8s) ease-in-out var(--ss-delay, 0s) infinite;
+  --animate-comet-trail: comet-trail var(--ct-duration, 4s) linear var(--ct-delay, 0s) infinite;
   --animate-morse-scroll: morse-scroll 30s linear infinite;
   --animate-morse-fade-in: morse-fade-in 2s ease-out forwards;
   --animate-slow-rotate: slow-rotate 60s linear infinite;
@@ -860,24 +860,28 @@ body::-webkit-scrollbar {
   }
 }
 
-@keyframes shooting-star {
+@keyframes comet-trail {
   0% {
+    stroke-dashoffset: 400;
     opacity: 0;
-    stroke-dashoffset: 100%;
   }
 
-  5% {
-    opacity: 0.6;
+  3% {
+    opacity: var(--ct-opacity, 0.65);
   }
 
-  15% {
-    opacity: 0;
-    stroke-dashoffset: 0;
+  88% {
+    opacity: var(--ct-opacity, 0.65);
   }
 
   100% {
+    stroke-dashoffset: -1050;
     opacity: 0;
   }
+}
+
+.animate-comet-trail {
+  animation: comet-trail var(--ct-duration, 4s) linear var(--ct-delay, 0s) infinite;
 }
 
 @keyframes morse-scroll {

@@ -1,4 +1,18 @@
+import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+  return {
+    title: t('educationTitle'),
+    description: t('educationDescription'),
+  };
+}
 import Link from 'next/link';
 import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
 import RetroWave from '@/components/RetroWave';
@@ -77,7 +91,7 @@ export default async function EducationPage({
       {/* Back link */}
       <Link
         href={`/${locale}`}
-        className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-soviet-orange transition-colors mb-6"
+        className="soviet-link inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-soviet-orange transition-colors mb-6"
       >
         <ArrowLeft size={16} />
         {locale === 'zh-hk' ? '返回履歷' : 'Back to CV'}

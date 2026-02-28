@@ -91,5 +91,13 @@
     "photoLabel": "Photo",
     "personalStatement": "Enter personal statement (2–3 sentences).",
     "nationality": "Hong Kong SAR"
+  },
+  "metadata": {
+    "cvTitle": "CV",
+    "cvDescription": "Professional CV and portfolio of NG Yu Ham Baldwin (吳宇涵) — Computer Science student at HKCT with expertise in iOS, Flutter, web, game, and backend development.",
+    "educationTitle": "Education",
+    "educationDescription": "Full academic transcript of NG Yu Ham Baldwin — 19 courses across 4 semesters at HKCT, Year 1 GPA 3.7.",
+    "projectsTitle": "Projects",
+    "projectsDescription": "Software project portfolio of NG Yu Ham Baldwin — iOS, Flutter, web, game, and backend development showcasing cross-platform and AI-powered applications."
   }
 }

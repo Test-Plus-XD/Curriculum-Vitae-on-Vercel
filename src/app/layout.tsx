@@ -23,7 +23,10 @@ const iansui = Iansui({
 });
 
 export const metadata: Metadata = {
-  title: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
+  title: {
+    default: 'NG Yu Ham Baldwin | Software Developer Portfolio & CV',
+    template: '%s | NG Yu Ham Baldwin',
+  },
   description:
     'Professional portfolio and CV of NG Yu Ham Baldwin (吳宇涵), a full-stack software developer and Computer Science student at HKCT. ' +
     'Bilingual (EN/繁體中文) showcase of iOS, Flutter, web applications, game development, and backend projects. ' +

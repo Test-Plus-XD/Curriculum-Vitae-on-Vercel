@@ -1,8 +1,24 @@
+import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Video, Calendar } from 'lucide-react';
 import { projects } from '@/lib/projects';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { locale, id } = await params;
+  const project = projects.find((p) => p.id === id);
+  if (!project) return { title: 'Project' };
+  const lang = locale === 'zh-hk' ? 'zh' : 'en';
+  return {
+    title: project.title[lang],
+    description: project.description[lang],
+  };
+}
 import { projectTimelines, sortTimelineEvents, formatTimelineDate } from '@/lib/timeline';
 import InlineVideo from '@/components/InlineVideo';
 import GlitchRevealText from '@/components/GlitchRevealText';
@@ -55,7 +71,7 @@ export default async function ProjectDetailPage({
       {/* Back link */}
       <Link
         href={`/${locale}/projects`}
-        className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6"
+        className="soviet-link inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6"
       >
         <ArrowLeft size={16} />
         {t('backToProjects')}
@@ -233,7 +249,7 @@ export default async function ProjectDetailPage({
                     href={project.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="soviet-link flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     <Github size={16} />
                     <span className="truncate">{project.repo.replace('https://github.com/', '')}</span>
@@ -246,7 +262,7 @@ export default async function ProjectDetailPage({
                     href={plat.repo!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="soviet-link flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     <Github size={16} />
                     <span className="truncate">{plat.name[lang]}</span>

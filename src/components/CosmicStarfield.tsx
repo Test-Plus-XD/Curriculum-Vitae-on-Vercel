@@ -38,21 +38,18 @@ interface CosmicRing {
 
 interface ShootingStar {
   id: number;
-  x1: string;
-  y1: string;
-  x2: string;
-  y2: string;
-  width: number;
-  dasharray: string;
-  delay: number;
+  d: string;        // SVG path data — quadratic Bezier curves for orbital arcs
+  dasharray: string; // comet-tail dash pattern: long-solid → medium → short → dots
   duration: number;
+  delay: number;
+  opacity: number;  // --ct-opacity CSS variable value
 }
 
 /**
  * CosmicStarfield — Interactive parallax star field inspired by
  * Reverse:1999 Cosmic Overture's warped starry grids and Arknights Lone Trail's
- * starry voids. Reduced star count for performance, increased shooting star trails
- * with curved paths for more natural orbital trajectories.
+ * starry voids. Reduced star count for performance, curved comet-trail shooting
+ * stars with dot-tail effect for natural orbital trajectories.
  * Hidden on the landing CV page and print.
  */
 export default function CosmicStarfield() {
@@ -85,21 +82,23 @@ export default function CosmicStarfield() {
   }, []);
 
   /// Star count reduced to 35 for better GPU performance
-  /// Each star has depth layering for parallax scrolling effect
+  /// Slightly smaller size range (0.15–0.63) vs prior (0.30–1.10) for a subtler field
+  /// Depends on pathname so stars re-scatter on every SPA navigation
   const stars = useMemo<Star[]>(() => {
     const count = isMobile ? 18 : 35;
     return Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: 0.3 + Math.random() * 0.8,
+      size: 0.15 + Math.random() * 0.48,
       baseOpacity: 0.08 + Math.random() * 0.3,
       twinkleSpeed: 1.5 + Math.random() * 6,
       layer: i % 3,
     }));
-  }, [isMobile]);
+  }, [isMobile, pathname]);
 
   /// Nebulae — pulsing coloured fog for cosmic atmosphere
+  /// Re-positioned on each navigation alongside stars
   const nebulae = useMemo<Nebula[]>(() => {
     const colors = ['#8f0000', '#db5b00', '#ffa500', '#6b0000', '#ff7700'];
     return Array.from({ length: isMobile ? 1 : 2 }, (_, i) => ({
@@ -113,9 +112,10 @@ export default function CosmicStarfield() {
       opacity: 0.008 + Math.random() * 0.015,
       pulseSpeed: 6 + Math.random() * 8,
     }));
-  }, [isMobile]);
+  }, [isMobile, pathname]);
 
   /// Cosmic orbital rings — warped elliptical paths inspired by Reverse:1999
+  /// Re-positioned on each navigation
   const cosmicRings = useMemo<CosmicRing[]>(() => {
     return Array.from({ length: isMobile ? 0 : 1 }, (_, i) => ({
       id: i,
@@ -126,17 +126,81 @@ export default function CosmicStarfield() {
       speed: 40 + i * 20,
       color: i === 0 ? '#8f0000' : '#db5b00',
     }));
-  }, [isMobile]);
+  }, [isMobile, pathname]);
 
-  /// Shooting-star trails — straight-line style restored from 53971b9 baseline values
+  /// Shooting-star comet trails — 7 variants with curved quadratic Bezier paths.
+  /// Each trail uses a complex strokeDasharray to simulate the visual pattern:
+  ///   _____ __. _.. ...
+  /// (long solid head → medium dash → short dash → micro-dots)
+  ///
+  /// All paths cross the x=27–73% visible range on portrait mobile
+  /// (xMidYMid slice clips roughly 27% off each side on a 9:16 screen).
+  /// pathLength="1000" normalises animation; CSS custom props drive duration/delay/opacity.
+  /// strokeWidth is consistent at 0.6 across all variants.
   const shootingStars = useMemo<ShootingStar[]>(() => [
-    { id: 0, x1: '0%',  y1: '20%', x2: '100%', y2: '35%', width: 0.8, dasharray: '200', delay: 0, duration: 8  },
-    { id: 1, x1: '15%', y1: '5%',  x2: '85%',  y2: '45%', width: 0.5, dasharray: '150', delay: 3, duration: 10 },
-    { id: 2, x1: '70%', y1: '10%', x2: '30%',  y2: '60%', width: 0.6, dasharray: '180', delay: 7, duration: 14 },
-    { id: 3, x1: '90%', y1: '15%', x2: '10%',  y2: '50%', width: 0.7, dasharray: '220', delay: 2, duration: 9  },
-    { id: 4, x1: '5%',  y1: '40%', x2: '80%',  y2: '70%', width: 0.4, dasharray: '160', delay: 5, duration: 12 },
-    { id: 5, x1: '60%', y1: '5%',  x2: '20%',  y2: '35%', width: 0.5, dasharray: '140', delay: 8, duration: 11 },
-    { id: 6, x1: '40%', y1: '8%',  x2: '95%',  y2: '55%', width: 0.6, dasharray: '190', delay: 1, duration: 13 },
+    {
+      // V0 — gentle top arc, left to right
+      id: 0,
+      d: 'M 5,12 Q 50,4 95,32',
+      dasharray: '175 6 3 5 2 5 1 5 1 800',
+      duration: 4,
+      delay: 0,
+      opacity: 0.65,
+    },
+    {
+      // V1 — steep right-to-left arc
+      id: 1,
+      d: 'M 82,8 Q 60,38 18,52',
+      dasharray: '120 6 3 5 1 5 1 800',
+      duration: 3,
+      delay: 5,
+      opacity: 0.70,
+    },
+    {
+      // V2 — shallow, wide arc, fast
+      id: 2,
+      d: 'M 10,25 Q 46,17 88,42',
+      dasharray: '105 6 2 5 1 5 1 800',
+      duration: 2.5,
+      delay: 9,
+      opacity: 0.60,
+    },
+    {
+      // V3 — deep curved arc, long duration
+      id: 3,
+      d: 'M 20,5 Q 68,48 90,28',
+      dasharray: '200 7 3 6 2 6 1 6 1 800',
+      duration: 5,
+      delay: 2,
+      opacity: 0.55,
+    },
+    {
+      // V4 — short right-side track with moderate arc
+      id: 4,
+      d: 'M 55,8 Q 73,30 95,46',
+      dasharray: '95 5 2 4 1 4 1 800',
+      duration: 3.5,
+      delay: 7,
+      opacity: 0.65,
+    },
+    {
+      // V5 — steep right-to-left lower arc
+      id: 5,
+      d: 'M 85,15 Q 48,57 15,65',
+      dasharray: '150 6 3 5 2 5 1 5 1 800',
+      duration: 4.5,
+      delay: 12,
+      opacity: 0.60,
+    },
+    {
+      // V6 — long, gentle full-width arc, slow and subtle
+      id: 6,
+      d: 'M 3,45 Q 48,30 92,58',
+      dasharray: '215 7 3 6 2 6 1 6 1 800',
+      duration: 6,
+      delay: 3,
+      opacity: 0.50,
+    },
   ], []);
 
   if (!mounted) return null;
@@ -313,25 +377,29 @@ export default function CosmicStarfield() {
           );
         })}
 
-        {/* Shooting-star trails — straight lines, 53971b9 values, Tailwind v4 CSS-var animation */}
+        {/* Shooting-star comet trails — curved quadratic Bezier paths with dot-tail dasharray.
+            dashoffset travels 400 → -1050 across pathLength="1000", giving a full enter-exit sweep.
+            CSS class animate-comet-trail reads --ct-duration / --ct-delay / --ct-opacity. */}
         {shootingStars.map((ss) => (
-          <line
+          <path
             key={`trail-${ss.id}`}
-            x1={ss.x1} y1={ss.y1}
-            x2={ss.x2} y2={ss.y2}
+            d={ss.d}
+            pathLength="1000"
+            fill="none"
             stroke={isDark
-              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#8f0000')
+              ? (ss.id % 3 === 0 ? '#db5b00' : ss.id % 3 === 1 ? '#ffa500' : '#ff9933')
               : (ss.id % 3 === 0 ? '#8f0000' : ss.id % 3 === 1 ? '#db5b00' : '#a04000')
             }
-            strokeWidth={ss.width}
+            strokeWidth="0.6"
             strokeDasharray={ss.dasharray}
             strokeLinecap="round"
             opacity="0"
             vectorEffect="non-scaling-stroke"
-            className="animate-shooting-star"
+            className="animate-comet-trail"
             style={{
-              '--ss-duration': `${ss.duration}s`,
-              '--ss-delay': `${ss.delay}s`,
+              '--ct-duration': `${ss.duration}s`,
+              '--ct-delay': `${ss.delay}s`,
+              '--ct-opacity': `${ss.opacity}`,
             } as React.CSSProperties}
           />
         ))}

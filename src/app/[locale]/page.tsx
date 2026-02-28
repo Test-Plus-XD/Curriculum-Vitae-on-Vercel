@@ -1,5 +1,19 @@
+import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+  return {
+    title: t('cvTitle'),
+    description: t('cvDescription'),
+  };
+}
 import { Mail, Phone, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { featuredProjects } from '@/lib/projects';
 import PrintButton from '@/components/PrintButton';
@@ -66,7 +80,7 @@ export default async function LandingPage({
                 href={c.href}
                 target={c.href.startsWith('http') ? '_blank' : undefined}
                 rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-slate-700"
+                className="soviet-link flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-slate-700"
               >
                 <c.icon size={12} className="flex-shrink-0" />
                 <span>{c.value}</span>
@@ -128,7 +142,7 @@ export default async function LandingPage({
                 </span>
                 <Link
                   href={`/${locale}/education`}
-                  className="print:hidden text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                  className="soviet-link print:hidden text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1"
                 >
                   {t('education.viewDetails')}
                   <ExternalLink size={10} />
@@ -154,7 +168,7 @@ export default async function LandingPage({
               </h2>
               <Link
                 href={`/${locale}/projects`}
-                className="print:hidden text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                className="soviet-link print:hidden text-xs text-blue-600 dark:text-blue-400"
               >
                 {t('projects.viewAll')}
               </Link>
@@ -167,7 +181,7 @@ export default async function LandingPage({
                     <div className="flex-1">
                       <Link
                         href={`/${locale}/projects/${project.id}`}
-                        className="font-semibold text-slate-800 dark:text-slate-100 text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-xs print:pointer-events-none"
+                        className="soviet-link font-semibold text-slate-800 dark:text-slate-100 text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-xs print:pointer-events-none"
                       >
                         {project.title[lang]}
                       </Link>
@@ -203,7 +217,7 @@ export default async function LandingPage({
                         href={project.repo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
+                        className="soviet-link text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
                       >
                         <Github size={10} />
                         {t('projects.viewRepo')}
@@ -215,7 +229,7 @@ export default async function LandingPage({
                         href={plat.repo!}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
+                        className="soviet-link text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
                       >
                         <Github size={10} />
                         {plat.name[lang]}

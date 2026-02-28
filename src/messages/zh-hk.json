@@ -91,5 +91,13 @@
     "photoLabel": "照片",
     "personalStatement": "請填入個人介紹（2–3句）。",
     "nationality": "香港特別行政區"
+  },
+  "metadata": {
+    "cvTitle": "履歷",
+    "cvDescription": "吳宇涵 (NG Yu Ham Baldwin) 的專業履歷及作品集——港專電腦學學生，專長 iOS、Flutter、網頁、遊戲及後端開發。",
+    "educationTitle": "學歷",
+    "educationDescription": "吳宇涵的完整學術記錄——港專四個學期共 19 門課程，大一 GPA 3.7。",
+    "projectsTitle": "項目",
+    "projectsDescription": "吳宇涵的軟件項目作品集——iOS、Flutter、網頁、遊戲及後端開發，展示跨平台及 AI 應用。"
   }
 }

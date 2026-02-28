@@ -53,9 +53,9 @@ export default function GlitchText({
   /// Locale detection — zh-hk path segments indicate Traditional Chinese mode
   const isChineseMode = pathname.includes('/zh-hk');
 
-  /// Speed adjustment — slower animation for Traditional Chinese (7ms vs 10ms)
+  /// Speed adjustment — slower animation for Traditional Chinese (1ms vs 10ms)
   /// This gives users more time to appreciate the complex character transitions
-  const speed = basespeed ?? (isChineseMode ? 7 : 10);
+  const speed = basespeed ?? (isChineseMode ? 1 : 10);
 
   const runGlitch = useCallback(() => {
     if (isGlitching) return;

@@ -36,7 +36,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ThemeProvider>
-        <div className={`min-h-screen flex flex-col scanlines ${locale === 'zh-hk' ? 'locale-zh' : 'locale-en'}`}>
+        <div suppressHydrationWarning className={`min-h-screen flex flex-col scanlines ${locale === 'zh-hk' ? 'locale-zh' : 'locale-en'}`}>
           {/* Sticky nav — hidden on print */}
           <div className="print:hidden">
             <Header />
