@@ -14,7 +14,7 @@ const projectIds = [
   'linux-server',
 ];
 
-const locales = ['en', 'zh-HK'];
+const locales = ['en', 'zh-hk'];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: MetadataRoute.Sitemap = [];

@@ -45,7 +45,7 @@ The portfolio features a **Final Year Project** (*Pour Rice* — cross-platform 
 | `/projects` | Project grid with category filtering | Filter by Mobile/Web/Game/Backend, featured showcase |
 | `/projects/[id]` | Individual project details | Development timeline, tech stack, video demos, repositories |
 
-**Available in both English (`/en`) and Traditional Chinese (`/zh-HK`)**
+**Available in both English (`/en`) and Traditional Chinese (`/zh-hk`)**
 
 ## Tech Stack
 

@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.test-plus.work',
     languages: {
       'en': 'https://www.test-plus.work/en',
-      'zh-HK': 'https://www.test-plus.work/zh-HK',
+      'zh-hk': 'https://www.test-plus.work/zh-hk',
     },
   },
 };
