@@ -905,7 +905,7 @@ a:not(.soviet-link):not(.no-link-effect):active::after {
 
 @keyframes comet-trail {
   0% {
-    stroke-dashoffset: 300;
+    stroke-dashoffset: 0;
     opacity: 0;
   }
 
@@ -918,7 +918,7 @@ a:not(.soviet-link):not(.no-link-effect):active::after {
   }
 
   100% {
-    stroke-dashoffset: -700;
+    stroke-dashoffset: -1000;
     opacity: 0;
   }
 }

@@ -129,8 +129,8 @@ export default function CosmicStarfield() {
   }, [isMobile, pathname]);
 
   /// Shooting-star comet trails — 7 variants with curved/arc-biased paths.
-  /// Visual intent per variant: one connected lead line + only dot clusters at the tail:
-  ///   _______._..... (no broken mid-dashes)
+  /// Visual intent per variant: one connected lead line + only dot clusters at the tail (pattern sum = 1000 to avoid unintended repeats):
+  ///   _______._.....
   /// Width is fixed at 0.6 for consistency; speed, arc, start point and head/tail lengths vary.
   /// The paths are designed to remain visible on mobile with `xMidYMid slice` cropping.
   const shootingStars = useMemo<ShootingStar[]>(() => [
@@ -138,7 +138,7 @@ export default function CosmicStarfield() {
       // V0 — fast upper-left sweep, gentle arc
       id: 0,
       d: 'M 8,11 Q 38,2 94,26',
-      dasharray: '320 14 1 8 1 8 1 8 1 638',
+      dasharray: '330 12 1 8 1 8 1 8 1 630',
       duration: 2.2,
       delay: 0,
       opacity: 0.7,
@@ -147,7 +147,7 @@ export default function CosmicStarfield() {
       // V1 — right-to-left descending arc
       id: 1,
       d: 'M 92,9 Q 68,30 18,54',
-      dasharray: '300 13 1 8 1 8 1 9 1 658',
+      dasharray: '305 12 1 8 1 8 1 9 1 654',
       duration: 2.5,
       delay: 1.3,
       opacity: 0.66,
@@ -156,7 +156,7 @@ export default function CosmicStarfield() {
       // V2 — shallow center orbit, very fast
       id: 2,
       d: 'M 14,24 Q 49,14 88,35',
-      dasharray: '270 12 1 8 1 8 1 8 1 699',
+      dasharray: '280 11 1 8 1 8 1 8 1 681',
       duration: 1.9,
       delay: 2.7,
       opacity: 0.62,
@@ -165,7 +165,7 @@ export default function CosmicStarfield() {
       // V3 — deep curvature with long connected head
       id: 3,
       d: 'M 18,5 Q 66,50 90,30',
-      dasharray: '350 16 1 9 1 9 1 9 1 613',
+      dasharray: '360 14 1 9 1 9 1 9 1 595',
       duration: 2.9,
       delay: 0.8,
       opacity: 0.58,
@@ -174,7 +174,7 @@ export default function CosmicStarfield() {
       // V4 — short top-right launch into mid frame
       id: 4,
       d: 'M 60,7 Q 79,24 96,45',
-      dasharray: '255 12 1 8 1 8 1 8 1 714',
+      dasharray: '265 11 1 8 1 8 1 8 1 696',
       duration: 2.1,
       delay: 3.5,
       opacity: 0.65,
@@ -183,7 +183,7 @@ export default function CosmicStarfield() {
       // V5 — low orbit, right-to-left
       id: 5,
       d: 'M 86,18 Q 52,58 13,68',
-      dasharray: '310 14 1 8 1 8 1 8 1 654',
+      dasharray: '320 12 1 8 1 8 1 8 1 640',
       duration: 2.7,
       delay: 4.2,
       opacity: 0.61,
@@ -192,7 +192,7 @@ export default function CosmicStarfield() {
       // V6 — long lower arc across viewport
       id: 6,
       d: 'M 5,48 Q 48,30 94,60',
-      dasharray: '380 18 1 9 1 9 1 9 1 571',
+      dasharray: '390 15 1 9 1 9 1 9 1 564',
       duration: 3.2,
       delay: 5.1,
       opacity: 0.56,
