@@ -29,6 +29,7 @@ export async function generateMetadata({
   const { locale } = await params;
   return {
     title: {
+      default: locale === 'zh-hk' ? '吳宇涵' : 'NG Yu Ham Baldwin',
       template: locale === 'zh-hk' ? '%s | 吳宇涵' : '%s | NG Yu Ham Baldwin',
     },
     openGraph: {

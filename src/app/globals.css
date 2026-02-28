@@ -1673,6 +1673,12 @@ a:not(.soviet-link):not(.no-link-effect):active::after {
    Printer-friendly overrides — all retro effects disabled
    ══════════════════════════════════════════════════════════════════════════ */
 @media print {
+  .min-h-screen {
+    min-height: auto !important;
+  }
+  .flex-1 {
+    flex: initial !important;
+  }
   body,
   .dark {
     background: white !important;
