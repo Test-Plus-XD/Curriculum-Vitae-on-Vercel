@@ -1,121 +1,201 @@
-# NG Yu Ham Baldwin — Full-Stack Software Developer Portfolio & CV
+# NG Yu Ham Baldwin (吳宇涵)
+## Academic Portfolio & Curriculum Vitae Website
 
-A professional bilingual (Traditional Chinese / British English) portfolio and CV website for **NG Yu Ham Baldwin (吳宇涵)**, a full-stack software developer and Computer Science student at Hong Kong College of Technology (HKCT). Built with Next.js 16+ (App Router), React 19, TypeScript, and Tailwind CSS v4, the site showcases academic excellence, comprehensive project portfolio, and technical expertise through a visually distinctive **Soviet retro-futuristic** interface inspired by 1960s Soviet space-age graphics, Russian constructivism, and contemporary retrofuturistic games such as *Atomic Heart*, *Arknights Lone Trail*, and *Reverse:1999*.
+A bilingual (English / Traditional Chinese) portfolio and curriculum vitae website presenting my academic trajectory, technical competencies, and software engineering projects as a Computer Science student at the Hong Kong College of Technology (HKCT).
 
-The portfolio features a **Final Year Project** (*Pour Rice* — cross-platform vegetarian restaurant discovery platform with AI-powered assistance), 8+ additional projects spanning **mobile development** (iOS/Swift, Flutter/Dart, Ionic), **web applications** (Next.js, React), **game development** (2D/3D), and **backend systems** (Node.js, Express, Firebase). Deployed on **Vercel** with performance monitoring via Vercel Speed Insights & Analytics.
+Designed and developed with Next.js, React, TypeScript, and Tailwind CSS, this project serves as both:
+- a professional digital CV for employers and collaborators, and
+- a curated academic record of coursework, projects, and final-year capstone development.
 
-## Key Features
+## Executive Profile
 
-### Content & Structure
-- **Bilingual Support**: Full English and Traditional Chinese (繁體中文) content with seamless language toggle (EN/繁體中文)
-- **Academic Excellence**: Comprehensive education timeline with 19 bilingual course listings, semester breakdown, and GPA metrics
-- **Extensive Project Portfolio**: 8+ detailed projects with category filtering (Mobile/Web/Game/Backend), development timelines, tech stacks, and integrated video demonstrations
-- **Final Year Project**: *Pour Rice* — comprehensive case study of a cross-platform restaurant discovery platform with real-time chat, AI assistance, and location services
+This website documents my progression as a full-stack developer through structured academic evidence and project-based outcomes. Core focus areas include:
 
-### Visual & Interactive Design
-- **Soviet Retro-Futuristic Aesthetic**: Inspired by 1960s Soviet space-age graphics and modern retrofuturistic media (Atomic Heart, Reverse:1999)
-  - Constructivist geometric patterns, diagonal grids, and brutalist typography
-  - Film-grain textures, CRT glitch effects, scanline overlays
-  - Dada/deconstructivist collage accents with torn-paper styling
-  - Parallax star fields with 35+ interactive stars and 7 curved shooting-star trails
-  - Holographic borders, radial gradient effects, and electromagnetic pulse animations
-- **Dynamic Theme System**:
-  - Dark mode: Full intensity Soviet effects on all non-CV pages
-  - Light mode: Subtler aged-paper aesthetic with sepia undertones
-  - Automatic system preference detection + manual toggle
-- **Interactive Animations**:
-  - Framer Motion staggered entrances and micro-interactions
-  - 3D perspective card tilts with spotlight tracking
-  - Cyrillic text scramble GlitchText effects on navigation
-  - Mouse-following radial cursor glow with spring physics
-  - Page transition animations with time-rewind effects
+- **Applied Software Engineering**: Building production-oriented web and mobile systems.
+- **Human-Centred Product Development**: Designing interfaces and workflows that prioritise clarity and usability.
+- **Cross-Platform Implementation**: Delivering projects across web, iOS, Flutter, and game engines.
+- **Evidence-Led Presentation**: Showcasing coursework, grades, technologies, and deliverables in a transparent format.
 
-### Accessibility & Deployment
-- **Print-Friendly CV**: Landing page optimised for clean black-and-white printing via `@media print`
-- **Performance Optimised**: Vercel Speed Insights + Analytics integration; GPU-optimised particle systems and animations
-- **Responsive Design**: Mobile-first approach with tested mobile and desktop layouts
-- **Open Graph & SEO**: Dynamic sitemap generation, comprehensive metadata, language alternates for Google
+## Featured Academic Work
 
-## Portfolio Pages
+### Final Year Project — *Pour Rice*
+A cross-platform vegetarian restaurant discovery platform integrating:
+- intelligent recommendation and AI-assisted interaction,
+- geolocation and nearby venue discovery,
+- real-time messaging and user-centric browsing workflows.
 
-| Route | Description | Highlights |
-|-------|-------------|-----------|
-| `/` | Landing CV — Professional summary | Print-friendly, academic focus, featured projects |
-| `/education` | Comprehensive education timeline | 4 semesters, 19 courses (bilingual), GPA metrics, statistics |
-| `/projects` | Project grid with category filtering | Filter by Mobile/Web/Game/Backend, featured showcase |
-| `/projects/[id]` | Individual project details | Development timeline, tech stack, video demos, repositories |
+This project is presented as a full case study with technical stack details, development context, and demonstrable outcomes.
 
-**Available in both English (`/en`) and Traditional Chinese (`/zh-hk`)**
+### Additional Project Portfolio
+Beyond the capstone, the website includes 8+ projects across:
+- **Mobile Development** (Swift, Flutter, Ionic)
+- **Web Applications** (Next.js, React)
+- **Backend Services** (Node.js, Express, Firebase)
+- **Game Development** (2D/3D interactive systems)
 
-## Tech Stack
+## Website Capabilities
 
-- **Framework**: Next.js 16.1.6+ (App Router), React 19, TypeScript 5
-- **Styling**: Tailwind CSS v4.1 (`@theme` block, no `tailwind.config.js`, PostCSS via `@tailwindcss/postcss`)
-- **Animations**: Framer Motion 12, react-wavify
-- **i18n**: next-intl 4
-- **Icons**: lucide-react
-- **Themes**: next-themes
-- **Analytics**: @vercel/speed-insights + @vercel/analytics
-- **Testing**: Vitest + @testing-library/react + fast-check
-- **Deployment**: Vercel
+- **Bilingual delivery** with English and Traditional Chinese content.
+- **Structured education timeline** with semester progression, course listings, and GPA references.
+- **Project taxonomy and filtering** by engineering domain.
+- **Print-optimised CV layout** suitable for formal application submission.
+- **Responsive and accessible interface** for desktop and mobile review.
+- **SEO and discoverability features** including metadata, sitemap generation, and locale-aware routing.
 
-## Quick Start
+## Information Architecture
+
+| Route | Purpose |
+|---|---|
+| `/` | Primary CV landing page and professional summary |
+| `/education` | Academic timeline, coursework, and performance indicators |
+| `/projects` | Portfolio index with category filtering |
+| `/projects/[id]` | Individual project case-study pages |
+
+Available in:
+- English: `/en`
+- Traditional Chinese: `/zh-hk`
+
+## Full Technical Stack
+
+### Core Runtime Dependencies
+
+| Category | Packages |
+|---|---|
+| Framework & UI | `next@16`, `react@19`, `react-dom@19` |
+| Language & Validation | `typescript@5`, `zod` |
+| Styling | `tailwindcss@4`, `@tailwindcss/postcss`, `postcss`, `autoprefixer` |
+| Internationalisation | `next-intl` |
+| Motion & Effects | `framer-motion`, `react-wavify` |
+| Theming | `next-themes` |
+| UI Assets | `lucide-react` |
+| Analytics & Performance | `@vercel/analytics`, `@vercel/speed-insights` |
+
+### Development & Testing Tooling
+
+| Category | Packages |
+|---|---|
+| Unit / Component Testing | `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom` |
+| Property-Based Testing | `fast-check` |
+| Build & Tooling | `@vitejs/plugin-react`, `@vitest/ui`, `@types/node`, `@types/react`, `@types/react-dom` |
+
+### Build Scripts
 
 ```bash
-# Install dependencies
+npm run dev      # Start development server
+npm run build    # Create production build
+npm run start    # Start production server
+npm run lint     # Run linter (configured via Next.js)
+npm run test     # Run Vitest test suites
+```
+
+## Local Development
+
+```bash
 npm install
-
-# Run development server
 npm run dev
+```
 
-# Build for production
+Production build:
+
+```bash
 npm run build
+npm run start
 ```
 
-## Project Structure
+## Full Repository Structure
 
+```text
+.
+├── ARCHITECTURE.md
+├── CLAUDE.md
+├── LICENSE
+├── README.md
+├── middleware.ts
+├── next.config.mjs
+├── package.json
+├── postcss.config.js
+├── tailwind.extension.json
+├── tsconfig.json
+├── vitest.config.ts
+├── vitest.setup.ts
+├── public/
+│   └── dada/
+│       ├── collage-1-dark.svg
+│       ├── collage-1.svg
+│       ├── collage-2-dark.svg
+│       ├── collage-2.svg
+│       ├── collage-3-dark.svg
+│       ├── collage-3.svg
+│       ├── collage-4-dark.svg
+│       ├── collage-4.svg
+│       ├── collage-5-dark.svg
+│       └── collage-5.svg
+└── src/
+    ├── app/
+    │   ├── globals.css
+    │   ├── layout.tsx
+    │   ├── sitemap.ts
+    │   └── [locale]/
+    │       ├── layout.tsx
+    │       ├── page.tsx
+    │       ├── education/
+    │       │   └── page.tsx
+    │       └── projects/
+    │           ├── layout.tsx
+    │           ├── page.tsx
+    │           └── [id]/
+    │               └── page.tsx
+    ├── components/
+    │   ├── AnimatedCard.tsx
+    │   ├── CosmicStarfield.tsx
+    │   ├── DadaCollage.tsx
+    │   ├── DadaScatterLayout.tsx
+    │   ├── DadaTypography.tsx
+    │   ├── DeconstructedGrid.example.tsx
+    │   ├── DeconstructedGrid.tsx
+    │   ├── EnhancedBackground.example.tsx
+    │   ├── EnhancedBackground.tsx
+    │   ├── Footer.tsx
+    │   ├── GlitchRevealText.tsx
+    │   ├── GlitchText.tsx
+    │   ├── Header.tsx
+    │   ├── InlineVideo.tsx
+    │   ├── LanguageToggle.tsx
+    │   ├── LocaleSetter.tsx
+    │   ├── MorseCodeTicker.tsx
+    │   ├── PrintButton.tsx
+    │   ├── ProjectCard.tsx
+    │   ├── RetroFuturisticCard.example.tsx
+    │   ├── RetroFuturisticCard.tsx
+    │   ├── RetroWave.tsx
+    │   ├── SovietBackground.tsx
+    │   ├── SovietCursorGlow.tsx
+    │   ├── SovietParticles.tsx
+    │   ├── SovietPropagandaPoster.tsx
+    │   ├── SovietTelemetry.tsx
+    │   ├── TemporalMotifs.example.tsx
+    │   ├── TemporalMotifs.tsx
+    │   ├── ThemeProvider.tsx
+    │   ├── ThemeToggle.tsx
+    │   ├── TimeRewindTransition.example.tsx
+    │   ├── TimeRewindTransition.tsx
+    │   └── VideoEmbed.tsx
+    ├── i18n/
+    │   └── request.ts
+    ├── lib/
+    │   ├── aesthetics.test.ts
+    │   ├── aesthetics.ts
+    │   ├── projects.ts
+    │   ├── timeline.ts
+    │   └── videos.ts
+    └── messages/
+        ├── en.json
+        └── zh-hk.json
 ```
-src/
-├── app/
-│   ├── [locale]/
-│   │   ├── page.tsx              # Landing CV
-│   │   ├── education/page.tsx    # Education details
-│   │   ├── projects/
-│   │   │   ├── page.tsx          # Projects grid
-│   │   │   └── [id]/page.tsx     # Project detail
-│   │   └── layout.tsx
-│   └── layout.tsx
-├── components/
-│   ├── Header.tsx
-│   ├── Footer.tsx
-│   ├── ProjectCard.tsx
-│   ├── ThemeToggle.tsx
-│   ├── LanguageToggle.tsx
-│   └── VideoEmbed.tsx
-├── lib/
-│   ├── projects.ts               # Project data
-│   └── timeline.ts               # Timeline utilities
-└── messages/
-    ├── en.json
-    └── zh-hk.json
-```
 
-## Customisation
+## Professional Objective
 
-Edit the placeholder comments in the source files to add personal information:
-
-```jsx
-{/* PLACEHOLDER: Enter full English name */}
-{/* PLACEHOLDER: Enter Chinese name */}
-{/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}
-{/* PLACEHOLDER: Add profile photo URL */}
-```
-
-## Deployment
-
-1. Push to GitHub
-2. Connect repository to Vercel
-3. Deploy automatically
+This portfolio is intended to communicate not only what I have built, but how I think and work: with technical rigour, academic discipline, and a commitment to maintainable, user-focused software.
 
 ## Licence
 
