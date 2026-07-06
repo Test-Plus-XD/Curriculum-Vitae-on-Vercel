@@ -13,6 +13,33 @@ export interface TimelineEvent {
 export const projectTimelines: Record<string, TimelineEvent[]> = {
   pourrice: [
     {
+      date: '07/05/2026',
+      type: 'video',
+      title: { en: 'FYP PWA Demo', zh: '畢業專題 PWA 演示' },
+      description: { en: 'Progressive Web App demonstration for the PourRice Ionic platform', zh: 'PourRice Ionic 平台的漸進式網絡應用演示' },
+      videoUrl: 'https://youtu.be/DMCyLYqmvcw',
+      videoId: 'DMCyLYqmvcw',
+      embedUrl: 'https://www.youtube.com/embed/DMCyLYqmvcw',
+    },
+    {
+      date: '04/05/2026',
+      type: 'video',
+      title: { en: 'FYP Technical Overview Presentation', zh: '畢業專題技術總覽簡報' },
+      description: { en: 'Technical architecture presentation with captions for the Final Year Project', zh: '畢業專題技術架構簡報（附字幕）' },
+      videoUrl: 'https://youtu.be/CTI5XFZ7POQ',
+      videoId: 'CTI5XFZ7POQ',
+      embedUrl: 'https://www.youtube.com/embed/CTI5XFZ7POQ',
+    },
+    {
+      date: '30/04/2026',
+      type: 'video',
+      title: { en: 'FYP Overview Demo (with live backend)', zh: '畢業專題總覽演示（連接實時後端）' },
+      description: { en: 'Full project overview demonstration with captions and live backend connection', zh: '畢業專題總覽演示，附字幕並連接實時後端' },
+      videoUrl: 'https://youtu.be/SsHJJNL3MKs',
+      videoId: 'SsHJJNL3MKs',
+      embedUrl: 'https://www.youtube.com/embed/SsHJJNL3MKs',
+    },
+    {
       date: '29/12/2025',
       type: 'video',
       title: { en: 'Flutter App Final Presentation', zh: 'Flutter 應用最終簡報' },
@@ -282,6 +309,79 @@ export const projectTimelines: Record<string, TimelineEvent[]> = {
       type: 'milestone',
       title: { en: 'Development Started', zh: '開發開始' },
       description: { en: 'Started Linux server administration project', zh: '開始 Linux 伺服器管理項目' },
+    },
+  ],
+
+  'data-comm-networking': [
+    {
+      date: '02/05/2026',
+      type: 'video',
+      title: { en: 'Game Server Network Design Presentation', zh: '遊戲伺服器網絡設計簡報' },
+      description: { en: 'Assignment 2 presentation on networked game server architecture', zh: '作業 2 簡報：網絡遊戲伺服器架構' },
+      videoUrl: 'https://youtu.be/tykZszgwRaY',
+      videoId: 'tykZszgwRaY',
+      embedUrl: 'https://www.youtube.com/embed/tykZszgwRaY',
+    },
+    {
+      // PLACEHOLDER: Confirm exact development start date for Term 2 2025/2026 coursework
+      date: '01/01/2026',
+      type: 'milestone',
+      title: { en: 'Development Started', zh: '開發開始' },
+      description: { en: 'Started Data Communication and Networking coursework', zh: '開始數據通信與網絡課程作業' },
+    },
+  ],
+
+  'computer-ethics': [
+    {
+      date: '03/05/2026',
+      type: 'video',
+      title: { en: 'Computer Ethics Project Presentation', zh: '計算機倫理專題簡報' },
+      description: { en: 'Project presentation with captions on computing ethics', zh: '計算機倫理專題簡報（附字幕）' },
+      videoUrl: 'https://youtu.be/JHXK4-w5x38',
+      videoId: 'JHXK4-w5x38',
+      embedUrl: 'https://www.youtube.com/embed/JHXK4-w5x38',
+    },
+    {
+      // PLACEHOLDER: Confirm exact development start date for Term 2 2025/2026 coursework
+      date: '01/01/2026',
+      type: 'milestone',
+      title: { en: 'Development Started', zh: '開發開始' },
+      description: { en: 'Started Computer Ethics coursework', zh: '開始計算機倫理課程作業' },
+    },
+  ],
+
+  'pourrice-ios': [
+    {
+      date: '28/04/2026',
+      type: 'video',
+      title: { en: 'iOS Project Operation', zh: 'iOS 專題操作演示' },
+      description: { en: 'Final project operation demonstration for the Swift iOS app', zh: 'Swift iOS 應用最終項目操作演示' },
+      videoUrl: 'https://youtu.be/r9jqsguKJlE',
+      videoId: 'r9jqsguKJlE',
+      embedUrl: 'https://www.youtube.com/embed/r9jqsguKJlE',
+    },
+    {
+      date: '03/04/2026',
+      type: 'video',
+      title: { en: 'iOS Assignment 2', zh: 'iOS 作業 2' },
+      videoUrl: 'https://youtube.com/shorts/c5yJIbbt8Wg',
+      videoId: 'c5yJIbbt8Wg',
+      embedUrl: 'https://www.youtube.com/embed/c5yJIbbt8Wg',
+    },
+    {
+      date: '15/03/2026',
+      type: 'video',
+      title: { en: 'iOS Assignment 1', zh: 'iOS 作業 1' },
+      videoUrl: 'https://youtube.com/shorts/yT6ES-SnVKU',
+      videoId: 'yT6ES-SnVKU',
+      embedUrl: 'https://www.youtube.com/embed/yT6ES-SnVKU',
+    },
+    {
+      // PLACEHOLDER: Confirm exact development start date for the Swift iOS platform
+      date: '01/01/2026',
+      type: 'milestone',
+      title: { en: 'Development Started', zh: '開發開始' },
+      description: { en: 'Started Swift iOS development for Proprietary Mobile Software Design', zh: '開始為專有手機軟件設計開發 Swift iOS 應用' },
     },
   ],
 };

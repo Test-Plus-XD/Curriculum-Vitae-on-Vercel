@@ -55,7 +55,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 relative bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-soviet-red/40">
+    <header className="sticky top-0 z-50 relative bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-300 dark:border-soviet-red/40 shadow-sm dark:shadow-none">
       {/* Soviet propaganda banner — visible in both modes (subtler in light) */}
       <div className="h-0.5 bg-gradient-to-r from-transparent via-soviet-red to-transparent opacity-30 dark:opacity-100" />
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">

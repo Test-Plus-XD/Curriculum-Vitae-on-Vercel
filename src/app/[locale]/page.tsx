@@ -21,11 +21,12 @@ import PrintButton from '@/components/PrintButton';
 /* ────────────────────────────────────────────────── inline static data */
 type Lang = 'en' | 'zh';
 
-const CURRENT_COURSES = [
-  { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理' },
-  { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)' },
-  { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡' },
-  { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通' },
+const FINAL_SEMESTER_COURSES = [
+  { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理', grade: 'B' },
+  { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)', grade: 'A+' },
+  { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡', grade: 'A+' },
+  { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通', grade: 'A+' },
+  { code: '06CIT4002', en: 'Final Year Project', zh: '畢業專題', grade: 'A+' },
 ];
 
 const SKILL_GROUPS: { key: string; items: string[] }[] = [
@@ -149,11 +150,14 @@ export default async function LandingPage({
                 </Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-                {CURRENT_COURSES.map((course) => (
-                  <div key={course.code} className="text-xs text-slate-600 dark:text-slate-300 print:text-[10px]">
-                    <span className="font-mono text-slate-400 dark:text-slate-500">{course.code}</span>
-                    <span className="mx-1">–</span>
-                    <span>{course[lang]}</span>
+                {FINAL_SEMESTER_COURSES.map((course) => (
+                  <div key={course.code} className="text-xs text-slate-600 dark:text-slate-300 print:text-[10px] flex justify-between gap-2">
+                    <span>
+                      <span className="font-mono text-slate-400 dark:text-slate-500">{course.code}</span>
+                      <span className="mx-1">–</span>
+                      <span>{course[lang]}</span>
+                    </span>
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-400 flex-shrink-0">{course.grade}</span>
                   </div>
                 ))}
               </div>

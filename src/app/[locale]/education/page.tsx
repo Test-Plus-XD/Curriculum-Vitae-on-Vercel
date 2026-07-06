@@ -28,16 +28,20 @@ interface CourseEntry {
   code: string;
   en: string;
   zh: string;
+  grade?: string;
+  credits?: number;
 }
 
-const SEMESTERS: { translationKey: string; courses: CourseEntry[] }[] = [
+const SEMESTERS: { translationKey: string; courses: CourseEntry[]; termGpa?: number }[] = [
   {
     translationKey: 'education.term_2025_2026_t2',
+    termGpa: 4.1,
     courses: [
-      { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理' },
-      { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)' },
-      { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡' },
-      { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通' },
+      { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理', grade: 'B', credits: 3 },
+      { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)', grade: 'A+', credits: 3 },
+      { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡', grade: 'A+', credits: 3 },
+      { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通', grade: 'A+', credits: 3 },
+      { code: '06CIT4002', en: 'Final Year Project', zh: '畢業專題', grade: 'A+', credits: 6 },
     ],
   },
   {
@@ -47,7 +51,6 @@ const SEMESTERS: { translationKey: string; courses: CourseEntry[] }[] = [
       { code: '03CIT4044', en: 'Cross-Platform Mobile Application Development', zh: '跨平台手機應用開發' },
       { code: '03CIT4045', en: '2D Mobile Game Development', zh: '2D 手機遊戲開發' },
       { code: '03CIT4047', en: 'Open Mobile Software Design', zh: '開放手機軟件設計' },
-      { code: '06CIT4002', en: 'Final Year Project', zh: '畢業專題' },
     ],
   },
   {
@@ -180,8 +183,8 @@ export default async function EducationPage({
               }`}>
                 <DadaTypography text={t(sem.translationKey)} as="span" intensity={0.4} scatterOnView />
                 {semIndex === 0 && (
-                  <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
-                    {locale === 'zh-hk' ? '進行中' : 'Current'}
+                  <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
+                    {locale === 'zh-hk' ? '最後學期' : 'Final'}
                   </span>
                 )}
               </h3>
@@ -203,6 +206,14 @@ export default async function EducationPage({
                   <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
                     {course.code}
                   </span>
+                  {course.grade && (
+                    <span className="inline-block ml-2 font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded mb-2">
+                      {course.grade}
+                      {course.credits != null && (
+                        <span className="text-slate-400 dark:text-slate-500 font-normal"> · {course.credits}cr</span>
+                      )}
+                    </span>
+                  )}
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-100 font-title italic">
                     <GlitchRevealText text={course[lang]} speed={6} />
                   </p>
@@ -243,9 +254,9 @@ export default async function EducationPage({
         </RetroFuturisticCard>
         <RetroFuturisticCard glowIntensity="high" cornerBrackets holographicBorder>
           <div className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.7</p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.8</p>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '大一 GPA' : 'Year 1 GPA'}
+              {locale === 'zh-hk' ? '累積 GPA' : 'Cumulative GPA'}
             </p>
           </div>
         </RetroFuturisticCard>
@@ -253,7 +264,7 @@ export default async function EducationPage({
           <div className="p-4 text-center">
             <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '預計畢業' : 'Expected Grad'}
+              {locale === 'zh-hk' ? '已畢業' : 'Graduated'}
             </p>
           </div>
         </RetroFuturisticCard>

@@ -66,7 +66,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-slate-200 dark:border-soviet-red/40 mt-16 print:mt-8">
+    <footer className="relative border-t border-slate-300 dark:border-soviet-red/40 mt-16 print:mt-8 bg-white/80 dark:bg-transparent">
       {/* Soviet accent line at the very top — visible in both modes */}
       <div className="absolute top-0 left-0 right-0 h-px soviet-line opacity-15 dark:opacity-40" />
 

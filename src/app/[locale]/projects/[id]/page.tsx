@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Video, Calendar } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Video, Calendar } from 'lucide-react';
 import { projects } from '@/lib/projects';
 
 export async function generateMetadata({
@@ -104,6 +104,21 @@ export default async function ProjectDetailPage({
         <p className="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
           <GlitchRevealText text={project.description[lang]} speed={4} glitchOnHover={false} />
         </p>
+
+        {/* Live PWA — prominent call-to-action */}
+        {project.liveUrl && (
+          <div className="mt-4">
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="soviet-print-btn soviet-holo-scan font-mono"
+            >
+              <ExternalLink size={14} />
+              {t('liveDemo')}
+            </a>
+          </div>
+        )}
 
         {/* Related Courses */}
         <div className="mt-4">
@@ -235,6 +250,28 @@ export default async function ProjectDetailPage({
               ))}
             </div>
           </div>
+
+          {/* Related Sub-Projects */}
+          {project.relatedProjects && project.relatedProjects.length > 0 && (
+            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
+              <div className="soviet-shimmer" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
+                <DadaTypography text={t('relatedProjects')} as="span" intensity={0.3} scatterOnView />
+              </h3>
+              <div className="space-y-2">
+                {project.relatedProjects.map((rp, i) => (
+                  <Link
+                    key={i}
+                    href={`/${locale}/projects/${rp.id}`}
+                    className="flex items-center justify-between gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
+                  >
+                    <span className="truncate">{rp.label[lang]}</span>
+                    <ArrowRight size={14} className="flex-shrink-0 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Repositories */}
           {(project.repo || project.platforms?.some((p) => p.repo)) && (

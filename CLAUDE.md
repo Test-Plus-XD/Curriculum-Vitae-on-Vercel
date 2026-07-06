@@ -116,7 +116,7 @@ Professional, concise CV layout with:
 ### Education Page (/education)
 - Timeline layout showing all 4 semesters
 - 19 courses with bilingual names
-- GPA display (3.7 Year 1)
+- GPA display (3.8 Final CGPA)
 - Statistics cards
 
 ### Projects Page (/projects)
@@ -146,14 +146,16 @@ Professional, concise CV layout with:
 | SE-Assignment | https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2 |
 | Card-Game | https://github.com/Test-Plus-XD/NetBeans-Projects/tree/main/CardMatchingGame |
 
-## Video Links (23 total)
+## Video Links (31 total)
 All video data is stored in `src/lib/projects.ts` and `src/lib/timeline.ts`.
 
-### Presentations (5)
+### Presentations (8)
 - Flutter, 2D Game, 3D Game, Linux, PHP presentations
+- Data Communication and Networking (Game Server Design), Computer Ethics, FYP Technical Overview presentations
 
-### Operations/Demos (18)
+### Operations/Demos (23)
 - Various assignment and final project demonstrations
+- 3 new iOS (Proprietary Mobile Software Design) operation videos, FYP Overview Demo, FYP PWA Demo
 
 ## Font System
 Three Google Fonts with a strict priority hierarchy:

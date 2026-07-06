@@ -6,6 +6,7 @@ import ProjectCard from '@/components/ProjectCard';
 import { projects } from '@/lib/projects';
 import DadaTypography from '@/components/DadaTypography';
 import DadaScatterLayout from '@/components/DadaScatterLayout';
+import DeconstructedGrid from '@/components/DeconstructedGrid';
 import GlitchText from '@/components/GlitchText';
 
 /* ─────────────────────────────────────────────────────────── types       */
@@ -63,17 +64,18 @@ export default function ProjectsPage() {
         />
       </p>
 
-      {/* project grid — scattered entrance, then reorder into grid */}
-      <DadaScatterLayout
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-        stagger={0.07}
-        delay={0.15}
-        intensity={0.5}
+      {/* project grid — deconstructivist layout with scattered entrance */}
+      <DeconstructedGrid
+        columns={2}
+        gap="1.25rem"
+        tiltIntensity={0.4}
+        offsetIntensity={0.25}
+        className="max-lg:!grid-cols-1"
       >
         {displayed.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} />
         ))}
-      </DadaScatterLayout>
+      </DeconstructedGrid>
     </div>
   );
 }

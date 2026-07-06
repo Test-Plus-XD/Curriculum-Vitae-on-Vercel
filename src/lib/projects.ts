@@ -27,6 +27,8 @@ export interface Project {
   videos: Video[];
   platforms?: Platform[];
   highlights?: { en: string[]; zh: string[] };
+  liveUrl?: string;
+  relatedProjects?: { id: string; label: { en: string; zh: string } }[];
 }
 
 function ytEmbed(id: string): string {
@@ -42,8 +44,8 @@ export const projects: Project[] = [
       zh: '倒米 Pour Rice — 畢業專題',
     },
     description: {
-      en: 'A comprehensive cross-platform vegetarian restaurant discovery platform for Hong Kong, featuring real-time chat, AI-powered assistance, and location-based services. This Final Year Project spans multiple platforms with a shared backend infrastructure.',
-      zh: '全面的跨平台香港素食餐廳探索平台，具備實時聊天、AI輔助及定位服務功能。此畢業專題橫跨多個平台，共用後端基礎設施。',
+      en: 'A comprehensive cross-platform vegetarian restaurant discovery platform for Hong Kong, featuring real-time chat, AI-powered assistance, and location-based services. This Final Year Project spans multiple platforms — including a native Swift iOS app built for the Proprietary Mobile Software Design course — with a shared backend infrastructure.',
+      zh: '全面的跨平台香港素食餐廳探索平台，具備實時聊天、AI輔助及定位服務功能。此畢業專題橫跨多個平台（包括為專有手機軟件設計課程開發的原生 Swift iOS 應用程式），共用後端基礎設施。',
     },
     categories: ['mobile', 'backend'],
     featured: true,
@@ -54,8 +56,12 @@ export const projects: Project[] = [
       { code: '03CIT4047', name: { en: 'Open Mobile Software Design', zh: '開放手機軟件設計' } },
       { code: '03CIT4043', name: { en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)' } },
     ],
-    status: 'in-progress',
+    status: 'complete',
     repo: null,
+    liveUrl: 'https://cross-platform-assignment.vercel.app/home',
+    relatedProjects: [
+      { id: 'pourrice-ios', label: { en: 'Swift iOS Platform (Sub-Project)', zh: 'Swift iOS 平台（子項目）' } },
+    ],
     techStack: [
       'Flutter / Dart',
       'Ionic / Angular',
@@ -83,7 +89,7 @@ export const projects: Project[] = [
       {
         name: { en: 'Swift iOS', zh: 'Swift iOS' },
         course: '03CIT4043',
-        status: 'in-progress',
+        status: 'complete',
         repo: 'https://github.com/Test-Plus-XD/iOS-Assignment',
       },
       {
@@ -120,6 +126,9 @@ export const projects: Project[] = [
       { type: 'operation', title: { en: 'Ionic Operation', zh: 'Ionic 操作演示' }, url: 'https://youtu.be/ybg66eH3-hI', embedUrl: ytEmbed('ybg66eH3-hI'), date: '12/11/2025' },
       { type: 'operation', title: { en: 'Flutter Assignment 2', zh: 'Flutter 作業 2' }, url: 'https://youtube.com/shorts/422JoEHT4SE', embedUrl: ytEmbed('422JoEHT4SE'), date: '27/11/2025' },
       { type: 'operation', title: { en: 'Flutter Assignment 1', zh: 'Flutter 作業 1' }, url: 'https://youtube.com/shorts/ZJHVqbcWlck', embedUrl: ytEmbed('ZJHVqbcWlck'), date: '2/11/2025' },
+      { type: 'demo', title: { en: 'FYP Overview Demo (with live backend)', zh: '畢業專題總覽演示（連接實時後端）' }, url: 'https://youtu.be/SsHJJNL3MKs', embedUrl: ytEmbed('SsHJJNL3MKs'), date: '30/4/2026' },
+      { type: 'presentation', title: { en: 'FYP Technical Overview Presentation', zh: '畢業專題技術總覽簡報' }, url: 'https://youtu.be/CTI5XFZ7POQ', embedUrl: ytEmbed('CTI5XFZ7POQ'), date: '4/5/2026' },
+      { type: 'demo', title: { en: 'FYP PWA Demo', zh: '畢業專題 PWA 演示' }, url: 'https://youtu.be/DMCyLYqmvcw', embedUrl: ytEmbed('DMCyLYqmvcw'), date: '7/5/2026' },
     ],
   },
 
@@ -331,6 +340,89 @@ export const projects: Project[] = [
     techStack: ['Linux', 'Shell / Bash', 'Server Services'],
     videos: [
       { type: 'presentation', title: { en: 'Linux Server Presentation', zh: 'Linux 伺服器簡報' }, url: 'https://youtu.be/U9pubOUTG-8', embedUrl: ytEmbed('U9pubOUTG-8'), date: '8/5/2025' },
+    ],
+  },
+
+  // --- 10. Data Communication and Networking ---------------------------------
+  {
+    id: 'data-comm-networking',
+    title: {
+      en: 'Data Communication and Networking — Game Server Design',
+      zh: '數據通信與網絡 — 遊戲伺服器設計',
+    },
+    description: {
+      en: 'Assignment presentation covering the design of a networked game server architecture, including client-server communication protocols and data exchange patterns.',
+      zh: '作業簡報，涵蓋網絡遊戲伺服器架構設計，包括客戶端與伺服器通信協定及數據交換模式。',
+    },
+    categories: ['backend'],
+    featured: false,
+    order: 10,
+    courses: [
+      { code: '03CIT4050', name: { en: 'Data Communication and Networking', zh: '數據通信與網絡' } },
+    ],
+    status: 'complete',
+    // PLACEHOLDER: Confirm exact technology stack used for the Game Server Network Design assignment
+    repo: null,
+    techStack: ['Networking Protocols', 'Client-Server Architecture'],
+    videos: [
+      { type: 'presentation', title: { en: 'Game Server Network Design — Assignment 2 Presentation', zh: '遊戲伺服器網絡設計 — 作業 2 簡報' }, url: 'https://youtu.be/tykZszgwRaY', embedUrl: ytEmbed('tykZszgwRaY'), date: '2/5/2026' },
+    ],
+  },
+
+  // --- 11. Computer Ethics ---------------------------------------------------
+  {
+    id: 'computer-ethics',
+    title: {
+      en: 'Computer Ethics — Project Presentation',
+      zh: '計算機倫理 — 專題簡報',
+    },
+    description: {
+      en: 'Project presentation examining ethical issues in computing and technology, presented with captioning for accessibility.',
+      zh: '專題簡報探討計算機及科技相關的倫理議題，附字幕以提高可及性。',
+    },
+    categories: [],
+    featured: false,
+    order: 11,
+    courses: [
+      { code: '03CIT4010', name: { en: 'Computer Ethics', zh: '計算機倫理' } },
+    ],
+    status: 'complete',
+    // PLACEHOLDER: Confirm exact project topic/technology (if any) for the Computer Ethics presentation
+    repo: null,
+    techStack: [],
+    videos: [
+      { type: 'presentation', title: { en: 'Computer Ethics Project Presentation (captioned)', zh: '計算機倫理專題簡報（附字幕）' }, url: 'https://youtu.be/JHXK4-w5x38', embedUrl: ytEmbed('JHXK4-w5x38'), date: '3/5/2026' },
+    ],
+  },
+
+  // --- 12. Pour Rice — Swift iOS (sub-project) --------------------------------
+  {
+    id: 'pourrice-ios',
+    title: {
+      en: 'Pour Rice — Swift iOS App',
+      zh: '倒米 Pour Rice — Swift iOS 應用程式',
+    },
+    description: {
+      en: 'The native iOS platform component of the Pour Rice Final Year Project, built with Swift for the Proprietary Mobile Software Design course. Shares the same backend infrastructure as the other Pour Rice platforms.',
+      zh: '倒米 Pour Rice 畢業專題的原生 iOS 平台組件，以 Swift 開發，對應專有手機軟件設計課程，與其他倒米平台共用相同的後端基礎設施。',
+    },
+    categories: ['mobile'],
+    featured: false,
+    order: 12,
+    courses: [
+      { code: '03CIT4043', name: { en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)' } },
+    ],
+    status: 'complete',
+    repo: 'https://github.com/Test-Plus-XD/iOS-Assignment',
+    // PLACEHOLDER: Confirm exact iOS frameworks/libraries used (e.g. SwiftUI vs UIKit, Core Data)
+    techStack: ['Swift'],
+    relatedProjects: [
+      { id: 'pourrice', label: { en: 'Pour Rice — Final Year Project (Main)', zh: '倒米 Pour Rice — 畢業專題（主頁）' } },
+    ],
+    videos: [
+      { type: 'operation', title: { en: 'iOS Assignment 1', zh: 'iOS 作業 1' }, url: 'https://youtube.com/shorts/yT6ES-SnVKU', embedUrl: ytEmbed('yT6ES-SnVKU'), date: '15/3/2026' },
+      { type: 'operation', title: { en: 'iOS Assignment 2', zh: 'iOS 作業 2' }, url: 'https://youtube.com/shorts/c5yJIbbt8Wg', embedUrl: ytEmbed('c5yJIbbt8Wg'), date: '3/4/2026' },
+      { type: 'operation', title: { en: 'iOS Project Operation', zh: 'iOS 專題操作演示' }, url: 'https://youtu.be/r9jqsguKJlE', embedUrl: ytEmbed('r9jqsguKJlE'), date: '28/4/2026' },
     ],
   },
 ];
