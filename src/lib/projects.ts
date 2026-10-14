@@ -262,9 +262,8 @@ export const projects: Project[] = [
       { code: '03CIT4042', name: { en: 'Software Engineering and Professional Practice', zh: '軟件工程與專業實踐' } },
     ],
     status: 'complete',
-    // PLACEHOLDER: Confirm exact technology stack used for the AI Annotation Tool
     repo: 'https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2',
-    techStack: ['Python', 'TDD'],
+    techStack: ['Next.js', 'TypeScript', 'SQLite', 'Firebase', 'Jest / Mocha / Playwright', 'TDD'],
     videos: [
       { type: 'operation', title: { en: 'SE Assignment 2 Operation', zh: 'SE 作業 2 操作演示' }, url: 'https://youtu.be/mgE3mYxxpYw', embedUrl: ytEmbed('mgE3mYxxpYw'), date: '26/12/2025' },
     ],
