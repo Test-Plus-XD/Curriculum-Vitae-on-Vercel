@@ -3,322 +3,175 @@
 **Owner**: NG Yu Ham Baldwin | 吳宇涵
 
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV website built with Next.js 16+ (App Router) for Vercel deployment. Soviet retro-futuristic aesthetic in both light and dark modes (except the landing CV page in light mode) with print-friendly CV landing page. Formal academic tone required.
+Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is an evolved Soviet constructivist / space-age poster with Dada accents, animated with **GSAP**. The CV landing page is a printable A4 "sheet" that prints as a clean black-and-white document. Formal academic tone.
 
 ## Critical Requirements
-1. **Bilingual Support**: All content in EN and ZH-HK with language toggle
-2. **Light Mode Default**: Defaults to light theme; manual toggle in header (Moon icon = switch to dark)
-3. **Responsive**: Mobile-first, test on both desktop and mobile
-4. **Academic Focus**: Education and projects are primary; work experience is secondary (brief)
-5. **British English**: Use colour, centre, organisation, programme throughout
-6. **Performance**: Vercel Speed Insights enabled
+1. **Bilingual**: every visible string exists in EN and ZH-HK (data: `{ en, zh }` pairs; UI: `src/messages/*.json`, same keys in both).
+2. **British English**: colour, centre, organisation, programme, labelling, optimise. A unit test rejects common American spellings in English copy.
+3. **Light mode default**; manual toggle only (`enableSystem={false}`).
+4. **Printable CV**: `/` must always print as clean B/W A4 (target ≤ 2 pages) — see *Print*.
+5. **Responsive**: mobile-first; check 375 px and desktop.
+6. **Accessibility**: every effect respects `prefers-reduced-motion`; decorative layers are `aria-hidden`; real text always stays in the DOM.
+7. **Academic focus**: education and projects first; work experience brief.
+8. **Privacy**: never render the birth date (only the computed age) or the street address.
 
 ## Tech Stack
-- Next.js 16.1.6+ (App Router)
-- React 19
-- TypeScript 5
-- Tailwind CSS 4.1.0 (upgraded from v3; PostCSS via `@tailwindcss/postcss`, no `tailwind.config.js`; dark mode via `@custom-variant dark` in globals.css)
-- next-intl 4.0.0 (i18n)
-- next-themes 0.4.0 (dark mode)
-- lucide-react 0.460.0 (icons)
-- framer-motion 12.33.0 (animation library — installed)
-- react-wavify (retro wave animation — installed)
-- zod ^4.3.6 (runtime validation for aesthetics module)
-- @vercel/speed-insights + @vercel/analytics
-- Vercel deployment
-- vitest + @testing-library/react + fast-check (dev — `npm test`)
+- Next.js 16.4 (App Router, Turbopack), React 19, TypeScript 5
+- Tailwind CSS 4 (`@import "tailwindcss"`, `@custom-variant dark`, `@theme` tokens; no `tailwind.config.js`)
+- next-intl 4.8 (`src/i18n/routing.ts`, `navigation.ts`, `request.ts`; locale routing in `src/proxy.ts` — Next 16's replacement for `middleware.ts`)
+- next-themes 0.4 (class strategy, `enableColorScheme={false}`)
+- **gsap 3.15 + @gsap/react 2.1** — plugins: ScrollTrigger, SplitText, ScrambleText, Flip, DrawSVG, MotionPath, CustomEase (all free, from the public `gsap` package)
+- lucide-react icons, @vercel/analytics, @vercel/speed-insights
+- vitest + @testing-library + fast-check (`npm test`)
 
 ## File Structure
 ```
 src/
 ├── app/
-│   ├── [locale]/
-│   │   ├── page.tsx              # Landing CV (professional, print-friendly)
-│   │   ├── education/
-│   │   │   └── page.tsx          # Full course listing by semester
-│   │   ├── projects/
-│   │   │   ├── page.tsx          # Projects grid with filtering
-│   │   │   └── [id]/
-│   │   │       └── page.tsx      # Individual project with timeline
-│   │   └── layout.tsx
-│   ├── layout.tsx                # Root layout with Speed Insights
-│   └── globals.css
+│   ├── layout.tsx                 # Pass-through root layout (html/body live in [locale]/layout)
+│   ├── not-found.tsx              # Fallback 404 outside any locale
+│   ├── globals.css                # Tokens, both themes, all component styles, reduced-motion, print
+│   ├── icon.svg · robots.ts · sitemap.ts
+│   └── [locale]/
+│       ├── layout.tsx             # Fonts, providers, BackgroundStage, Header, Footer, CursorReticle
+│       ├── page.tsx               # CV sheet (printable; revalidates daily for the age)
+│       ├── education/page.tsx     # Programme, stats, pinned semester track
+│       ├── projects/page.tsx      # Flip-filtered grid + Collaborations
+│       ├── projects/[id]/page.tsx # Case study: highlights, platforms, timeline, sidebar
+│       ├── not-found.tsx · [...rest]/page.tsx
 ├── components/
-│   ├── Header.tsx                # Nav with Framer Motion stagger + GlitchText links
-│   ├── Footer.tsx                # Contact links with stagger animations + neon glow
-│   ├── ProjectCard.tsx           # AnimatedCard-wrapped cards with scan sweep + tilt
-│   ├── AnimatedCard.tsx          # 3D tilt, spotlight tracking, staggered entrance
-│   ├── GlitchText.tsx            # Cyrillic text scramble on hover (CRT effect)
-│   ├── SovietCursorGlow.tsx      # Mouse-following radial glow (spring physics)
-│   ├── PrintButton.tsx           # Soviet-styled print CV action button
-│   ├── ThemeToggle.tsx           # Dark/light mode
-│   ├── LanguageToggle.tsx        # EN/繁體中文
-│   ├── ThemeProvider.tsx         # next-themes wrapper
-│   ├── VideoEmbed.tsx            # Legacy YouTube modal
-│   ├── InlineVideo.tsx           # YouTube embed (thumbnail → fullscreen iframe)
-│   ├── RetroWave.tsx             # Enlarged (440px) mountain range with react-wavify waves
-│   ├── SovietParticles.tsx       # 20 floating particles (stars, gears, sickles)
-│   ├── SovietBackground.tsx      # Full-page grid/diagonal/grain + holographic stripe + radar rings
-│   ├── CosmicStarfield.tsx       # 35 stars (18 mobile), 2 nebulae, 1 orbital ring, 4 shooting stars
-│   ├── MorseCodeTicker.tsx       # Dual scrolling Morse code strips (top + bottom)
-│   ├── SovietTelemetry.tsx       # Side-panel telemetry readout (lg+ screens)
-│   ├── SovietPropagandaPoster.tsx # Constructivist geometric decorations
-│   ├── DadaCollage.tsx           # Floating Dada collage fragments, stamps, scattered text
-│   ├── DadaTypography.tsx        # Deconstructed text with per-character displacement on hover
-│   ├── EnhancedBackground.tsx    # Parallax layered background (grain, sepia, aged spots) for enhanced pages; no duplicate layers
-│   ├── DeconstructedGrid.tsx     # Grid with random tilt/offset per item (deconstructivist layout)
-│   ├── TimeRewindTransition.tsx  # Page transition with scale+blur+scanline sweep (Reverse:1999)
-│   ├── TemporalMotifs.tsx        # Floating SVG motifs (clocks, triangles, gears, stars)
-│   └── RetroFuturisticCard.tsx   # Card with layered shadows, corner brackets, shimmer, holo border
-├── messages/
-│   ├── en.json                   # English translations
-│   └── zh-hk.json                # Traditional Chinese translations
-└── lib/
-    ├── projects.ts               # Project data with all links
-    ├── aesthetics.ts              # Page type classification (cv vs enhanced) + config
-    ├── timeline.ts               # Timeline data and utilities
-    └── videos.ts                 # Video data organised by type
+│   ├── Header · Footer · Telemetry · ThemeProvider · ThemeToggle · LanguageToggle · PrintButton
+│   ├── CvSection · SheetIntro                 # CV sheet building blocks
+│   ├── SemesterTrack                          # Education: pinned horizontal track
+│   ├── ProjectsFilterGrid · ProjectCard · PosterArt
+│   ├── DevTimeline · InlineVideo · OrbitDiagram
+│   ├── transition/TransitionProvider · TransitionLink
+│   └── fx/                                    # Reusable GSAP effects (see below)
+├── i18n/ routing.ts · navigation.ts · request.ts
+├── lib/
+│   ├── profile.ts     # Name, title, contacts, summary, getAge()
+│   ├── education.ts   # Programme, 4 semesters / 19 courses, grades
+│   ├── cv.ts          # Skill groups, experience, languages, IELTS, achievements
+│   ├── projects.ts    # 12 projects, 30 videos, milestones, collaborations, buildTimeline()
+│   ├── youtube.ts     # URL parsing, thumbnails, nocookie embeds
+│   ├── i18n-text.ts   # Bilingual type, pick(), date formatting
+│   ├── text-fx.ts     # Pure helpers for Dada/glitch text (tested)
+│   ├── gsap.ts        # The only place plugins are registered
+│   ├── reveal.ts      # Transition ↔ entrance coordination
+│   └── seo.ts         # canonical + hreflang alternates
+├── messages/ en.json · zh-hk.json
+└── proxy.ts
 ```
 
-## Placeholder Comments
-Add JSX comments for missing information that the user must provide:
-```jsx
-{/* PLACEHOLDER: Enter full English name */}
-{/* PLACEHOLDER: Enter Chinese name */}
-{/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}  {/* Rendered <p> is commented out in page.tsx */}
-{/* PLACEHOLDER: Add profile photo URL */}
-{/* PLACEHOLDER: Enter date of birth */}
-```
+## Content: where to edit
+- **Personal details / summary** → `src/lib/profile.ts`
+- **Courses, grades, GPA** → `src/lib/education.ts`
+- **Skills, jobs, languages, achievements** → `src/lib/cv.ts`
+- **Projects, videos, milestones, collaborations** → `src/lib/projects.ts` (ids are route slugs; `FEATURED_IDS` picks the three on the CV; dates are ISO `YYYY-MM-DD`; `approximate: true` shows a milestone as "approx. Month Year")
+- **UI labels** → `src/messages/*.json` (keep keys identical in both files — tested)
+- Development timelines are rendered **newest first** (`buildTimeline`); a same-day milestone sits below that day's videos.
+- Missing information gets a JSX comment: `{/* PLACEHOLDER: … */}`. Not supplied so far: profile photo, academic awards, earlier-semester grades, exact start dates for Computer Ethics, Data Communication and Networking and the Swift iOS sub-project (marked `approximate`).
 
 ## Personal Information
 | Field | Value |
 |-------|-------|
 | Name (EN) | NG Yu Ham Baldwin |
 | Name (ZH) | 吳宇涵 |
+| Title | Software Developer |
 | Email | baldwon0xd@gmail.com |
 | Phone | +852 6701 6557 |
+| Location shown | Hong Kong SAR |
+| Age | Computed by `getAge()` from May 2005 (Hong Kong time); never show the birth date |
 | GitHub | https://github.com/Test-Plus-XD |
 | LinkedIn | https://www.linkedin.com/in/test-plus-004601285/ |
 | YouTube | https://youtube.com/playlist?list=PLkzUf67y42SM-JlZk4eJEDIYPdb7VKbVo |
 | Discord | test_plus |
 
-## Page Structure
-
-### Landing CV (/)
-Professional, concise CV layout with:
-- Header with name, title, contact info
-- Education summary (links to full details)
-- Featured projects (top 3)
-- Skills grouped by category
-- Work experience (brief - 炒散侍應 in Chinese)
-- Certifications (IELTS Academic Band 6.5 only)
-
-### Education Page (/education)
-- Timeline layout showing all 4 semesters
-- 19 courses with bilingual names
-- GPA display (3.8 Final CGPA)
-- Statistics cards
-
-### Projects Page (/projects)
-- Filter by: All, Mobile, Web, Game, Backend
-- Card grid with "View Details" links
-- Shows first 2 videos per project
-
-### Project Detail Page (/projects/[id])
-- Development timeline with YouTube thumbnails
-- Video dates as timeline markers
-- Tech stack sidebar
-- Repository links
-- Platform components (for multi-platform projects)
-
-## Key Certifications
-- **IELTS Academic**: Band 6.5 (only certification listed)
+Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game Development), HDPMAGDF, QF Level 4, Sept 2024 – May 2026 (graduated May 2026), final CGPA 3.8, final-term GPA 4.1. Certification: IELTS Academic Band 6.5 only.
 
 ## Repository Links
 | Repo | URL |
 |------|-----|
 | PourRice-Ionic | https://github.com/Test-Plus-XD/Cross-Platform-Assignment |
-| PourRice-Swift | https://github.com/Test-Plus-XD/iOS-Assignment |
 | PourRice-Flutter | https://github.com/Test-Plus-XD/Android-Assignment |
+| PourRice-Swift | https://github.com/Test-Plus-XD/iOS-Assignment |
 | Web-Assignment | https://github.com/Test-Plus-XD/Web-Assignment |
 | 2D-Chess-Game | https://github.com/Test-Plus-XD/2D-Chess-Project |
 | 2D-Puzzle-Game | https://github.com/Test-Plus-XD/2D-Puzzle-Game-Assignment |
-| SE-Assignment | https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2 |
+| AI Annotation Tool v2 | https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2 |
 | Card-Game | https://github.com/Test-Plus-XD/NetBeans-Projects/tree/main/CardMatchingGame |
+| Collaboration (public) | https://github.com/keithku321/object-detection |
+| Collaboration (private, never linked) | keithku321/gaming-ai-companion |
 
-## Video Links (31 total)
-All video data is stored in `src/lib/projects.ts` and `src/lib/timeline.ts`.
+**Videos**: 30 distinct YouTube links across the 12 projects (tested).
 
-### Presentations (8)
-- Flutter, 2D Game, 3D Game, Linux, PHP presentations
-- Data Communication and Networking (Game Server Design), Computer Ethics, FYP Technical Overview presentations
+## Pages
+- **`/` CV** — paper sheet with registration marks and an HKCT stamp; header (DadaTypography name, contacts, age), profile, education with final-semester grades, three featured projects, experience, skills, languages, IELTS, achievements (collaborations appear on `/projects` only). Feeds out like printer paper on load (`SheetIntro`).
+- **`/education`** — hero with GlitchRevealText institution, programme facts, counter stat cards, **pinned horizontal semester track** (≥ 1024 px with full motion; stacked otherwise).
+- **`/projects`** — category filter (All/Mobile/Web/Game/Backend) re-flowing the grid with **Flip**; cards with diagonal split thumbnails or a generated poster; Collaborations section.
+- **`/projects/[id]`** — hero + live/repo actions, highlight counters, overview, Pour Rice **orbit diagram** of its platforms, newest-first development timeline with FLIP video modal, sticky sidebar (tech, courses, repos, related).
 
-### Operations/Demos (23)
-- Various assignment and final project demonstrations
-- 3 new iOS (Proprietary Mobile Software Design) operation videos, FYP Overview Demo, FYP PWA Demo
+## GSAP effects system
+**Rules (important):**
+- Import `gsap` and plugins **only** from `@/lib/gsap` (registers everything once, defines `soviet` and `rewind` eases).
+- Use `useGSAP` with a `scope`; branch with `gsap.matchMedia()` on `FULL_MOTION` / `REDUCED_MOTION` / `FINE_POINTER`.
+- **Inside a `mm.add()` handler, use the handler's own second argument (`contextSafe`)** for deferred callbacks — never `useGSAP`'s `contextSafe`. Mixing them makes two GSAP contexts reference each other and revert recursion crashes the page ("Maximum call stack size exceeded"). `playOnReveal(contextSafe, fn)` in `src/lib/reveal.ts` wraps this correctly; return its result from the handler.
+- **GSAP runs tween and ScrollTrigger callbacks inside the context that created them.** Never call another component's context-bound code (or `ScrollTrigger.refresh()`) from inside such a callback or a `useGSAP` body — defer it to a fresh task/frame (`setTimeout`, `requestAnimationFrame`). The transition cover's tweens live outside any context for this reason.
+- Entrance animations must wait for the page-transition cover: use `playOnReveal` (it runs immediately when nothing is covering).
+- Elements animated in from hidden carry `data-fx-hide`; CSS hides them before first paint (`html.js-fx`, set by an inline script) and a 3 s CSS failsafe reveals them if scripts never run. Call `markReady(el)` after setting the initial GSAP state.
+- Never put a CSS `transform` on something GSAP animates with `x/xPercent` (GSAP folds it into its own values).
+- Use DrawSVG only on solid strokes (it overwrites `stroke-dasharray`).
 
-## Font System
-Three Google Fonts with a strict priority hierarchy:
+**Components (`src/components/fx/`):**
+| Component | Effect |
+|---|---|
+| `BackgroundStage` | Fixed layers: CSS grid → `CosmosCanvas` → `ConstructivistField` → grain, scanlines (dark), vignette. Client-only, `no-print`. |
+| `CosmosCanvas` | 2D canvas star field (3 depths), pointer + scroll parallax, twinkle, pointer-linked HUD lines and shooting stars in dark mode; drawn on `gsap.ticker`. |
+| `ConstructivistField` | SVG poster: red sun, orbit rings with satellites (MotionPath), diagonal band, rays, star, outlined "КОСМОС"; strokes draw in; scroll parallax; **re-poses per route** (`POSES`). |
+| `DadaTypography` | Per-glyph deconstruction (spec in the profile document): seeded PRNG, 2 px first-paint clamp, double-rAF + 10 ms alignment, hover re-scatter ×1.8, optional red/gold misregistration. |
+| `GlitchText` / `GlitchRevealText` | Cyrillic/Bauhaus scramble overlay (Bauhaus-only in 繁中), base text keeps layout. |
+| `Scatter` | Children settle from a +32 px (`collage`: +48 px) diagonal, or `rise`; fade only under reduced motion. |
+| `RevealHeading` | SplitText line-mask rise + extending rule + "§ 0n" index. |
+| `Counter` | Count-up on view; final value is server-rendered and restored before printing. |
+| `TiltCard` | 3D tilt, cursor spotlight (`--mx/--my`), closing corner brackets. |
+| `Magnetic` | Pulls buttons towards the pointer, elastic release. |
+| `CursorReticle` | Trailing crosshair that locks on to interactive elements (fine pointers only). |
+| `MorseCodeTicker` | Looping Morse strips in the footer. |
 
-| Priority | Font | Usage | Weight/Style | CSS Variable |
-|----------|------|-------|--------------|--------------|
-| **1 (Highest)** | **Noto Serif Display** | Names, card/grid titles, section headings | 300 Italic | `--font-title` |
-| **2** | **Iansui** | Chinese (繁體中文) body text | 400 | `--font-zh` |
-| **2** | **LINE Seed JP** | English body text | 400 | `--font-en` |
+**Page transitions** (`components/transition/`): `TransitionLink` (wraps next-intl `Link`) asks `TransitionProvider` to sweep a red slab and an ink slab across while the destination name scrambles in; the route changes under the cover, then the slabs sweep off and `fx:reveal` releases entrance animations. `<html data-cover="on|off">` reflects the state. The latest click wins while the cover is sweeping in; modified clicks, same-page links, hidden tabs and reduced motion bypass it; timer failsafes navigate (0.9 s) and uncover (1.5 s) even if animation frames stall. **Language switches do a full page load** of the translated URL after the cover sweeps in — the `[locale]` layout owns `<html>`, and remounting it client-side would drop the `js-fx` class and re-render inline scripts. The theme toggle uses a View Transitions circular reveal where supported.
 
-**Implementation**:
-- **Iansui** loaded via `next/font/google` (primary — injects `--font-zh` CSS variable with optimised loading)
-- **LINE Seed JP** + **Noto Serif Display** loaded via CDN `<link>` tags (not available in `next/font/google`)
-- Iansui CDN `<link>` also present as fallback
-- Locale-specific classes (`.locale-en`, `.locale-zh`) switch body font automatically
-- `.font-title` class **overrides** locale font with `!important` — always renders Noto Serif Display regardless of language
-- Body text uses locale-specific fonts; headings/titles always use Noto Serif Display
-- Apply `font-title` to: names (h1), section headings (h2), card titles, stat numbers, semester headers
+## Styling
+- Tokens live in `globals.css` (`:root` = light aged paper, `:root.dark` = night launch site); components use only tokens. Palette: Soviet red `#8f0000`, orange `#db5b00`, gold `#ffa500`, paper `#f5efe6`, dark `#161412`.
+- Component styles are plain CSS in `@layer components` (BEM-ish class names); Tailwind supplies preflight, the theme and occasional utilities.
+- Links and accents are red (not blue). Design is geometric and warm: hard edges, diagonals, registration marks, stamps.
 
-## Styling Guidelines
+## Fonts (all via `next/font/google`)
+| Priority | Font | Use | Variable |
+|---|---|---|---|
+| 1 | Noto Serif Display (variable, italic, `wdth` axis) | Names, headings, card titles, numerals (`.font-title`, light italic; condensed numerals via `font-stretch`) | `--ff-title` → `--font-title` |
+| 2 | Iansui | Traditional Chinese body text and any `lang="zh-HK"` element | `--ff-zh` → `--font-zh` |
+| 2 | LINE Seed JP 400/700 | English body text | `--ff-en` → `--font-en` |
 
-### Soviet Retro-Futuristic Aesthetic (Both Light & Dark Modes)
-Inspired by 1960s Soviet space age graphics, Russian constructivism, and retrofuturistic games (Atomic Heart, Reverse:1999 Cosmic Overture, Arknights Lone Trail).
+`body.locale-zh` switches the body font; Chinese mode also disables `text-transform` so embedded Latin keeps its case.
 
-**Mode Behaviour**:
-- **Dark mode**: Full intensity Soviet effects on ALL pages (including CV)
-- **Light mode**: Subtler aged-paper Soviet effects on education/projects pages ONLY
-- **CV page**: Excluded from light-mode effects via `.cv-page` CSS class
-- **Print**: All effects disabled
-
-**Background & Overlay Effects** (via `SovietBackground` component):
-- **Grid Background**: Brutalist architectural grid (red `#8f0000`, 40px × 40px)
-- **Diagonal Lines**: Constructivist 45° orange diagonal lines (repeating every 80px)
-- **Film Grain**: Subtle SVG noise texture overlay for aged aesthetic
-- **Scanlines**: Industrial horizontal scanlines (`.scanlines::after`)
-- **Vignette**: Warm radial gradient edge darkening
-
-**Component-level Effects**:
-- `.glow-heading` — Soviet red/orange text shadow with breathing animation
-- `.glow-card` — Angular geometric borders with constructivist corner brackets + shimmer
-- `.soviet-line` / `.soviet-line-animated` — Red-to-orange gradient accent lines
-- `.soviet-link` — Animated gradient underline scan on hover with glow
-- `.soviet-stat` / `.soviet-badge` / `.soviet-filter` — Themed UI elements
-- `.soviet-tech-tag` — Hover effects on tech stack tags
-- `.soviet-ripple` — Click ripple effect on interactive elements
-- `.soviet-glitch` / `.soviet-crt-hover` — CRT glitch effects on hover
-- `.soviet-scan-sweep` — Horizontal scan line sweep on hover
-- `.soviet-holo-scan` — Holographic scanner sweep on interactive elements
-- `.soviet-holo-border` — Animated conic gradient border on hover
-- `.soviet-rgb-split` — RGB channel split glitch on hover (requires `data-text`)
-- `.soviet-spotlight` — Radial glow following cursor position (CSS custom props)
-- `.soviet-magnetic` — Subtle pull towards cursor on hover
-- `.soviet-cursor-blink` — Typewriter cursor blink for terminal elements
-- `.soviet-print-btn` — Soviet-styled action button with gradient background
-- `.retro-card` / `.retro-card-glow-*` — RetroFuturisticCard base + glow levels (low/medium/high)
-- `.retro-card-holographic` — Holographic rotating border effect on RetroFuturisticCard
-- `.corner-bracket-*` — Animated corner bracket decorations (tl/tr/bl/br) for RetroFuturisticCard
-- `.retro-shimmer` / `.retro-shimmer-active` — Shimmer sweep inside RetroFuturisticCard
-- Text selection — Soviet propaganda red/gold highlight with glow
-
-**Dada / Deconstructivist Effects** (Reverse:1999 inspired):
-- `.dada-torn-edge` — Clip-path simulating ripped/torn paper edges
-- `.dada-fragment` — Aged paper collage snippet with tilt + shadow
-- `.dada-stamp` / `.dada-stamp-rect` — Circular/rectangular ink stamp decorations
-- `.dada-scatter` — Rotated, displaced typographic fragments (positioned absolute)
-- `.dada-diagonal` — Constructivist/deconstructivist diagonal line divider via `::before`
-- `.dada-noise` — Heavy SVG grain overlay for collage texture areas
-- `.dada-redact` — Censorship/redaction bar over text via `::after`
-- `.dada-cutout` — Newspaper clipping style inline text (slightly rotated, bordered)
-- `.dada-tilt` — Slight chaotic rotation on hover (uses `--dada-hover-rotate` CSS var)
-
-**Atmospheric Components** (hidden on CV page in light mode):
-- `RetroWave` — Enlarged (440px) SVG mountain range with react-wavify animated waves, perspective grid, dual glow lines, stronger horizon glow
-- `SovietParticles` — 20 floating particles (stars, dots, diamonds, sickles, gears)
-- `SovietBackground` — Full-page grid/diagonal/grain/vignette overlay + holographic stripe overlay + concentric radar rings (pulsing grid and data stream removed for GPU optimisation)
-- `CosmicStarfield` — 35 interactive stars / 18 on mobile (3 depth layers, 8× parallax), 2 pulsing nebulae, 1 cosmic orbital ring, circular sparkle glow effects, 4 shooting star trails with dual-layer glow (outer halo + bright core); halo intensity intentionally reduced (stdDeviation 1.0/1.5, opacity ×0.15)
-- `MorseCodeTicker` — Dual scrolling Morse code strips (top + reversed bottom) with Soviet space messages
-- `SovietTelemetry` — Side-panel mission control readout with fluctuating values (lg+ screens)
-- `SovietPropagandaPoster` — Enlarged corner brackets, rotating star, dashed lines, geodesic nodes, aurora band
-- `SovietCursorGlow` — Mouse-following radial glow with spring physics (Atomic Heart polymer glove HUD)
-- `DadaCollage` — Floating Dada collage fragments (torn paper, diagonal slashes, ink stamps, scattered typographic text), inspired by Reverse:1999 / Tzara / Heartfield
-- `DadaTypography` — Per-character deconstructed text displacement on hover with spring physics (used on education/projects headings)
-- `EnhancedBackground` — Parallax background (film grain, sepia, aged spots, temporal distortion) for enhanced pages only; light mode uses sepia/aged-paper textures; scanlines/diagonals/vignette removed (handled by SovietBackground); **parallax uses CSS custom properties (`--parallax-slow/med`) not React state — no re-renders on scroll**
-- `TemporalMotifs` — Floating SVG decorative motifs (clocks, triangles, gears, stars) with drift + flicker animations, parallax scroll, density control (sparse/medium/dense); **scroll offset uses CSS custom property (`--motif-scroll`) with RAF throttling — no re-renders on scroll**
-
-**Interactive / Layout Components**:
-- `GlitchText` — Cyrillic text scramble on hover, inspired by CRT displays and Atomic Heart telemetry
-- `AnimatedCard` — 3D tilt effect with spotlight tracking and staggered entrance animation (wraps ProjectCard)
-- `TimeRewindTransition` — Page transition wrapper with scale-down (0.97) effect (Reverse:1999 time-rewind); uses `AnimatePresence mode="sync"` so navigation is never blocked; only activates on enhanced pages, respects `prefers-reduced-motion`
-- `DeconstructedGrid` — CSS Grid with seeded random tilt (-1.5° to +1.5°) and vertical offset per item; used on projects page for deconstructivist layout
-- `RetroFuturisticCard` — Card component with layered Soviet box-shadows, animated corner brackets, shimmer sweep, optional holographic rotating border; used on education stats
-
-**Colour Palette**:
-  - Soviet red: `#8f0000` (deep crimson)
-  - Soviet orange: `#db5b00` (warm orange-red)
-  - Aged beige: `#e3d5c1` (paper texture)
-  - Industrial gray: `#8c8670` (concrete)
-  - Space age gold: `#ffa500` (accents)
-  - Warm background (light): `#f5efe6` (aged paper)
-  - Background (dark): `#1a1a1a` (dark with warm undertone)
-  - Text: `slate-100` (dark) / `slate-800` (light)
-
-**Design Philosophy**:
-- Geometric & angular (NOT smooth/organic)
-- Warm colours (red/orange/gold, NOT cool cyan/purple)
-- Brutalist architecture influence
-- 1960s Soviet space race imagery
-- Constructivist typography principles
-- Analogue tech aesthetic (CRT, Morse code, telemetry, radar)
-- Dada/Deconstructivist accents: collage fragments, torn edges, scattered typography, ink stamps, slight tilts (Reverse:1999 / Tzara)
-- Interactive elements respond to mouse/hover/click
-
-### General Styling
-- Tailwind CSS utility classes throughout
-- **Tailwind v4**: Uses `@import "tailwindcss"` + `@custom-variant dark (&:where(.dark, .dark *))` + `@theme { }` syntax in `globals.css` (no `tailwind.config.js`); custom CSS goes *after* the `@theme { }` block
-- Dark mode: `dark:` prefix for all colour variations (class-based via `@custom-variant dark`, toggled by next-themes on `<html>`)
-- Print overrides: All retro effects disabled, clean black/white output
-- Mobile-first responsive design
-- Accent colours: Blue (blue-600/blue-400) for links
+## Print
+- `@media print` + `@page { size: A4; margin: 12mm 13mm }`; colours forced to black/white and `color-scheme: light !important` (next-themes must not set an inline `color-scheme`).
+- Hidden: header, footer, background, cursor, cover, buttons, stamps, registration marks (`.no-print`).
+- Anything GSAP left mid-animation is forced visible and untransformed (`[data-fx-hide]`, `.sheet-intro`); counters restore their value on `beforeprint`.
+- `.print-only` / `.screen-only` swap contact labels for printable URLs.
+- Verify with Chrome/Edge print-to-PDF in **both locales and both themes**.
 
 ## Commands
 ```bash
 npm install
 npm run dev
 npm run build
-npm test          # Vitest (unit tests for aesthetics module)
-npm run test:ui   # Vitest UI browser interface
+npm test          # vitest run (data integrity, age, YouTube parsing, text-fx)
+npm run test:ui
 ```
 
-## Key Features
-
-### Video Embedding System
-- **InlineVideo Component**: Click thumbnail → fullscreen YouTube iframe
-- Thumbnails: Direct `<img>` from `img.youtube.com/vi/{videoId}/hqdefault.jpg`
-- Fixes Next.js Image loading issues with external YouTube CDN
-- All timeline videos embedded directly (no external links needed)
-
-### Dark Mode Theming
-- System preference auto-detection
-- Manual toggle with sun/moon icon
-- Theme persisted in localStorage
-- Soviet retro effects active in BOTH modes (subtler in light mode)
-- CV page excluded from light-mode effects (`.cv-page` class)
-- All atmospheric components use `usePathname()` to detect CV page
-- Print mode forces light theme with clean output
-
-### Framer Motion Animation System
-- **Header**: Staggered nav item entrance with blur-in, animated active indicator (`layoutId` spring)
-- **Footer**: Staggered contact link entrance, icon neon glow, `whileHover`/`whileTap` micro-interactions
-- **ProjectCard**: Wrapped in `AnimatedCard` for 3D tilt + spotlight; category badge entrance animations; tech tag scale interactions
-- **GlitchText**: Cyrillic character scramble effect on nav links (hover-triggered)
-- **SovietCursorGlow**: Global mouse-following radial glow with Framer Motion spring physics
-
-### Print Support
-- `PrintButton` component on CV landing page (Soviet-styled action button)
-- All retro effects, animations, shadows, and text-shadows disabled in `@media print`
-- Scanlines, corner brackets, and section-header accents hidden
-- Clean black/white output with neutral borders
-
-## Notes
-- **British English** required (colour, centre, organisation, programme)
-- **Academic emphasis** > work experience
-- Mobile-first responsive design
-- All external links open in new tabs (`target="_blank"`)
-- Print-friendly CV page (hidden nav, no background effects)
-- For full architecture details, see [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+## Notes for agents
+- British English in all copy and comments.
+- Data files may be edited by the owner while you work — make targeted edits, never rewrite them wholesale.
+- Headless Chromium throttles `requestAnimationFrame`, so GSAP screenshots taken there can show mid-animation states; check interactions in a real browser tab.
+- See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the in-depth guide.

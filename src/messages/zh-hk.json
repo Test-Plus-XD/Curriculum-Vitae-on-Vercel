@@ -1,1 +1,127 @@
-{}
+{
+  "meta": {
+    "siteName": "吳宇涵",
+    "cvTitle": "吳宇涵 — 個人履歷",
+    "cvDescription": "吳宇涵（NG Yu Ham Baldwin）的個人履歷：軟件開發人員，香港專業進修學校電腦學高級文憑（流動應用及遊戲開發）畢業生。",
+    "educationTitle": "學歷",
+    "educationDescription": "香港專業進修學校電腦學高級文憑（流動應用及遊戲開發）：四個學期共 19 個科目，最終累積平均績點 3.8。",
+    "projectsTitle": "項目",
+    "projectsDescription": "十二個涵蓋流動應用、網頁、遊戲及後端開發的學術項目，包括畢業專題 Pour Rice 倒米。"
+  },
+  "nav": {
+    "label": "主要導覽",
+    "cv": "履歷",
+    "education": "學歷",
+    "projects": "項目",
+    "skip": "跳至內容",
+    "home": "吳宇涵 — 首頁"
+  },
+  "controls": {
+    "toDark": "切換至深色主題",
+    "toLight": "切換至淺色主題",
+    "language": "語言",
+    "print": "列印履歷",
+    "close": "關閉",
+    "play": "播放影片：{title}",
+    "back": "返回項目列表"
+  },
+  "transition": {
+    "cv": "個人履歷",
+    "education": "學歷",
+    "projects": "項目"
+  },
+  "cv": {
+    "document": "個人履歷",
+    "age": "{age} 歲",
+    "profile": "個人簡介",
+    "education": "學歷",
+    "featured": "精選項目",
+    "skills": "技術能力",
+    "experience": "工作經驗",
+    "languages": "語言能力",
+    "certification": "證書",
+    "achievements": "其他成就",
+    "cgpa": "最終累積平均績點",
+    "termGpa": "最後學期平均績點",
+    "fullRecord": "完整科目紀錄",
+    "allProjects": "所有項目",
+    "finalSemester": "最後學期",
+    "contact": "聯絡資料",
+    "labels": {
+      "email": "電郵",
+      "phone": "電話",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "location": "所在地",
+      "age": "年齡"
+    }
+  },
+  "education": {
+    "eyebrow": "學業紀錄",
+    "title": "學歷",
+    "programme": "課程",
+    "code": "課程編號",
+    "qf": "資歷架構",
+    "qfLevel": "資歷架構第 {level} 級",
+    "mode": "修讀模式",
+    "period": "修讀期間",
+    "statCgpa": "最終累積平均績點",
+    "statTermGpa": "最後學期平均績點",
+    "statCourses": "科目",
+    "statSemesters": "學期",
+    "courseCount": "{count} 個科目",
+    "grade": "成績",
+    "credits": "{count} 學分",
+    "timeline": "學期時間線",
+    "gradesNote": "此處列出最後學期的成績；較早學期的表現以最終累積平均績點概括。"
+  },
+  "projects": {
+    "eyebrow": "作品集",
+    "title": "項目",
+    "intro": "高級文憑期間完成的課業及畢業專題項目，各附相關科目、所用技術及錄影示範。",
+    "filterLabel": "按類別篩選項目",
+    "all": "全部",
+    "mobile": "流動應用",
+    "web": "網頁",
+    "game": "遊戲",
+    "backend": "後端",
+    "showing": "{count} 個項目",
+    "videos": "{count, plural, =0 {沒有影片} other {# 段影片}}",
+    "view": "查看詳情",
+    "collaborations": "協作項目",
+    "collaborationsIntro": "於朋友擁有的程式庫中作出的貢獻，不屬於十二個課程項目之列。",
+    "publicRepo": "公開程式庫",
+    "privateRepo": "私人程式庫",
+    "owner": "擁有者：{owner}",
+    "contributions": "本人貢獻"
+  },
+  "project": {
+    "overview": "概覽",
+    "keyPoints": "要點",
+    "highlights": "重點數據",
+    "platforms": "平台",
+    "primary": "主要",
+    "timeline": "開發時間線",
+    "tech": "技術",
+    "repos": "程式庫",
+    "noRepo": "沒有公開程式庫",
+    "courses": "相關科目",
+    "related": "相關項目",
+    "approx": "約",
+    "presentation": "簡報",
+    "operation": "操作示範",
+    "demo": "示範",
+    "milestone": "里程碑",
+    "noVideos": "此項目沒有錄影片段。"
+  },
+  "footer": {
+    "contact": "聯絡",
+    "source": "原始碼",
+    "built": "以 Next.js 及 GSAP 建構，託管於 Vercel。"
+  },
+  "notFound": {
+    "title": "訊號中斷",
+    "body": "找不到此頁面。",
+    "home": "返回履歷"
+  }
+}

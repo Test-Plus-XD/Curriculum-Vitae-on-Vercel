@@ -1,14 +1,7 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { ReactNode } from 'react';
 
-export const metadata: Metadata = {
-  title: 'NG Yu Ham Baldwin',
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
+// The <html> and <body> elements live in app/[locale]/layout.tsx so the document language can follow the
+// route. This root layout only passes children through, as next-intl recommends.
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return children;
 }

@@ -1,1 +1,127 @@
-{}
+{
+  "meta": {
+    "siteName": "NG Yu Ham Baldwin",
+    "cvTitle": "NG Yu Ham Baldwin — Curriculum Vitae",
+    "cvDescription": "Curriculum vitae of NG Yu Ham Baldwin, Software Developer and Computer Studies graduate (Mobile Applications & Game Development), Hong Kong College of Technology.",
+    "educationTitle": "Education",
+    "educationDescription": "Higher Diploma in Computer Studies (Mobile Applications and Game Development) at HKCT: 19 courses across four semesters, final CGPA 3.8.",
+    "projectsTitle": "Projects",
+    "projectsDescription": "Twelve academic projects across mobile, web, game and backend development, including the Pour Rice Final Year Project."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "cv": "CV",
+    "education": "Education",
+    "projects": "Projects",
+    "skip": "Skip to content",
+    "home": "NG Yu Ham Baldwin — home"
+  },
+  "controls": {
+    "toDark": "Switch to dark theme",
+    "toLight": "Switch to light theme",
+    "language": "Language",
+    "print": "Print CV",
+    "close": "Close",
+    "play": "Play video: {title}",
+    "back": "Back to projects"
+  },
+  "transition": {
+    "cv": "Curriculum Vitae",
+    "education": "Education",
+    "projects": "Projects"
+  },
+  "cv": {
+    "document": "Curriculum Vitae",
+    "age": "{age}",
+    "profile": "Profile",
+    "education": "Education",
+    "featured": "Selected projects",
+    "skills": "Technical skills",
+    "experience": "Work experience",
+    "languages": "Languages",
+    "certification": "Certification",
+    "achievements": "Achievements",
+    "cgpa": "Final CGPA",
+    "termGpa": "Final-term GPA",
+    "fullRecord": "Full course record",
+    "allProjects": "All projects",
+    "finalSemester": "Final semester",
+    "contact": "Contact",
+    "labels": {
+      "email": "Email",
+      "phone": "Phone",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "location": "Location",
+      "age": "Age"
+    }
+  },
+  "education": {
+    "eyebrow": "Academic record",
+    "title": "Education",
+    "programme": "Programme",
+    "code": "Programme code",
+    "qf": "Qualifications Framework",
+    "qfLevel": "QF Level {level}",
+    "mode": "Study mode",
+    "period": "Period",
+    "statCgpa": "Final CGPA",
+    "statTermGpa": "Final-term GPA",
+    "statCourses": "Courses",
+    "statSemesters": "Semesters",
+    "courseCount": "{count} courses",
+    "grade": "Grade",
+    "credits": "{count} credits",
+    "timeline": "Semester timeline",
+    "gradesNote": "Grades are shown for the final semester; earlier semesters are summarised by the final CGPA."
+  },
+  "projects": {
+    "eyebrow": "Portfolio",
+    "title": "Projects",
+    "intro": "Coursework and capstone projects from the Higher Diploma, each with its course links, technology and recorded demonstrations.",
+    "filterLabel": "Filter projects by category",
+    "all": "All",
+    "mobile": "Mobile",
+    "web": "Web",
+    "game": "Game",
+    "backend": "Backend",
+    "showing": "{count, plural, one {# project} other {# projects}}",
+    "videos": "{count, plural, =0 {No videos} one {# video} other {# videos}}",
+    "view": "View details",
+    "collaborations": "Collaborations",
+    "collaborationsIntro": "Contributions to repositories owned by a friend, outside the twelve course projects.",
+    "publicRepo": "Public repository",
+    "privateRepo": "Private repository",
+    "owner": "Owner: {owner}",
+    "contributions": "My contributions"
+  },
+  "project": {
+    "overview": "Overview",
+    "keyPoints": "Key points",
+    "highlights": "Highlights",
+    "platforms": "Platforms",
+    "primary": "Primary",
+    "timeline": "Development timeline",
+    "tech": "Technology",
+    "repos": "Repositories",
+    "noRepo": "No public repository",
+    "courses": "Related courses",
+    "related": "Related project",
+    "approx": "approx.",
+    "presentation": "Presentation",
+    "operation": "Operation",
+    "demo": "Demonstration",
+    "milestone": "Milestone",
+    "noVideos": "No recorded video for this project."
+  },
+  "footer": {
+    "contact": "Contact",
+    "source": "Source code",
+    "built": "Built with Next.js and GSAP. Hosted on Vercel."
+  },
+  "notFound": {
+    "title": "Signal lost",
+    "body": "This page could not be found.",
+    "home": "Return to the CV"
+  }
+}
