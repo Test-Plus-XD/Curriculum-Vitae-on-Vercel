@@ -65,3 +65,7 @@ Content lives in typed, bilingual data modules under `src/lib/` (`profile.ts`, `
 ## Licence
 
 MIT
+
+---
+
+[![](https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://github.com/deepseek-ai/deepseek-harness)
