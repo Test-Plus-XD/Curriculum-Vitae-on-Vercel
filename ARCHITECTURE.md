@@ -15,16 +15,17 @@
 5. [Rendering model](#rendering-model)
 6. [Animation architecture](#animation-architecture)
 7. [Collage system](#collage-system)
-8. [Page transitions](#page-transitions)
-9. [Background stage](#background-stage)
-10. [Pages](#pages)
-11. [Styling and theming](#styling-and-theming)
-12. [Fonts](#fonts)
-13. [Print](#print)
-14. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
-15. [Testing](#testing)
-16. [Adding content](#adding-content)
-17. [Deployment](#deployment)
+8. [Readymades](#readymades)
+9. [Page transitions](#page-transitions)
+10. [Background stage](#background-stage)
+11. [Pages](#pages)
+12. [Styling and theming](#styling-and-theming)
+13. [Fonts](#fonts)
+14. [Print](#print)
+15. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
+16. [Testing](#testing)
+17. [Adding content](#adding-content)
+18. [Deployment](#deployment)
 
 ---
 
@@ -60,12 +61,14 @@ Every route is statically generated for both locales (33 pages at build time). P
 │   ├── components/
 │   │   ├── fx/                       # Reusable GSAP effects
 │   │   ├── collage/                  # Dada collage system and the Three.js Merzbau
+│   │   ├── readymade/                # Three.js readymades: figure, canvas, stage, print pass, works/
 │   │   ├── transition/               # Page-transition provider and link
 │   │   └── *.tsx                     # Page sections and site chrome
 │   ├── i18n/                         # routing.ts · navigation.ts · request.ts
 │   ├── lib/                          # Data modules and pure helpers (+ *.test.ts)
 │   └── messages/                     # en.json · zh-hk.json
 ├── public/images/                    # Header amplifier monogram, Pour Rice app icons
+├── public/models/                    # CC0 glTF models for the readymades + CREDITS.txt
 ├── next.config.mjs                   # next-intl plugin, Turbopack root, pourrice-ios redirect
 ├── postcss.config.js                 # @tailwindcss/postcss
 ├── vitest.config.ts · vitest.setup.ts
@@ -156,7 +159,7 @@ Rules this pattern encodes:
 | Component | Technique |
 |---|---|
 | `DadaTypography` | Text segmented into nowrap word groups, fixed-width spaces and breakable CJK glyphs; each glyph is a transform target. Seeded Park–Miller PRNG, first paint clamped to ±2 px, alignment scheduled with two rAFs and a 10 ms failsafe, hover re-scatters with a fresh seed (×1.8), springs approximated with `back.out` eases and per-glyph stagger; optional hue/drop-shadow misregistration. Plain text until mounted. |
-| `GlitchText` | rAF loop resolving one character per `max(4, speed)` ms; unresolved characters drawn from Cyrillic + symbol pools (English) or Bauhaus glyphs only (Chinese) in an `aria-hidden` overlay while the base text keeps the layout. Triggers: view (once, −30 px margin, 100 ms delay), mount (200 ms), hover. `loadIn` mode paints glyph noise before the first frame and resolves once the page is revealed and the text is in view; the base text is hidden with `opacity`, never `visibility`, so it stays accessible and prints. |
+| `GlitchText` | rAF loop resolving one character per `max(4, speed)` ms; unresolved characters drawn from Cyrillic + symbol pools (English) or Bauhaus glyphs only (Chinese) in an `aria-hidden` overlay while the base text keeps the layout. Each noise glyph holds for `GLITCH_GLYPH_HOLD_MS` (110 ms ± 30 %, `lib/text-fx.ts`; the `glyphHold` prop overrides it) instead of changing every frame. Hover replays ignore touch pointers. Triggers: view (once, −30 px margin, 100 ms delay), mount (200 ms), hover. `loadIn` mode paints glyph noise before the first frame and resolves once the page is revealed and the text is in view; the base text is hidden with `opacity`, never `visibility`, so it stays accessible and prints. |
 | `Scramble` | `GlitchText` in `loadIn` mode without hover replay — the header nav's randomise effect used as a load-in across the site (labels, badges, dates, chips, course codes, buttons, CV entries, timeline titles). |
 | `Scatter` | `ScrollTrigger.batch` entrances: `scatter` (+32 px diagonal and slight rotation), `collage` (+48 px), `rise`; fade-only for reduced motion. |
 | `RevealHeading` | `SplitText` with `mask: 'lines'` and `autoSplit` (re-splits after font load), lines rise, rule extends, index slides in. |
@@ -191,6 +194,35 @@ Paper surfaces (course tickets, collaboration clippings, milestone notes) keep t
 
 ---
 
+## Readymades
+
+Three Dada objects rendered live with Three.js and printed as halftone photomontage cut-outs, each with a typewritten museum label: Raoul Hausmann's *Der Geist unserer Zeit* (1920) on `/education`, Marcel Duchamp's *Bicycle Wheel* (1913) on `/projects` and Man Ray's *Cadeau* (1921) on the 404. Real objects come from CC0 scans (Poly Haven, credited in `public/models/CREDITS.txt`); the rest is built from primitives.
+
+**Loading.** `ReadymadeFigure` (server-rendered markup: the stage box and the label) watches the stage with an `IntersectionObserver` (400 px margin) and, once the browser is idle, mounts `ReadymadeCanvas` through `next/dynamic` — so three.js, the GLTF loader and the models are only fetched for a figure that is about to be seen. Until the piece is ready, a dotted cutting line with scissors holds its place. If the WebGL context cannot be created, or loading fails, the figure removes itself.
+
+**Stage** (`stage.ts`). Transparent canvas, pixel ratio capped (2, or 1.5 on touch devices), hemisphere + key + rim lights and a low-intensity `RoomEnvironment` reflection so metals read as metal. `dispose()` walks the scene and frees every geometry, material and texture, then the print pass and the renderer.
+
+**Print pass** (`print.ts`). The scene renders into a 4× MSAA render target; a full-screen triangle then redraws it:
+
+1. **Tone** — ACES curve, gamma, then per-work black and white points and a mid-tone gamma.
+2. **Two plates** — a 45° black halftone screen for the tones (dot radius ∝ √ink) and a 15° red screen where the subject is red (redness = red minus the larger of green and blue), offset by about a pixel like a misregistered press; very dark pixels (line work: spokes, tick marks) print solid.
+3. **Cut-out** — the coverage is dilated by up to ~7 CSS px (24 taps), the radius wandering with value noise, giving a paper margin with a hand-cut edge; the same dilation, offset, becomes a red halftone shadow plate.
+4. Output is premultiplied straight to the canvas; paper, ink and red are fixed sRGB values, so the cut-out stays paper in dark mode too.
+
+**Works** (`works/*.ts`) share one shape (`works/types.ts`): an async build that loads assets and assembles the scene (in its finished state), returning a factory that — inside the figure's `gsap.context` — makes:
+
+- `intro`, a paused timeline of `from` tweens with labels (`arrive` / `parts` / `tape` / `settled`, `stool` / `wheel` / `spin`, `iron` / `tacks`), so reverting the context always leaves the piece assembled and reduced motion simply jumps to `progress(1)`;
+- `update(time, dt)` for idle motion (sway, a ticking second hand, the free-wheeling spin), `look(x, y)` for mouse/pen, `scroll(progress, velocity)` from a ScrollTrigger on the figure, `drag(dx)` (Duchamp, via a `Draggable` proxy whose `onClick` still acts) and `act()`;
+- actions replay parts of the intro with `tweenTo(label)` then `play(label)`: the head's instruments are knocked off and refitted, the tacks pulled and hammered again; the wheel gets a spin.
+
+Models stay in their own units (metres) inside a scaled `body` group, nested in an entrance group (`rig`) and an idle/pointer group (`turn`), so the three kinds of motion never fight over one transform.
+
+**Cost.** The loop runs on `gsap.ticker` only while the figure intersects the viewport (and not at all in hidden tabs), capped at 30 fps on touch devices. Shader-compile logging is off in production.
+
+**Adding a model.** Download the 1k glTF from Poly Haven into `public/models/<name>/`, shrink its textures to 512–1024 px, remove maps the print look does not need and any `KHR_materials_transmission` (it costs an extra render pass), and add the model to `CREDITS.txt`; `data.test.ts` checks that every referenced file exists and that each model is credited.
+
+---
+
 ## Page transitions
 
 `TransitionProvider` renders a fixed cover (red slab and ink slab, both torn along their long edges by `tornSlab()` clip-paths, with a grid, star and label) and exposes `navigate(href, { label, locale })`. It tracks a phase — `idle → covering → waiting → revealing → idle`:
@@ -213,11 +245,13 @@ The cover's tweens are created outside any GSAP context on purpose: GSAP runs a 
 `BackgroundStage` mounts client-side only and stacks:
 
 1. `.bg-grid` — 40 px architectural grid and 45° diagonals (CSS gradients).
-2. `CosmosCanvas` — DPR-capped canvas; stars in three depths with pointer and scroll parallax; in dark mode cross glints, HUD lines from the pointer to nearby foreground stars, and shooting stars. Runs on `gsap.ticker`; reduced motion draws one still frame; reacts to theme changes via a `MutationObserver` on `<html>`.
+2. `CosmosCanvas` — DPR-capped canvas; stars in three depths with pointer and scroll parallax; in dark mode cross glints, HUD lines from the pointer to nearby foreground stars, and shooting stars. Runs on `gsap.ticker`; reduced motion draws one still frame; reacts to theme changes via a `MutationObserver` on `<html>`. Pointer parallax follows a mouse or pen only (a finger is tapping or scrolling); the canvas is sized to the stage and keeps its stars when resized.
 3. `ConstructivistField` — 1600×1000 SVG (`slice`): rays, striped diagonal band, sun disc with rings, orbit ellipses with two MotionPath satellites, rotating star, outlined "КОСМОС · 1961". Each layer has a pose group (route-dependent), a parallax group (scrubbed over the whole document) and its own perpetual motion. `POSES` defines the composition for `cv`, `education`, `projects` and `detail`; changing route tweens every layer to its new pose.
 4. `.bg-grain` (animated SVG noise), `.bg-scanlines` (dark only) and `.bg-vignette`.
 
 In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper sheet reads clearly.
+
+**Mobile stability.** The stage is `100lvh` tall rather than `inset: 0`, so mobile toolbars sliding in and out never resize it (which would rescale the poster and move the stars). `html { overflow-x: clip }` keeps anything an entrance animation slides in from off-screen from widening the phone's layout viewport; without it the browser zooms the whole page out and back while the animation runs.
 
 ---
 
@@ -226,8 +260,9 @@ In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper s
 | Route | Composition |
 |---|---|
 | `/` | `CollageHero` (screen only), then the toolbar (eyebrow + `PrintButton`), `SheetIntro` → taped `article.cv-sheet` with marks and an inked `Stamp`, header (identity + `dl` contacts with screen/print variants), two `Scatter` columns of `CvSection`s, then `CutUpPoem` (screen only). Hero content is built from the real data (final grades, featured footage). |
-| `/education` | Hero (DadaTypography, GlitchRevealText institution, programme facts, graduation badge), stat cards (`TiltCard` + `Counter`), `RevealHeading`, `SemesterTrack` of perforated ticket-stub courses, grade note. |
-| `/projects` | Hero, `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, torn-edged soft-duotone thumbnails or `PosterArt`, stretched link), Collaborations as newspaper clippings with Unbounded headlines (private repositories have no link). |
+| `/education` | Hero (DadaTypography, GlitchRevealText institution, programme facts in a 2 × 2 grid, graduation badge) with Readymade № 1 in a second column from 1024 px, stat cards (`TiltCard` + `Counter`), `RevealHeading`, `SemesterTrack` of perforated ticket-stub courses, grade note. |
+| `/projects` | Hero with Readymade № 2, `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, torn-edged soft-duotone thumbnails or `PosterArt`, stretched link), Collaborations as newspaper clippings with Unbounded headlines and 15 px body copy (private repositories have no link). |
+| 404 | Outlined "404", ransom-note title, home link, and Readymade № 3 beside them from 1024 px. |
 | `/projects/[id]` | Back link, hero (badges, live and repository actions in `Magnetic`; Pour Rice shows its app icon), highlight counters, overview and key points, platforms (`OrbitDiagram` + list) for multi-platform projects, `DevTimeline` (newest first, kraft-paper milestone notes) with `InlineVideo`s, sticky sidebar (tech, courses, repositories). `dynamicParams = false`. |
 
 ---
@@ -280,8 +315,8 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 |---|---|
 | `profile.test.ts` | Age boundaries in Hong Kong time; contact links |
 | `youtube.test.ts` | URL parsing and embed URLs |
-| `text-fx.test.ts` | Lossless segmentation (fast-check), CJK splitting, PRNG determinism, displacement clamps, glitch pools and frames |
-| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, British spelling |
+| `text-fx.test.ts` | Lossless segmentation (fast-check), CJK splitting, PRNG determinism, displacement clamps, glitch pools and frames, the glyph cycler holding each noise glyph for its hold time |
+| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, readymade labels in both languages, every model's files present and credited (no transmission pass), British spelling |
 | `collage.test.ts` | Seeded PRNG range and determinism, shuffle as a permutation, torn clip-paths (only the requested sides, inside the box), torn slabs, ransom glyphs (deterministic, bare spaces, no paper repeated on neighbours), lossless cut-up in English and Chinese |
 
 ---

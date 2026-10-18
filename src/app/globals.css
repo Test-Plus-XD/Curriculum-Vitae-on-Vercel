@@ -119,6 +119,9 @@
 @layer base {
   html {
     background: var(--bg);
+    /* Entrances slide content in from off-screen; on phones that overflow must never widen the layout
+       viewport, or the browser rescales the whole page while the animation runs. */
+    overflow-x: clip;
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-text-size-adjust: 100%;
@@ -294,7 +297,13 @@
   /* --------------------------------------------------------- background */
   .bg-stage {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Sized to the large viewport, so mobile toolbars sliding in and out (on scroll, on navigation) never
+       resize the stage — which would rescale the poster and shift the stars. */
+    height: 100vh;
+    height: 100lvh;
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
@@ -1795,6 +1804,9 @@
       var(--newsprint);
     color: var(--ink-black);
     box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+    /* Body copy at the same size as the project cards' summaries. */
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   .collab-card:nth-child(odd) {
@@ -1816,9 +1828,9 @@
 
   .collab-title {
     font-family: var(--font-display);
-    font-size: clamp(20px, 2.1vw, 27px);
+    font-size: clamp(18px, 1.7vw, 22px);
     font-weight: 800;
-    line-height: 1.12;
+    line-height: 1.15;
     text-transform: uppercase;
     letter-spacing: -0.01em;
   }
@@ -3375,6 +3387,201 @@
     margin-top: 16px;
   }
 
+  /* ------------------------------------------------------------ readymades */
+  /* A 3D object printed as a halftone cut-out (WebGL), with a typewritten museum label pasted over it. */
+  .readymade {
+    position: relative;
+    width: min(100%, 440px);
+    margin: 36px auto 0;
+  }
+
+  .readymade[data-state="failed"] {
+    display: none;
+  }
+
+  .readymade-stage {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+
+  .readymade-duchamp .readymade-stage {
+    aspect-ratio: 3 / 4;
+    cursor: grab;
+  }
+
+  .readymade-duchamp .readymade-stage:active {
+    cursor: grabbing;
+  }
+
+  .readymade-manray .readymade-stage {
+    aspect-ratio: 1 / 0.86;
+  }
+
+  .readymade-canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Until the piece arrives: a dotted cutting line, with scissors, where it will be pasted. */
+  .readymade-cut {
+    position: absolute;
+    inset: 9% 12% 14%;
+    border: 2px dashed var(--line-strong);
+    pointer-events: none;
+    transition: opacity 0.8s var(--ease-out);
+  }
+
+  .readymade-cut::before {
+    content: "✂";
+    position: absolute;
+    top: -14px;
+    left: 14px;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .readymade[data-state="ready"] .readymade-cut {
+    opacity: 0;
+  }
+
+  .readymade-label {
+    --ink: var(--ink-black);
+    --muted: #5f5446;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: start;
+    gap: 3px;
+    width: min(88%, 310px);
+    margin: -44px 0 0 auto;
+    padding: 16px 18px 14px;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.05) 0 1px, transparent 1px 22px) 0 6px,
+      var(--scrap);
+    color: var(--ink-black);
+    font-family: var(--font-type);
+    font-size: 12.5px;
+    line-height: 1.55;
+    rotate: -1.6deg;
+    box-shadow: 0 16px 26px -18px rgba(23, 18, 15, 0.6);
+  }
+
+  .readymade-label .tape-tl {
+    top: -12px;
+    left: -22px;
+    width: 76px;
+  }
+
+  .readymade-kicker {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+  }
+
+  .readymade-artist {
+    color: var(--muted);
+  }
+
+  .readymade-title {
+    font-size: 21px;
+    line-height: 1.15;
+    color: var(--ink-black);
+  }
+
+  .readymade-note {
+    margin-top: 4px;
+  }
+
+  .locale-zh .readymade-label,
+  .locale-zh .readymade-note {
+    font-family: var(--font-zh);
+  }
+
+  .readymade-action {
+    margin-top: 8px;
+    padding: 5px 10px 4px;
+    border: 1.5px solid var(--vermilion);
+    color: var(--vermilion);
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    rotate: -2deg;
+    transition: background 0.25s, color 0.25s, opacity 0.4s;
+  }
+
+  .readymade-action:hover,
+  .readymade-action:focus-visible {
+    background: var(--vermilion);
+    color: var(--scrap);
+  }
+
+  .readymade-action:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  @media (min-width: 1024px) {
+    .page-hero.has-readymade {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(300px, 34vw, 430px);
+      column-gap: 32px;
+      align-items: start;
+    }
+
+    .page-hero.has-readymade > :not(.readymade) {
+      position: relative;
+      z-index: 2;
+      grid-column: 1;
+    }
+
+    /* Inline pieces stay their own width inside the grid. */
+    .page-hero.has-readymade > .eyebrow,
+    .page-hero.has-readymade > .graduation-badge {
+      justify-self: start;
+    }
+
+    /* The programme facts share the column with the readymade: a tidy two by two. */
+    .page-hero.has-readymade .hero-meta {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .page-hero.has-readymade > .readymade {
+      z-index: 1;
+      grid-column: 2;
+      grid-row: 1 / span 8;
+      width: 100%;
+      margin: -12px 0 0;
+    }
+
+    .page-404.has-readymade {
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+      column-gap: 56px;
+      align-items: center;
+    }
+
+    .page-404.has-readymade > :not(.readymade) {
+      grid-column: 1;
+    }
+
+    .page-404.has-readymade > .readymade {
+      grid-column: 2;
+      grid-row: 1 / span 4;
+      margin: 0;
+    }
+  }
+
   /* Chinese mode: keep the original letter case of embedded Latin text (e.g. "3ds Max", "GitHub"). */
   body.locale-zh * {
     text-transform: none;
@@ -3396,6 +3603,11 @@
 
   .js-fx [data-fx-hide]:not(.fx-ready) {
     animation-delay: 3s !important;
+  }
+
+  /* Readymades are shown as still prints; their actions are all motion. */
+  .readymade-action {
+    display: none;
   }
 }
 

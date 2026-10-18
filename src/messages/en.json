@@ -148,5 +148,26 @@
     "restore": "Restore",
     "credit": "After Tristan Tzara’s recipe for a Dadaist poem, 1920.",
     "result": "Current arrangement"
+  },
+  "readymade": {
+    "series": "Readymade № {number}",
+    "hausmann": {
+      "artist": "After Raoul Hausmann",
+      "title": "The Spirit of Our Time, 1920",
+      "note": "A head with no thoughts of its own, only the instruments fixed to it: a pocket watch, a tape measure, spectacles, a cup and a grade card reading 3.8.",
+      "action": "Refit the head"
+    },
+    "duchamp": {
+      "artist": "After Marcel Duchamp",
+      "title": "Bicycle Wheel, 1913",
+      "note": "The first readymade: a wheel and its fork set upside down in a kitchen stool. Drag across it to spin it.",
+      "action": "Spin the wheel"
+    },
+    "manray": {
+      "artist": "After Man Ray",
+      "title": "Gift, 1921",
+      "note": "A flat-iron with fourteen tacks on its sole: a useful object made useless, like a link to a page that is not here.",
+      "action": "Hammer it again"
+    }
   }
 }

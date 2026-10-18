@@ -3,6 +3,8 @@ import fc from 'fast-check';
 import {
   BAUHAUS_GLYPHS,
   GLITCH_CHARS,
+  GLITCH_GLYPH_HOLD_MS,
+  createGlitchCycler,
   createRandom,
   glitchFrame,
   glitchGlyph,
@@ -94,5 +96,26 @@ describe('glitch', () => {
     expect(frame[4]).toBe(' ');
     expect(Array.from(frame)).toHaveLength(9);
     expect(glitchFrame('Hong Kong', 99, false)).toBe('Hong Kong');
+  });
+
+  it('holds each noise glyph for its hold time instead of changing every frame', () => {
+    const hold = 100;
+    const random = createRandom(42);
+    const cycle = createGlitchCycler(true, hold, () => (random() + 1) / 2);
+    const first = cycle('香港理工', 0, 0);
+    // Within 70 % of the hold nothing may change, whatever the frame rate.
+    for (let t = 16; t < hold * 0.7; t += 16) expect(cycle('香港理工', 0, t)).toBe(first);
+    // After 130 % of the hold every glyph has been redrawn at least once (the pool may repeat a glyph).
+    const later = Array.from({ length: 30 }, (_, k) => cycle('香港理工', 0, hold * 1.3 + k * hold * 1.3));
+    expect(later.some((f) => f !== first)).toBe(true);
+    expect(Array.from(first).every((ch) => BAUHAUS_GLYPHS.includes(ch))).toBe(true);
+  });
+
+  it('keeps resolved characters and spaces in the cycler', () => {
+    const cycle = createGlitchCycler(false, GLITCH_GLYPH_HOLD_MS);
+    const frame = cycle('Hong Kong', 3, 0);
+    expect(frame.slice(0, 3)).toBe('Hon');
+    expect(frame[4]).toBe(' ');
+    expect(cycle('Hong Kong', 99, 5)).toBe('Hong Kong');
   });
 });

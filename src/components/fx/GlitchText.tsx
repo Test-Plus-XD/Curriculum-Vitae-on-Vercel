@@ -1,10 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, type ElementType } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, type ElementType, type PointerEvent } from 'react';
 import { useLocale } from 'next-intl';
 import { gsap, prefersReducedMotion } from '@/lib/gsap';
 import { onPageReveal } from '@/lib/reveal';
-import { glitchFrame } from '@/lib/text-fx';
+import { createGlitchCycler, glitchFrame, GLITCH_GLYPH_HOLD_MS } from '@/lib/text-fx';
 
 export interface GlitchTextProps {
   text: string;
@@ -12,6 +12,8 @@ export interface GlitchTextProps {
   className?: string;
   /** Milliseconds per resolved character; defaults to 1 (繁中) or 10 (EN), never below 4. */
   speed?: number;
+  /** Milliseconds each noise glyph holds before changing; defaults to GLITCH_GLYPH_HOLD_MS in lib/text-fx.ts. */
+  glyphHold?: number;
   glitchOnHover?: boolean;
   glitchOnMount?: boolean;
   glitchOnView?: boolean;
@@ -36,6 +38,7 @@ export default function GlitchText({
   as: Tag = 'span',
   className,
   speed,
+  glyphHold = GLITCH_GLYPH_HOLD_MS,
   glitchOnHover = true,
   glitchOnMount = false,
   glitchOnView = false,
@@ -78,6 +81,8 @@ export default function GlitchText({
     overlay.style.display = 'block';
     rootRef.current?.classList.add('fx-rgb-split');
     const start = performance.now();
+    // Each noise glyph holds for its own ~glyphHold ms rather than changing every frame.
+    const cycle = createGlitchCycler(isChinese, glyphHold);
     const tick = (now: number) => {
       const current = textRef.current;
       const progress = Math.floor((now - start) / msPerChar);
@@ -85,11 +90,11 @@ export default function GlitchText({
         finish();
         return;
       }
-      overlay.textContent = glitchFrame(current, progress, isChinese);
+      overlay.textContent = cycle(current, progress, now);
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
-  }, [finish, isChinese, msPerChar]);
+  }, [finish, isChinese, msPerChar, glyphHold]);
 
   // Load-in: show noise from the first client paint until it is time to resolve.
   useIsomorphicLayoutEffect(() => {
@@ -140,13 +145,14 @@ export default function GlitchText({
     [],
   );
 
-  const onEnter = () => {
-    if (!glitchOnHover) return;
+  // Hover only: a tap on a touch screen is a navigation, not a hover, and must not nudge the text.
+  const onEnter = (e: PointerEvent) => {
+    if (!glitchOnHover || e.pointerType === 'touch') return;
     run();
     if (rootRef.current && !prefersReducedMotion()) gsap.to(rootRef.current, { scale: 1.01, duration: 0.2 });
   };
-  const onLeave = () => {
-    if (glitchOnHover && rootRef.current) gsap.to(rootRef.current, { scale: 1, duration: 0.25 });
+  const onLeave = (e: PointerEvent) => {
+    if (glitchOnHover && e.pointerType !== 'touch' && rootRef.current) gsap.to(rootRef.current, { scale: 1, duration: 0.25 });
   };
 
   return (

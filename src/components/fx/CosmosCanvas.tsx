@@ -50,28 +50,39 @@ export default function CosmosCanvas() {
     let nextMeteor = 2 + Math.random() * 4;
     let time = 0;
 
+    const makeStar = (): Star => {
+      const layer = (Math.random() < 0.55 ? 0 : Math.random() < 0.7 ? 1 : 2) as Star['layer'];
+      return {
+        x: Math.random(),
+        y: Math.random(),
+        layer,
+        r: (0.4 + Math.random() * 0.8) * DEPTH[layer] + (layer === 2 ? 0.6 : 0.2),
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.6 + Math.random() * 1.8,
+        tint: (Math.random() < 0.7 ? 0 : Math.random() < 0.6 ? 1 : 2) as Star['tint'],
+      };
+    };
+
+    // Sized to the stage (which uses the large viewport height), so mobile toolbars do not resize it. When
+    // the stage really does change size, the existing stars are kept — only a few are added or dropped — so
+    // the sky never reshuffles under the reader.
     const build = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
+      const host = canvas.parentElement;
+      const nextWidth = host?.clientWidth || window.innerWidth;
+      const nextHeight = host?.clientHeight || window.innerHeight;
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (nextWidth === width && nextHeight === height && nextDpr === dpr) return;
+      dpr = nextDpr;
+      width = nextWidth;
+      height = nextHeight;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const count = Math.round(Math.min(240, Math.max(60, (width * height) / 6500)) * (width < 640 ? 0.6 : 1));
-      stars = Array.from({ length: count }, () => {
-        const layer = (Math.random() < 0.55 ? 0 : Math.random() < 0.7 ? 1 : 2) as Star['layer'];
-        return {
-          x: Math.random(),
-          y: Math.random(),
-          layer,
-          r: (0.4 + Math.random() * 0.8) * DEPTH[layer] + (layer === 2 ? 0.6 : 0.2),
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.6 + Math.random() * 1.8,
-          tint: (Math.random() < 0.7 ? 0 : Math.random() < 0.6 ? 1 : 2) as Star['tint'],
-        };
-      });
+      if (count > stars.length) stars.push(...Array.from({ length: count - stars.length }, makeStar));
+      else stars.length = count;
     };
 
     const colour = (tint: Star['tint'], alpha: number) => {
@@ -173,6 +184,9 @@ export default function CosmosCanvas() {
       if (reduced) still();
     };
     const onMove = (e: PointerEvent) => {
+      // Parallax follows a mouse or pen. A finger on a phone is tapping or scrolling: following it would slide
+      // the whole sky towards every tap, visibly shifting it during theme changes and page transitions.
+      if (e.pointerType === 'touch') return;
       pointer.tx = e.clientX / width;
       pointer.ty = e.clientY / height;
       pointer.px = e.clientX;

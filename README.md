@@ -30,6 +30,7 @@ A Dada photomontage in Soviet poster colours — Schwitters-style *Merz* collage
 
 - **Background** — a canvas star field with parallax and shooting stars, beneath a constructivist SVG composition (red sun, orbit rings with satellites, diagonal bands, rays) that draws itself in and re-arranges itself on every page change.
 - **Collage** — a landing photomontage with a ransom-note name, label-maker title, name chop, ink stamp and draggable duotone scraps of project footage, floating over a Three.js *Merzbau* of torn CV scraps, a red wedge and a Tatlin tower; a Tzara-style cut-up poem; courses as ticket stubs and collaborations as newspaper clippings.
+- **Readymades** — three Dada sculptures rebuilt in Three.js from CC0 scanned objects and printed live as red-and-black halftone cut-outs with museum labels: Hausmann's *Spirit of Our Time* (a marble bust fitted with a pocket watch, tape measure, spectacles and a "3.8" grade card) on Education, Duchamp's *Bicycle Wheel* (spin it) on Projects, and Man Ray's tack-studded iron, *Gift*, on the 404.
 - **Elements** — deconstructed Dada typography, Cyrillic text-scramble load-ins on labels across the site, scattered card entrances, line-mask headings, count-up figures, 3D tilt cards with spotlight, magnetic buttons, a targeting cursor, a Flip-animated project filter, a pinned horizontal semester track and an animated orbit diagram of Pour Rice's architecture.
 - **Transitions** — torn red and black slabs that sweep across between pages while the destination name is pasted up from cut-out letters, a circular reveal for theme changes, and video players that grow out of their thumbnails.
 
@@ -42,7 +43,7 @@ Everything respects `prefers-reduced-motion`, and the CV prints as a plain black
 | Framework | `next@16`, `react@19`, `typescript@5` |
 | Styling | `tailwindcss@4`, `@tailwindcss/postcss` |
 | Animation | `gsap@3.15`, `@gsap/react` (ScrollTrigger, SplitText, Flip, DrawSVG, MotionPath, CustomEase, Draggable, Inertia) |
-| 3D | `three` (landing-page Merzbau, lazy-loaded) |
+| 3D | `three` (landing-page Merzbau and the readymades, lazy-loaded); CC0 models from [Poly Haven](https://polyhaven.com), credited in `public/models/CREDITS.txt` |
 | Internationalisation | `next-intl` |
 | Theming & icons | `next-themes`, `lucide-react` |
 | Analytics | `@vercel/analytics`, `@vercel/speed-insights` |

@@ -1,0 +1,10 @@
+3D models used by the "Readymade" figures (src/components/readymade/).
+
+All models are from Poly Haven (https://polyhaven.com) and are released under CC0 1.0
+(public domain). Textures were downscaled for the web; some maps were removed.
+
+marble_bust_01        Rico Cilliers      https://polyhaven.com/a/marble_bust_01
+measuring_tape_01     Kuutti Siitonen    https://polyhaven.com/a/measuring_tape_01
+vintage_pocket_watch  Tal Swicegood      https://polyhaven.com/a/vintage_pocket_watch
+round_spectacles      Sean Buckley       https://polyhaven.com/a/round_spectacles
+painted_wooden_stool  Kirill Sannikov    https://polyhaven.com/a/painted_wooden_stool

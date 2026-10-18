@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { usePathname } from '@/i18n/navigation';
 import { gsap, useGSAP, ScrollTrigger, FULL_MOTION } from '@/lib/gsap';
+import { isCovered } from '@/lib/reveal';
 import TransitionLink from './transition/TransitionLink';
 import GlitchText from './fx/GlitchText';
 import LanguageToggle from './LanguageToggle';
@@ -60,7 +61,14 @@ export default function Header() {
             const shouldHide = self.direction === 1 && self.scroll() > 160;
             if (shouldHide !== hidden) {
               hidden = shouldHide;
-              gsap.to(header, { yPercent: hidden ? -100 : 0, duration: 0.45, ease: hidden ? 'power3.in' : 'expo.out' });
+              // Under the page-transition cover (the new page resetting the scroll) the header snaps back at
+              // once, so it is already in place when the cover lifts instead of sliding in during the reveal.
+              gsap.to(header, {
+                yPercent: hidden ? -100 : 0,
+                duration: isCovered() ? 0 : 0.45,
+                ease: hidden ? 'power3.in' : 'expo.out',
+                overwrite: 'auto',
+              });
             }
           },
         });

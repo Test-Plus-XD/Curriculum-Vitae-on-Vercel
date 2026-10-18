@@ -11,6 +11,7 @@ import TiltCard from '@/components/fx/TiltCard';
 import Scramble from '@/components/fx/Scramble';
 import { Tape } from '@/components/collage/Paper';
 import ProjectsFilterGrid from '@/components/ProjectsFilterGrid';
+import ReadymadeFigure from '@/components/readymade/ReadymadeFigure';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -26,13 +27,14 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
 
   return (
     <div className="page page-projects">
-      <section className="page-hero">
+      <section className="page-hero has-readymade">
         <p className="eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
           <Scramble text={t('eyebrow')} />
         </p>
         <DadaTypography as="h1" text={t('title')} className="hero-title font-title" colorShift intensity={1} />
         <p className="hero-lede">{t('intro')}</p>
+        <ReadymadeFigure work="duchamp" number={2} />
       </section>
 
       <ProjectsFilterGrid projects={PROJECTS} />

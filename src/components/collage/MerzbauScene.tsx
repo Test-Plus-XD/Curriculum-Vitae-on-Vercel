@@ -435,6 +435,8 @@ export default function MerzbauScene({ content, progressRef, onFail }: Props) {
     };
 
     const onPointer = (e: PointerEvent) => {
+      // Mouse and pen only: on a phone a finger is scrolling or tapping, and the camera should hold still.
+      if (e.pointerType === 'touch') return;
       const rect = host.getBoundingClientRect();
       pointer.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
       camTarget.set(pointer.x, pointer.y);

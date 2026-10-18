@@ -106,3 +106,41 @@ export function glitchFrame(text: string, progress: number, isChinese: boolean, 
     .map((ch, i) => (ch === ' ' || i < progress ? ch : glitchGlyph(isChinese, random)))
     .join('');
 }
+
+/**
+ * How long each noise glyph stays on screen before it is swapped for another, in milliseconds. Every glyph
+ * gets its own hold of 70–130 % of this, so they never flip in unison. Raise it to slow the flicker further;
+ * lower it for a faster, more frantic scramble. (How quickly the real text resolves is a separate setting:
+ * the `speed` prop of GlitchText / Scramble, in milliseconds per character.)
+ */
+export const GLITCH_GLYPH_HOLD_MS = 110;
+
+/**
+ * Stateful version of `glitchFrame` for animation loops: each unresolved character keeps its noise glyph
+ * until its own hold time has passed, instead of changing on every frame.
+ */
+export function createGlitchCycler(
+  isChinese: boolean,
+  holdMs: number = GLITCH_GLYPH_HOLD_MS,
+  random: () => number = Math.random,
+): (text: string, progress: number, now: number) => string {
+  let glyphs: string[] = [];
+  let due: number[] = [];
+  return (text, progress, now) => {
+    const chars = Array.from(text);
+    if (glyphs.length !== chars.length) {
+      glyphs = new Array(chars.length).fill('');
+      due = new Array(chars.length).fill(0);
+    }
+    return chars
+      .map((ch, i) => {
+        if (ch === ' ' || i < progress) return ch;
+        if (!glyphs[i] || now >= due[i]) {
+          glyphs[i] = glitchGlyph(isChinese, random);
+          due[i] = now + holdMs * (0.7 + random() * 0.6);
+        }
+        return glyphs[i];
+      })
+      .join('');
+  };
+}

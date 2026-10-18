@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import en from '../messages/en.json';
 import zh from '../messages/zh-hk.json';
@@ -68,6 +70,25 @@ describe('projects', () => {
   });
 });
 
+describe('readymade models', () => {
+  // The CC0 models the readymades load from /public/models (see CREDITS.txt there).
+  const MODELS = ['marble_bust_01', 'vintage_pocket_watch', 'measuring_tape_01', 'round_spectacles', 'painted_wooden_stool'];
+
+  it('ships every glTF with its buffers and textures, and no transmission pass', () => {
+    for (const name of MODELS) {
+      const dir = join(process.cwd(), 'public', 'models', name);
+      const gltf = JSON.parse(readFileSync(join(dir, `${name}.gltf`), 'utf8'));
+      for (const { uri } of [...gltf.buffers, ...gltf.images]) expect(existsSync(join(dir, uri)), `${name}: ${uri}`).toBe(true);
+      expect(gltf.extensionsUsed ?? []).not.toContain('KHR_materials_transmission');
+    }
+  });
+
+  it('credits every model', () => {
+    const credits = readFileSync(join(process.cwd(), 'public', 'models', 'CREDITS.txt'), 'utf8');
+    for (const name of MODELS) expect(credits).toContain(name);
+  });
+});
+
 describe('education', () => {
   it('lists 19 courses over four semesters', () => {
     expect(SEMESTERS).toHaveLength(4);
@@ -96,6 +117,15 @@ describe('bilingual content', () => {
     const keys = (o: object, prefix = ''): string[] =>
       Object.entries(o).flatMap(([k, v]) => (v && typeof v === 'object' ? keys(v, `${prefix}${k}.`) : [`${prefix}${k}`]));
     expect(keys(zh).sort()).toEqual(keys(en).sort());
+  });
+
+  it('labels every readymade in both languages', () => {
+    for (const work of ['hausmann', 'duchamp', 'manray'] as const) {
+      for (const messages of [en, zh]) {
+        const label = messages.readymade[work];
+        for (const key of ['artist', 'title', 'note', 'action'] as const) expect(label[key].trim(), `${work}.${key}`).not.toBe('');
+      }
+    }
   });
 
   it('uses British spelling in English copy', () => {

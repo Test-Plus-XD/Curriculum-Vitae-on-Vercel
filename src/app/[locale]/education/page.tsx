@@ -11,6 +11,7 @@ import TiltCard from '@/components/fx/TiltCard';
 import Counter from '@/components/fx/Counter';
 import Scramble from '@/components/fx/Scramble';
 import SemesterTrack from '@/components/SemesterTrack';
+import ReadymadeFigure from '@/components/readymade/ReadymadeFigure';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -33,7 +34,7 @@ export default async function EducationPage({ params }: { params: Promise<{ loca
 
   return (
     <div className="page page-education">
-      <section className="page-hero">
+      <section className="page-hero has-readymade">
         <p className="eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
           <Scramble text={t('eyebrow')} />
@@ -73,6 +74,7 @@ export default async function EducationPage({ params }: { params: Promise<{ loca
           </span>
           <Scramble text={L(PROGRAMME.graduated)} delay={300} />
         </p>
+        <ReadymadeFigure work="hausmann" number={1} />
       </section>
 
       <Scatter className="stat-grid" variant="collage">

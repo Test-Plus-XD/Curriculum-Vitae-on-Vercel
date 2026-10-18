@@ -251,9 +251,6 @@ export const PROJECTS: Project[] = [
       },
     ],
     milestones: [{ date: '2025-09-01', title: bi('TDD-based development began', '以 TDD 方式展開開發') }],
-    status: 'complete',
-    repo: 'https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2',
-    techStack: ['Next.js', 'TypeScript', 'SQLite', 'Firebase', 'Jest / Mocha / Playwright', 'TDD'],
     videos: [
       { url: 'https://youtu.be/mgE3mYxxpYw', date: '2025-12-26', kind: 'operation', title: bi('Software Engineering Assignment 2 Operation', '軟件工程作業二操作示範') },
     ],

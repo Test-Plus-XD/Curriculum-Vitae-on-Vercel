@@ -3,7 +3,7 @@
 **Owner**: NG Yu Ham Baldwin | 吳宇涵
 
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background. Animated with **GSAP**, plus a **Three.js** Merzbau on the landing page. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
+Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background. Animated with **GSAP**, plus **Three.js**: a Merzbau on the landing page and three **readymades** (Hausmann's head on Education, Duchamp's bicycle wheel on Projects, Man Ray's iron on the 404) printed live as halftone photomontage cut-outs. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
 
 ## Critical Requirements
 1. **Bilingual**: every visible string exists in EN and ZH-HK (data: `{ en, zh }` pairs; UI: `src/messages/*.json`, same keys in both — tested).
@@ -21,7 +21,7 @@ Bilingual (Traditional Chinese / British English) CV and portfolio built with Ne
 - next-intl 4.8 (`src/i18n/routing.ts`, `navigation.ts`, `request.ts`; locale routing in `src/proxy.ts` — Next 16's replacement for `middleware.ts`)
 - next-themes 0.4 (class strategy, `enableColorScheme={false}`)
 - **gsap 3.15 + @gsap/react 2.1** — plugins: ScrollTrigger, SplitText, Flip, DrawSVG, MotionPath, CustomEase, Draggable, Inertia (all free, from the public `gsap` package)
-- **three 0.186** — the Merzbau scene only, lazy-loaded (`next/dynamic`, `ssr: false`) after the page is idle
+- **three 0.186** — the Merzbau scene and the readymades, lazy-loaded (`next/dynamic`, `ssr: false`) once the page is idle and the figure is near the viewport; CC0 glTF models from Poly Haven in `public/models/` (credits in `public/models/CREDITS.txt`)
 - lucide-react icons, @vercel/analytics, @vercel/speed-insights
 - vitest + @testing-library + fast-check (`npm test`)
 
@@ -47,6 +47,7 @@ src/
 │   ├── ProjectsFilterGrid · ProjectCard · PosterArt
 │   ├── DevTimeline · InlineVideo · OrbitDiagram
 │   ├── collage/                               # Dada collage system (see below)
+│   ├── readymade/                             # Three.js readymades: figure, canvas, stage, print pass, works/
 │   ├── transition/TransitionProvider · TransitionLink
 │   └── fx/                                    # Reusable GSAP effects (see below)
 ├── i18n/ routing.ts · navigation.ts · request.ts
@@ -65,6 +66,7 @@ src/
 ├── messages/ en.json · zh-hk.json
 └── proxy.ts
 public/images/        # Header amplifier monogram, Pour Rice app icons
+public/models/        # CC0 glTF models for the readymades (textures shrunk for the web) + CREDITS.txt
 ```
 
 ## Content: where to edit
@@ -113,8 +115,9 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 
 ## Pages
 - **`/` CV** — (1) **collage hero** (screen only): ransom-note name, label-maker title, typewritten descriptor, vermilion name chop, ink stamp, newsprint scrap and draggable duotone scraps of project footage over the Three.js Merzbau; scrolling scatters it. (2) **CV sheet**: taped paper sheet with registration marks and an inked stamp; header (DadaTypography name, contacts, age), profile, education with final-semester grades, three featured projects, experience, skills, languages, IELTS, achievements. Feeds out like printer paper (`SheetIntro`). (3) **Cut-up poem** (screen only): Tzara-style "shake the bag" toy over the profile text.
-- **`/education`** — hero with GlitchRevealText institution, programme facts, counter stat cards, **pinned horizontal semester track** (≥ 1024 px with full motion; stacked otherwise) of taped sheets holding **ticket-stub** courses.
-- **`/projects`** — category filter re-flowing the grid with **Flip**; taped cards with torn-edged, lightly duotoned thumbnails (full colour on hover) or a generated poster; collaborations as newspaper clippings.
+- **`/education`** — hero with GlitchRevealText institution, programme facts and **Readymade № 1** (Hausmann's head, beside the text from 1024 px, below it on phones), counter stat cards, **pinned horizontal semester track** (≥ 1024 px with full motion; stacked otherwise) of taped sheets holding **ticket-stub** courses.
+- **`/projects`** — hero with **Readymade № 2** (Duchamp's bicycle wheel: drag across it to spin); category filter re-flowing the grid with **Flip**; taped cards with torn-edged, lightly duotoned thumbnails (full colour on hover) or a generated poster; collaborations as newspaper clippings (body copy at the card size, 15 px).
+- **404** — ransom-note "Signal lost" beside **Readymade № 3** (Man Ray's tack-studded iron).
 - **`/projects/[id]`** — hero + live/repo actions, highlight counters, overview, Pour Rice **orbit diagram** of its platforms, newest-first timeline (kraft-paper milestone notes, video thumbnails opening a FLIP modal), sticky sidebar (tech, courses, repos).
 
 ## GSAP effects system
@@ -135,8 +138,10 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 | `CosmosCanvas` | 2D canvas star field (3 depths), pointer + scroll parallax, twinkle, HUD lines and shooting stars in dark mode; drawn on `gsap.ticker`. |
 | `ConstructivistField` | SVG poster: red sun, orbit rings with satellites (MotionPath), diagonal band, rays, star, "КОСМОС"; draws in; scroll parallax; **re-poses per route**. |
 | `DadaTypography` | Per-glyph deconstruction (spec in the profile document): seeded PRNG, 2 px first-paint clamp, double-rAF + 10 ms alignment, hover re-scatter ×1.8, optional misregistration. |
-| `GlitchText` / `GlitchRevealText` | Cyrillic/Bauhaus scramble overlay (Bauhaus-only in 繁中); `loadIn` mode starts as glyph noise and resolves once revealed and in view. |
+| `GlitchText` / `GlitchRevealText` | Cyrillic/Bauhaus scramble overlay (Bauhaus-only in 繁中); `loadIn` mode starts as glyph noise and resolves once revealed and in view. Hover replays ignore touch taps. |
 | `Scramble` | `GlitchText` in load-in mode without hover replay — the nav-link randomise effect used across the site on labels, codes, dates, chips, badges, buttons, timeline and CV entries. |
+
+**Scramble speed — the two knobs:** how long each noise glyph holds before it changes is `GLITCH_GLYPH_HOLD_MS` in `src/lib/text-fx.ts` (110 ms, randomised ±30 % per glyph; raise it to slow the flicker, or pass `glyphHold` to one instance). How fast the real text resolves is the `speed` prop (ms per character; defaults in `GlitchText.tsx`: 10 for English, 4 for 繁中).
 | `Scatter` | Children settle from a +32 px (`collage`: +48 px) diagonal, or `rise`; fade only under reduced motion. |
 | `RevealHeading` | SplitText line-mask rise + extending rule + scrambled "§ 0n" index. |
 | `Counter` · `TiltCard` · `Magnetic` · `CursorReticle` · `MorseCodeTicker` | Count-up figures; 3D tilt with spotlight and brackets; magnetic buttons; targeting cursor; Morse strips. |
@@ -152,6 +157,19 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 | `MerzbauScene` | Three.js: canvas-painted torn scraps of CV data floating in depth (hover flips them), a Lissitzky red wedge piercing a white disc, a Tatlin tower spiral; renders only while visible; one still frame under reduced motion; disposes everything on unmount. |
 | `CutUpPoem` | Tzara cut-up: profile cut into slips, "shake the bag" (Flip), restore; arrangement announced in a polite live region. |
 
+**Readymades (`src/components/readymade/`)** — real objects printed as halftone photomontage cut-outs:
+| File | What it does |
+|---|---|
+| `ReadymadeFigure` | The `<figure>`: stage + typewritten museum label (`readymade.*` messages) with an action button. Mounts the canvas only when idle and near the viewport; a dotted cutting line (✂) holds the place meanwhile; hides itself if WebGL fails. Screen only. |
+| `ReadymadeCanvas` | Creates the stage, builds the work, plays its entrance after `fx:reveal` once in view, drives it on `gsap.ticker` while visible (30 fps cap on touch devices). One `gsap.context` for everything, reverted on unmount. Mouse/pen turn the piece; Duchamp's wheel also spins on horizontal drags (Draggable proxy, vertical touch scrolling untouched). Reduced motion: one still frame, no action button. |
+| `stage.ts` | Renderer, studio lights, a RoomEnvironment reflection, disposal of every geometry/material/texture. |
+| `print.ts` | The look: scene rendered off-screen, then redrawn as a 45° black halftone + 15° (misregistered) red screen on paper, solid line work, a hand-cut paper margin following the silhouette, and a red halftone shadow plate. Colours stay paper in both themes. |
+| `works/hausmann.ts` | After *Der Geist unserer Zeit* (1920): scanned marble bust fitted with a pocket watch (ticking), measuring tape pulled across the brow, spectacles, enamel cup and a "3.8" grade card. Click: knock the parts off and refit. |
+| `works/duchamp.ts` | After *Bicycle Wheel* (1913): scanned white stool, built wheel (red rim, laced spokes, fork). Drag / scroll / button spin it; it free-wheels back to an idle turn. |
+| `works/manray.ts` | After *Cadeau* (1921): built flat-iron; fourteen tacks hammered in one by one. Click: hammer again. |
+
+Each work loads its assets, builds the **assembled** scene, then returns a factory that makes a paused GSAP timeline of `from` tweens with labels (so reverting leaves it assembled) plus `update/look/drag/scroll/act`. Models live in bust/stool units (metres) inside a scaled group. To add a model: download the 1k glTF from Poly Haven (CC0) into `public/models/<name>/`, shrink textures to 512–1024 px, drop maps the print look doesn't need and any `KHR_materials_transmission` (expensive extra pass), and add it to `CREDITS.txt` (a test checks the files and the credit).
+
 **Page transitions** (`components/transition/`): `TransitionLink` asks `TransitionProvider` to sweep a red slab and an ink slab — **torn along their long edges** (`tornSlab`) — across while the destination is pasted up from cut-out letters; the route changes under the cover, then the slabs sweep off and `fx:reveal` releases entrance animations. `<html data-cover="on|off">` reflects the state. The latest click wins; modified clicks, same-page links, hidden tabs and reduced motion bypass it; timer failsafes navigate (0.9 s) and uncover (1.5 s). **Language switches do a full page load** of the translated URL. The theme toggle uses a View Transitions circular reveal where supported.
 
 ## Styling
@@ -159,6 +177,7 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 - Paper elements (tickets, clippings, milestone notes) **re-scope the tokens** (`--ink`, `--muted`, `--accent-text`…) so everything inside stays readable on paper in dark mode.
 - Component styles are plain CSS in `@layer components`; Tailwind supplies preflight, the theme and occasional utilities. Links and accents are red.
 - Avoid `mix-blend-mode` on large animated layers (it cost most of the frame budget on the grain layer).
+- **Mobile stability**: `html` has `overflow-x: clip`, so content sliding in from off-screen (entrances, tilted cards) never widens the phone's layout viewport — otherwise the browser rescales the whole page mid-animation. The fixed background stage is `100lvh` tall (mobile toolbars don't resize it) and the star canvas keeps its stars on resize. Parallax and hover effects ignore touch pointers.
 
 ## Fonts (all via `next/font/google`)
 | Priority | Font | Use | Variable |
@@ -173,7 +192,7 @@ Accent faces are not preloaded. `body.locale-zh` switches the body font; Chinese
 
 ## Print
 - `@media print` + `@page { size: A4; margin: 12mm 13mm }`; colours forced to black/white and `color-scheme: light !important`.
-- Hidden: header, footer, background, cursor, cover, collage hero, cut-up poem, buttons, stamps, tape, registration marks (`.no-print`).
+- Hidden: header, footer, background, cursor, cover, collage hero, cut-up poem, readymades, buttons, stamps, tape, registration marks (`.no-print`).
 - Anything GSAP left mid-animation is forced visible and untransformed; scramble text that has not resolved prints its real text (`.glitch-base`); counters restore their value on `beforeprint`.
 - Verify with Chrome/Edge print-to-PDF in **both locales and both themes**.
 
@@ -182,7 +201,7 @@ Accent faces are not preloaded. `body.locale-zh` switches the body font; Chinese
 npm install
 npm run dev
 npm run build
-npm test          # vitest run (data integrity, age, YouTube parsing, text-fx, collage generators)
+npm test          # vitest run (data integrity, age, YouTube parsing, text-fx, collage generators, readymade models)
 npm run test:ui
 ```
 
