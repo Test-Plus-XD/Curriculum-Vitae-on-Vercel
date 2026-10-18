@@ -39,6 +39,10 @@ interface Hung {
   phase: number;
   /** World y of the hanging point, before the entrance offset. */
   baseY: number;
+  /** Damped-spring state for a tap: an angular offset and its velocity. */
+  push: { angle: number; vel: number };
+  /** Spin added by the last tap, decaying back to the idle turn. */
+  spinKick: number;
   /** Entrance offsets, all additive so the idle animation never fights the entrance tween. */
   fall: { y: number };
   swing: { z: number; x: number };
@@ -55,6 +59,8 @@ export interface ObjetsPiece {
   look(x: number, y: number): void;
   /** Scroll progress of the figure through the viewport (0…1). */
   scroll(progress: number): void;
+  /** A tap sets the prints swinging and gives their turn a shove. */
+  gust(): void;
   /** Where object `index` hangs, in CSS px inside the stage. */
   anchor(index: number, out: { x: number; y: number }): void;
 }
@@ -105,6 +111,8 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
       spin,
       phase: i * 1.73,
       baseY: spot.y,
+      push: { angle: 0, vel: 0 },
+      spinKick: 0,
       fall: { y: 0 },
       swing: { z: 0, x: 0 },
       twirl: { y: 0 },
@@ -144,10 +152,14 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
         stage.camera.lookAt(0, -0.05, 0);
         stage.camera.updateMatrixWorld();
         for (const h of hung) {
-          h.spinAngle += h.spec.spin * dt;
+          // A tap arrives as a damped spring: the print swings, and its turn gets a shove that decays.
+          h.push.vel += (-28 * h.push.angle - 3.4 * h.push.vel) * dt;
+          h.push.angle += h.push.vel * dt;
+          h.spinKick *= Math.exp(-dt * 1.7);
+          h.spinAngle += (h.spec.spin + h.spinKick) * dt;
           // Compose: idle motion + the entrance offset (so the entrance tween never fights the idle loop).
           h.hang.position.y = h.baseY + h.fall.y;
-          h.hang.rotation.z = h.swing.z + Math.sin(time * 0.42 + h.phase) * 0.045 + sway * 0.06;
+          h.hang.rotation.z = h.swing.z + h.push.angle + Math.sin(time * 0.42 + h.phase) * 0.045 + sway * 0.06;
           h.hang.rotation.x = Math.sin(time * 0.33 + h.phase * 1.7) * 0.02 + h.swing.x;
           h.spin.rotation.y = h.spinAngle + h.twirl.y;
         }
@@ -158,6 +170,13 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
       },
       scroll(progress) {
         scrolled.p = progress;
+      },
+      gust() {
+        hung.forEach((h, i) => {
+          const dir = i % 2 ? -1 : 1;
+          h.push.vel += dir * (1.5 + (i % 3) * 0.35);
+          h.spinKick += dir * 2.4;
+        });
       },
       anchor(index, out) {
         const h = hung[index];

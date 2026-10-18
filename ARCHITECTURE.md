@@ -69,7 +69,7 @@ Every route is statically generated for both locales (33 pages at build time). P
 │   ├── i18n/                         # routing.ts · navigation.ts · request.ts
 │   ├── lib/                          # Data modules and pure helpers (+ *.test.ts)
 │   └── messages/                     # en.json · zh-hk.json
-├── public/images/                    # Header amplifier monogram, Pour Rice app icons
+├── public/images/                    # Header monogram, Pour Rice icons, press/ halftone prints for the scroll wall
 ├── public/models/                    # CC0 glTF models for the readymades and the mobile + CREDITS.txt
 ├── next.config.mjs                   # next-intl plugin, Turbopack root, pourrice-ios redirect
 ├── postcss.config.js                 # @tailwindcss/postcss
@@ -274,14 +274,21 @@ The cover's tweens are created outside any GSAP context on purpose: GSAP runs a 
 
 ## Background stage
 
-`BackgroundStage` mounts client-side only and stacks:
+`BackgroundStage` mounts client-side only and stacks, bottom to top:
 
 1. `.bg-grid` — 40 px architectural grid and 45° diagonals (CSS gradients).
-2. `CosmosCanvas` — DPR-capped canvas; stars in three depths with pointer and scroll parallax; in dark mode cross glints, HUD lines from the pointer to nearby foreground stars, and shooting stars. Runs on `gsap.ticker`; reduced motion draws one still frame; reacts to theme changes via a `MutationObserver` on `<html>`. Pointer parallax follows a mouse or pen only (a finger is tapping or scrolling); the canvas is sized to the stage and keeps its stars when resized.
-3. `ConstructivistField` — 1600×1000 SVG (`slice`): rays, striped diagonal band, sun disc with rings, orbit ellipses with two MotionPath satellites, rotating star, outlined "КОСМОС · 1961". Each layer has a pose group (route-dependent), a parallax group (scrubbed over the whole document) and its own perpetual motion. `POSES` defines the composition for `cv`, `education`, `projects` and `detail`; changing route tweens every layer to its new pose.
-4. `.bg-grain` (animated SVG noise), `.bg-scanlines` (dark only) and `.bg-vignette`.
+2. `InkMisregistration` — two full-page 45° halftone screens: a black one and a red plate a hair out of register (`--screen-ink` / `--screen-red`, faded by `--screen-opacity`). See *Press-sheet motion* below.
+3. `CosmosCanvas` — DPR-capped canvas; stars in three depths with pointer and scroll parallax; in dark mode cross glints, HUD lines from the pointer to nearby foreground stars, and shooting stars. Runs on `gsap.ticker`; reduced motion draws one still frame; reacts to theme changes via a `MutationObserver` on `<html>`. Pointer parallax follows a mouse or pen only (a finger is tapping or scrolling); the canvas is sized to the stage and keeps its stars when resized.
+4. `ConstructivistField` — 1600×1000 SVG (`slice`): rays, striped diagonal band, sun disc with rings, orbit ellipses with two MotionPath satellites, rotating star, outlined "КОСМОС · 1961". The sun disc carries a halftone dot pattern over its gradient (`#cf-dots` / `.cf-screen-dots`), so it prints rather than glows. Each layer has a pose group (route-dependent), a parallax group (scrubbed over the whole document) and its own perpetual motion. `POSES` defines the composition for `cv`, `education`, `projects` and `detail`; changing route tweens every layer to its new pose.
+5. `.bg-dressing` — the printer's furniture: four corner registration crosses (shown from 1280 px), a vertical colour bar of four swatches and two vertical typewritten marginalia slugs (from 1440 px). Decorative, aria-hidden, pointer-transparent.
+6. `PressLamp` — a 120 vmax radial pool of warm light (cream in light mode, red-orange in dark) translated with the pointer so the sheet seems lit; it stays at the centre under reduced motion or a coarse pointer.
+7. `.bg-grain` (animated SVG noise), `.bg-scanlines` (dark only) and `.bg-vignette`.
 
-In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper sheet reads clearly.
+In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper sheet reads clearly; light-mode field alphas are a little stronger overall (`--field-opacity` 0.62) so the poster geometry reads through the halftone screen.
+
+**Press-sheet motion.** `InkMisregistration` owns the screen movements, each created inside its `useGSAP` context and gated by `gsap.matchMedia`: the red plate follows the pointer with `quickTo` (mouse and pen only, ±7/6 px); a scrubbed `ScrollTrigger` slides a second copy of the red screen ±12 px under the black one, so the dot pattern creeps out of alignment as the page is read; every navigation knocks the black plate from -13/8 px back into register over about a second (skipped when `prefers-reduced-motion` is on). `PressLamp` translates its pool with the pointer through its own `quickTo`. Only `transform` is animated — no layout, no filters, and no blend mode on a full-screen layer; under reduced motion the screens and the lamp hold still.
+
+**Scroll wall (`ScrollWall`).** The fixed stage only covers the viewport, so the paper would otherwise go blank down a long page. `ScrollWall` is rendered once in `[locale]/layout.tsx` as the first child of `<main>`; it is positioned `absolute; inset: 0; z-index: -1` (above the fixed stage, behind every section) and spans the whole document. Its `PATTERNS` — outlined `Merz` / `DADA` / `КОСМОС` words, typewritten serial strips, halftone discs, dashed orbit arcs and registration marks — repeat once down long pages (mirrored and turned the other way), and its `PRINTS` give each route two to six ghosted halftone prints of that route's own models. The prints are transparent cut-outs generated from the live `print.ts` pass and shipped as WebP in `public/images/press/`. In light mode they use `mix-blend-mode: multiply` (small, static images only) so their paper margins disappear into the sheet; dark mode keeps them plain and dimmer. Every item gets one scrubbed `fromTo` on `y` (depth 0.5–1.7), so the furniture drifts at different rates while scrolling — nothing at all under reduced motion. The wall is hidden below 900 px, `aria-hidden` and `no-print`.
 
 **Mobile stability.** The stage is `100lvh` tall rather than `inset: 0`, so mobile toolbars sliding in and out never resize it (which would rescale the poster and move the stars). `html { overflow-x: clip }` keeps anything an entrance animation slides in from off-screen from widening the phone's layout viewport; without it the browser zooms the whole page out and back while the animation runs.
 
@@ -359,6 +366,7 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 - **New video**: append to the project's `videos` with its date and kind; the card thumbnails and the newest-first timeline update automatically.
 - **New UI label**: add the key to both `messages/en.json` and `messages/zh-hk.json`.
 - **New found object**: drop the model folder in `public/models/<name>/` (glTF + `.bin` + 512 px JPEG textures, no extensions), add an entry to `FOUND_OBJECTS` in `src/components/objets/objects.ts`, and credit it in `CREDITS.txt`; add it to `MODELS` in `data.test.ts`.
+- **New scroll-wall print**: bake a transparent halftone print through the live `print.ts` pass (screenshot the canvas with the page chrome and background hidden), optimise it to WebP at roughly 600 px on the long side into `public/images/press/`, and add it to a route in `PRINTS` in `src/components/fx/ScrollWall.tsx`.
 - **New effect**: build it in `components/fx/` following the component pattern above.
 
 ---

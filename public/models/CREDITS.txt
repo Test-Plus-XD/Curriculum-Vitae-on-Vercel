@@ -12,3 +12,6 @@ cross_pein_hammer     Tics               https://polyhaven.com/a/cross_pein_hamm
 wooden_spoon          Ronnie Barter      https://polyhaven.com/a/wooden_spoon
 vintage_stapler       Mateusz Sadek      https://polyhaven.com/a/vintage_stapler
 vintage_telephone_wall_clock  Adrian C           https://polyhaven.com/a/vintage_telephone_wall_clock
+
+The halftone prints in public/images/press/ are renders of these same CC0 models, made with the
+site's own print pass (src/components/readymade/print.ts) and used as the scrolling background wall.

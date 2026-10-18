@@ -5,8 +5,8 @@ export type Segment =
   | { type: 'space' }
   | { type: 'char'; char: string };
 
-// Latin letters (incl. accented), digits, apostrophes and hyphens stay together so English words never break mid-word.
-const WORD_CHAR = /[A-Za-zÀ-ɏ0-9'’\-]/;
+// Latin letters (incl. accented), digits, apostrophes, hyphens and parentheses stay together so titles never break inside a parenthetical word.
+const WORD_CHAR = /[A-Za-zÀ-ɏ0-9'’()（）\-]/;
 
 export function segmentText(text: string): Segment[] {
   const segments: Segment[] = [];

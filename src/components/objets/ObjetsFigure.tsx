@@ -102,6 +102,7 @@ export default function ObjetsFigure({ className = '' }: Props) {
         <span className="objets-after">{t('after')}</span>
         <span className="objets-note">{t('note')}</span>
         <span className="objets-catalogue">{catalogue}</span>
+        <span className="objets-hint">{t('swingHint')}</span>
       </figcaption>
     </figure>
   );

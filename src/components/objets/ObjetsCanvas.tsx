@@ -160,6 +160,13 @@ export default function ObjetsCanvas({ onReady, onFail }: Props) {
               host.removeEventListener('pointerleave', onLeave);
             });
 
+            // A tap or click sets the prints swinging; nothing to set in motion under reduced motion.
+            const onTap = () => piece!.gust();
+            if (!reduced) {
+              host.addEventListener('click', onTap);
+              cleanups.push(() => host.removeEventListener('click', onTap));
+            }
+
             ScrollTrigger.create({
               trigger: figure,
               start: 'top bottom',

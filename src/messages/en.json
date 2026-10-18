@@ -183,6 +183,7 @@
     },
     "stampRing": "★ Objets trouvés ★ Mobile № 4 ★ ",
     "stampCentre": "RIEN",
-    "stampSub": "NI UTILE NI NEUF"
+    "stampSub": "NI UTILE NI NEUF",
+    "swingHint": "Tap the prints to set them swinging."
   }
 }

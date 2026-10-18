@@ -11,6 +11,7 @@ import { SITE } from '@/lib/profile';
 import ThemeProvider from '@/components/ThemeProvider';
 import TransitionProvider from '@/components/transition/TransitionProvider';
 import BackgroundStage from '@/components/fx/BackgroundStage';
+import ScrollWall from '@/components/fx/ScrollWall';
 import CollageDefs from '@/components/collage/CollageDefs';
 import CursorReticle from '@/components/fx/CursorReticle';
 import Header from '@/components/Header';
@@ -116,6 +117,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
               <BackgroundStage />
               <Header />
               <main id="main" className="site-main">
+                <ScrollWall />
                 {children}
               </main>
               <Footer />

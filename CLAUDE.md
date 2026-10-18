@@ -3,7 +3,7 @@
 **Owner**: NG Yu Ham Baldwin | 吳宇涵
 
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background. Animated with **GSAP**, plus **Three.js**: a Merzbau on the landing page and four **Dada set pieces** rendered live as halftone photomontage cut-outs — three **readymades** (Hausmann's head on Education, Duchamp's bicycle wheel on Projects, Man Ray's iron on the 404) and a hanging **found-object mobile** of four everyday scans on the Projects hero. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
+Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background printed as a press sheet: halftone screens with a misregistered red plate, registration marks, colour bar, marginalia and ghosted readymade prints that drift behind the content as it scrolls. Animated with **GSAP**, plus **Three.js**: a Merzbau on the landing page and four **Dada set pieces** rendered live as halftone photomontage cut-outs — three **readymades** (Hausmann's head on Education, Duchamp's bicycle wheel on Projects, Man Ray's iron on the 404) and a hanging **found-object mobile** of four everyday scans on the Projects hero. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
 
 ## Critical Requirements
 1. **Bilingual**: every visible string exists in EN and ZH-HK (data: `{ en, zh }` pairs; UI: `src/messages/*.json`, same keys in both — tested).
@@ -66,7 +66,7 @@ src/
 │   └── seo.ts         # canonical + hreflang alternates
 ├── messages/ en.json · zh-hk.json
 └── proxy.ts
-public/images/        # Header amplifier monogram, Pour Rice app icons
+public/images/        # Header monogram, Pour Rice icons, press/ halftone prints for the scroll wall
 public/models/        # CC0 glTF models for the readymades and the mobile (textures shrunk for the web) + CREDITS.txt
 ```
 
@@ -76,7 +76,8 @@ public/models/        # CC0 glTF models for the readymades and the mobile (textu
 - **Skills, jobs, languages, achievements** → `src/lib/cv.ts`
 - **Projects, videos, milestones, collaborations** → `src/lib/projects.ts` (ids are route slugs; `FEATURED_IDS` picks the three on the CV; dates are ISO `YYYY-MM-DD`; `approximate: true` shows a milestone as "approx. Month Year")
 - **UI labels** → `src/messages/*.json` (keep keys identical in both files — tested)
-- **Found-object mobile** — the four objects (model folder, catalogue size, idle spin and hanging turn) are catalogued in `src/components/objets/objects.ts`; its label, stamp and object names are the `objets` namespace in `src/messages/*.json`.
+- **Scroll wall** — the ghosted prints are `public/images/press/*.webp` (regenerate them from the live print pass if a model changes); the furniture and their positions are `PATTERNS` / `PRINTS` in `src/components/fx/ScrollWall.tsx`.
+- **Found-object mobile** — the four objects (model folder, catalogue size, idle spin and hanging turn) are catalogued in `src/components/objets/objects.ts`; its label, stamp, swing hint and object names are the `objets` namespace in `src/messages/*.json`.
 - **Pour Rice** includes its native Swift iOS app (12 videos, platforms list, iOS start milestone). The old `/projects/pourrice-ios` URL permanently redirects to `/projects/pourrice` (`next.config.mjs`).
 - Development timelines are rendered **newest first** (`buildTimeline`); a same-day milestone sits below that day's videos.
 - The collage hero is assembled in `[locale]/page.tsx` from real data — change the data and the collage follows.
@@ -136,9 +137,9 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 **Components (`src/components/fx/`):**
 | Component | Effect |
 |---|---|
-| `BackgroundStage` | Fixed layers: CSS grid → `CosmosCanvas` → `ConstructivistField` → grain, scanlines (dark), vignette. Client-only, `no-print`. |
+| `BackgroundStage` | Fixed press sheet: CSS grid → two halftone screens with a misregistered red plate → `CosmosCanvas` → `ConstructivistField` → press-sheet dressing (registration marks, colour bar, marginalia) → `PressLamp` → grain, scanlines (dark), vignette. Client-only, `no-print`. |
 | `CosmosCanvas` | 2D canvas star field (3 depths), pointer + scroll parallax, twinkle, HUD lines and shooting stars in dark mode; drawn on `gsap.ticker`. |
-| `ConstructivistField` | SVG poster: red sun, orbit rings with satellites (MotionPath), diagonal band, rays, star, "КОСМОС"; draws in; scroll parallax; **re-poses per route**. |
+| `ConstructivistField` | SVG poster: screen-printed red sun (a halftone dot pattern over the gradient), orbit rings with satellites (MotionPath), diagonal band, rays, star, "КОСМОС"; draws in; scroll parallax; **re-poses per route**. |
 | `DadaTypography` | Per-glyph deconstruction (spec in the profile document): seeded PRNG, 2 px first-paint clamp, double-rAF + 10 ms alignment, hover re-scatter ×1.8, optional misregistration. |
 | `GlitchText` / `GlitchRevealText` | Cyrillic/Bauhaus scramble overlay (Bauhaus-only in 繁中); `loadIn` mode starts as glyph noise and resolves once revealed and in view. Hover replays ignore touch taps. |
 | `Scramble` | `GlitchText` in load-in mode without hover replay — the nav-link randomise effect used across the site on labels, codes, dates, chips, badges, buttons, timeline and CV entries. |
@@ -147,6 +148,16 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 | `Scatter` | Children settle from a +32 px (`collage`: +48 px) diagonal, or `rise`; fade only under reduced motion. |
 | `RevealHeading` | SplitText line-mask rise + extending rule + scrambled "§ 0n" index. |
 | `Counter` · `TiltCard` · `Magnetic` · `CursorReticle` · `MorseCodeTicker` | Count-up figures; 3D tilt with spotlight and brackets; magnetic buttons; targeting cursor; Morse strips. |
+| `InkMisregistration` | The two fixed halftone screens: the red plate drifts with the pointer, slides ±12 px under the black one as the page scrolls, and is knocked out of register for a second on every navigation. |
+| `PressLamp` | One soft pool of warm light (cream in light mode, red-orange in dark) that follows the pointer across the sheet. |
+| `ScrollWall` | Ghosted halftone prints of the site's own readymades plus printer's furniture (outlined `Merz` / `DADA` / `КОСМОС` words, serial strips, halftone discs, orbit arcs, registration marks) laid down the document behind the content, each drifting at its own rate as the page scrolls. |
+
+**Press sheet (`src/components/fx/`)** — the printed paper the whole site sits on:
+- **Screens.** `InkMisregistration` draws two full-page 45° dot screens: a black one (`--screen-ink`) and a red plate (`--screen-red`) a hair out of register, both faded by `--screen-opacity`. The red plate follows the pointer with a `quickTo` drift (mouse and pen only); a scrubbed ScrollTrigger slides its inner copy ±12 px under the black screen so the dots creep as you read; every navigation knocks the black screen from -13/8 px back into register (skipped under reduced motion). Only transform is animated, all of it `gsap.matchMedia`-gated on `FULL_MOTION` / `FINE_POINTER` and reverted by the `useGSAP` context.
+- **Dressing.** Four corner registration crosses (from 1280 px), a vertical colour bar of four swatches (from 1440 px) and two vertical typewritten marginalia slugs ("Merz · Hannover · 1926", "HKCT · CGPA 3.8 · 2026") live in `.bg-dressing`; aria-hidden, `no-print`, pointer-transparent.
+- **Lamp.** `PressLamp` renders a 120 vmax radial pool that is translated with the pointer, so paper, screen and field shift under it; it stays at the centre under reduced motion or a coarse pointer.
+- **Scroll wall.** `ScrollWall` is rendered once in `[locale]/layout.tsx` as the first child of `<main>` (`position: absolute; inset: 0; z-index: -1`, above the fixed stage but behind every section) and spans the whole document. `PATTERNS` — outlined words, typewritten strips, halftone discs, dashed orbit arcs and registration marks — repeats once down long pages (mirrored, turned the other way); `PRINTS` gives each route two to six ghosted halftone prints of its own models. Light-theme prints use `mix-blend-mode: multiply` so their paper margins vanish into the sheet; the dark theme keeps them plain and dimmer. Every item gets one scrubbed `fromTo` on `y` (depth 0.5–1.7), so the wall drifts at different rates while scrolling. Hidden below 900 px, aria-hidden, `no-print`; under reduced motion nothing parallaxes.
+- **Prints.** `public/images/press/*.webp` are transparent halftone cut-outs produced from the live `print.ts` pass (the Duchamp wheel, the Hausmann head, the Man Ray iron and the four found objects). They are renders of the CC0 models, covered by `public/models/CREDITS.txt`; regenerate them from the same scene if a model or a print option changes.
 
 **Collage (`src/components/collage/`):**
 | Component | What it is |
@@ -181,7 +192,7 @@ Each work loads its assets, builds the **assembled** scene, then returns a facto
 | `ObjetsCanvas.tsx` | The dynamic-imported client canvas: creates the readymade stage with the mobile's print options, plays the drop-in once the page is revealed and the figure is in view, drives it on `gsap.ticker` while visible (about 30 fps on coarse pointers, one still frame under reduced motion), and rewrites the SVG strings and catalogue tags from the projected anchors every frame. |
 | `ObjetsFigure.tsx` | The `<figure>`: mounts the canvas once the page is idle and the figure is near the viewport (a dotted ✂ cutting line holds the place), draws the wire, strings, clamps, tape and "№ 1…4" hanging tags, and carries the red `RIEN / NI UTILE NI NEUF` stamp and a typewritten label card listing the four objects. Hidden if WebGL fails; screen only (`no-print`). |
 
-The `anchor()` projection ties the two renderers together: each frame the hanging point is projected to CSS pixels and the figure's SVG strings, clamps, tape ends and catalogue tags are rewritten to match, so they stay tied through the drop-in, the pendulum swing and the camera sway. The halftone print pass is reused — with a finer screen and more ink (cell 3, margin 5, red shadow [6, 8] at 0.38, black 0.13, white 0.8, gamma 1.3) — so the objects print as two-colour newspaper cut-outs with hand-cut paper margins and a misregistered red shadow plate, paper-coloured in both themes. There is no action button: the motion is the idle turn, the entrance, pointer parallax and scroll sway. The canvas and the SVG rig are `aria-hidden`; the label card stays real text, and the stamp and catalogue tags are drawn as crisp DOM text rather than into the canvas. Every visible string comes from the `objets` namespace, and its styles are the `objets trouvés` block after the readymades in `src/app/globals.css`. `data.test.ts` checks all nine models' files and credits.
+The `anchor()` projection ties the two renderers together: each frame the hanging point is projected to CSS pixels and the figure's SVG strings, clamps, tape ends and catalogue tags are rewritten to match, so they stay tied through the drop-in, the pendulum swing and the camera sway. The halftone print pass is reused — with a finer screen and more ink (cell 3, margin 5, red shadow [6, 8] at 0.38, black 0.13, white 0.8, gamma 1.3) — so the objects print as two-colour newspaper cut-outs with hand-cut paper margins and a misregistered red shadow plate, paper-coloured in both themes. There is no action button, but the prints are a toy: a tap or click calls `gust()`, which pushes each hung object with a damped spring (stiffness 28, damping 3.4) and gives its turn a decaying spin kick; the label prints `objets.swingHint` (hidden under reduced motion) and the stage shows a pointer cursor. Otherwise the motion is the idle turn, the entrance, pointer parallax and scroll sway. The canvas and the SVG rig are `aria-hidden`; the label card stays real text, and the stamp and catalogue tags are drawn as crisp DOM text rather than into the canvas. Every visible string comes from the `objets` namespace, and its styles are the `objets trouvés` block after the readymades in `src/app/globals.css`. `data.test.ts` checks all nine models' files and credits.
 
 **Page transitions** (`components/transition/`): `TransitionLink` asks `TransitionProvider` to sweep a red slab and an ink slab — **torn along their long edges** (`tornSlab`) — across while the destination is pasted up from cut-out letters; the route changes under the cover, then the slabs sweep off and `fx:reveal` releases entrance animations. `<html data-cover="on|off">` reflects the state. The latest click wins; modified clicks, same-page links, hidden tabs and reduced motion bypass it; timer failsafes navigate (0.9 s) and uncover (1.5 s). **Language switches do a full page load** of the translated URL. The theme toggle uses a View Transitions circular reveal where supported.
 
@@ -189,7 +200,8 @@ The `anchor()` projection ties the two renderers together: each frame the hangin
 - Tokens live in `globals.css` (`:root` = light aged paper, `:root.dark` = night launch site). Palette: Soviet red `#8f0000`, vermilion `#c8231a`, orange `#db5b00`, gold `#ffa500`, paper `#f5efe6`, dark `#161412`, plus collage papers that stay paper-coloured in both themes: scrap `#f6efe2`, newsprint `#e7ddc8`, kraft `#c39a63`, ink `#17120f`, tape.
 - Paper elements (tickets, clippings, milestone notes) **re-scope the tokens** (`--ink`, `--muted`, `--accent-text`…) so everything inside stays readable on paper in dark mode.
 - Component styles are plain CSS in `@layer components`; Tailwind supplies preflight, the theme and occasional utilities. Links and accents are red.
-- Avoid `mix-blend-mode` on large animated layers (it cost most of the frame budget on the grain layer).
+- Press-sheet tokens: `--screen-ink` / `--screen-red` / `--screen-opacity` (the two dot screens), `--reg-ink` (registration marks), `--slug-ink` (marginalia) and `--lamp-core` / `--lamp-opacity` (the reading lamp), set in both themes. Light-mode field alphas were raised (`--field-opacity` 0.62) so the poster geometry reads through the screen.
+- Avoid `mix-blend-mode` on large animated layers (it cost most of the frame budget on the grain layer). The only exception is the small scroll-wall prints (`multiply` in light mode), never a full-screen layer.
 - **Mobile stability**: `html` has `overflow-x: clip`, so content sliding in from off-screen (entrances, tilted cards) never widens the phone's layout viewport — otherwise the browser rescales the whole page mid-animation. The fixed background stage is `100lvh` tall (mobile toolbars don't resize it) and the star canvas keeps its stars on resize. Parallax and hover effects ignore touch pointers.
 
 ## Fonts (all via `next/font/google`)
@@ -205,7 +217,7 @@ Accent faces are not preloaded. `body.locale-zh` switches the body font; Chinese
 
 ## Print
 - `@media print` + `@page { size: A4; margin: 12mm 13mm }`; colours forced to black/white and `color-scheme: light !important`.
-- Hidden: header, footer, background, cursor, cover, collage hero, cut-up poem, readymades, the found-object mobile, buttons, stamps, tape, registration marks (`.no-print`).
+- Hidden: header, footer, background (including the press sheet and the scroll wall), cursor, cover, collage hero, cut-up poem, readymades, the found-object mobile, buttons, stamps, tape, registration marks (`.no-print`).
 - Anything GSAP left mid-animation is forced visible and untransformed; scramble text that has not resolved prints its real text (`.glitch-base`); counters restore their value on `beforeprint`.
 - Verify with Chrome/Edge print-to-PDF in **both locales and both themes**.
 

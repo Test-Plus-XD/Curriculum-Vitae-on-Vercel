@@ -170,6 +170,9 @@ export default function ConstructivistField({ variant }: { variant: FieldVariant
         <pattern id="cf-stripes" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <rect width="6" height="14" fill="var(--band-stripe)" />
         </pattern>
+        <pattern id="cf-dots" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <circle className="cf-screen-dot" cx="3" cy="3" r="1.15" />
+        </pattern>
       </defs>
 
       <g data-layer="rays">
@@ -210,6 +213,7 @@ export default function ConstructivistField({ variant }: { variant: FieldVariant
           <g data-pose="disc">
             <g data-spin="">
               <circle r="230" fill="url(#cf-sun)" className="cf-sun" />
+              <circle r="230" fill="url(#cf-dots)" className="cf-screen-dots" />
               <circle r="262" className="cf-ring" data-draw="" />
               <g data-ring-dash="">
                 <circle r="292" className="cf-ring-dash" />

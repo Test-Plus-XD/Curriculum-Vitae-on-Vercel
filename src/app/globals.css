@@ -57,14 +57,23 @@
   --diag-line: rgba(219, 91, 0, 0.05);
   --sun-core: #b8361c;
   --sun-edge: #8f0000;
-  --band: rgba(219, 91, 0, 0.14);
-  --band-stripe: rgba(143, 0, 0, 0.08);
-  --ray: rgba(143, 0, 0, 0.1);
-  --ray-strong: rgba(143, 0, 0, 0.18);
-  --orbit: rgba(31, 27, 23, 0.22);
-  --word-stroke: rgba(143, 0, 0, 0.18);
-  --field-opacity: 0.55;
+  --band: rgba(219, 91, 0, 0.17);
+  --band-stripe: rgba(143, 0, 0, 0.1);
+  --ray: rgba(143, 0, 0, 0.13);
+  --ray-strong: rgba(143, 0, 0, 0.22);
+  --orbit: rgba(31, 27, 23, 0.26);
+  --word-stroke: rgba(143, 0, 0, 0.22);
+  --field-opacity: 0.62;
   --canvas-opacity: 0.9;
+
+  /* Press-sheet dressing: the halftone screen and the printer's marks in the margin. */
+  --screen-ink: rgba(31, 27, 23, 0.66);
+  --screen-red: rgba(200, 35, 26, 0.74);
+  --screen-opacity: 0.08;
+  --reg-ink: rgba(31, 27, 23, 0.46);
+  --slug-ink: rgba(31, 27, 23, 0.46);
+  --lamp-core: rgba(255, 238, 208, 0.82);
+  --lamp-opacity: 0.6;
 
   --header-bg: rgba(245, 239, 230, 0.8);
   --shadow: 0 1px 0 rgba(31, 27, 23, 0.04), 0 22px 44px -28px rgba(70, 35, 10, 0.4);
@@ -105,6 +114,13 @@
   --word-stroke: rgba(255, 138, 92, 0.22);
   --field-opacity: 0.85;
   --canvas-opacity: 1;
+  --screen-ink: rgba(241, 236, 228, 0.54);
+  --screen-red: rgba(228, 64, 47, 0.64);
+  --screen-opacity: 0.055;
+  --reg-ink: rgba(241, 236, 228, 0.4);
+  --slug-ink: rgba(241, 236, 228, 0.42);
+  --lamp-core: rgba(255, 112, 32, 0.22);
+  --lamp-opacity: 0.7;
 
   --header-bg: rgba(22, 20, 18, 0.74);
   --shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 0 26px 50px -28px rgba(0, 0, 0, 0.8);
@@ -392,6 +408,230 @@
     background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0, 0, 0, 0.62) 100%);
   }
 
+  /* ------------------------------------------------- press-sheet dressing */
+  /* A faint 45° halftone screen printed over the paper, with its red plate just out of register. */
+  .bg-screen,
+  .bg-screen-red {
+    position: absolute;
+    inset: -34%;
+    pointer-events: none;
+  }
+
+  .bg-screen::before,
+  .bg-screen-slip::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, currentColor 0 0.95px, transparent 1.2px);
+    background-size: 7px 7px;
+    transform: rotate(45deg);
+  }
+
+  .bg-screen {
+    opacity: var(--screen-opacity);
+    color: var(--screen-ink);
+  }
+
+  /* The red plate sits a hair off the black one and slips under it as the page is scrolled. */
+  .bg-screen-red {
+    color: var(--screen-red);
+    opacity: calc(var(--screen-opacity) * 1.2);
+    will-change: transform;
+  }
+
+  .bg-screen-slip {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+
+  /* A reading lamp: a soft pool of light that follows the pointer across the sheet. */
+  .bg-lamp {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120vmax;
+    height: 120vmax;
+    margin: -60vmax 0 0 -60vmax;
+    background: radial-gradient(circle, var(--lamp-core) 0%, transparent 58%);
+    opacity: var(--lamp-opacity);
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Registration marks, a colour bar and marginalia: the printer's furniture left in the sheet margin. */
+  .bg-dressing {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .bg-reg {
+    position: absolute;
+    display: none;
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: var(--reg-ink);
+    stroke-width: 1;
+  }
+
+  .bg-reg-tl { top: 18px; left: 18px; }
+  .bg-reg-tr { top: 18px; right: 18px; }
+  .bg-reg-bl { bottom: 18px; left: 18px; }
+  .bg-reg-br { bottom: 18px; right: 18px; }
+
+  .bg-bar {
+    position: absolute;
+    display: none;
+    left: 17px;
+    top: 50%;
+    translate: 0 -50%;
+    gap: 4px;
+  }
+
+  .bg-bar i {
+    display: block;
+    width: 8px;
+    height: 15px;
+    background: var(--red);
+    opacity: 0.55;
+  }
+
+  .bg-bar i:nth-child(2) { background: var(--vermilion); }
+  .bg-bar i:nth-child(3) { background: var(--orange); }
+  .bg-bar i:nth-child(4) { background: var(--ink); opacity: 0.35; }
+
+  .bg-slug {
+    position: absolute;
+    display: none;
+    top: 50%;
+    font-family: var(--font-type);
+    font-size: 10px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--slug-ink);
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+  }
+
+  .bg-slug-left { left: 14px; transform: translateY(-50%) rotate(180deg); }
+  .bg-slug-right { right: 14px; transform: translateY(-50%); }
+
+  @media (min-width: 1280px) {
+    .bg-reg { display: block; }
+  }
+
+  @media (min-width: 1440px) {
+    .bg-bar { display: grid; }
+    .bg-slug { display: block; }
+  }
+
+  /* ----------------------------------------------------------------- scroll wall */
+  /* Ghosted prints and printer's furniture that pass behind the content as the page scrolls. */
+  .scroll-wall {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .wall-item {
+    position: absolute;
+    will-change: transform;
+  }
+
+  /* The prints are ink on the same paper: multiply drops their paper margins and leaves the halftone
+     screen, exactly as a second impression would. (Blend modes are only used on these small prints, never
+     on a full-screen layer.) */
+  .wall-print img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: calc(var(--wall-opacity, 0.34) * 1.6);
+    mix-blend-mode: multiply;
+  }
+
+  /* On the night sheet the cut-outs are paper-coloured, so they stay plain and dimmed. */
+  .dark .wall-print img {
+    mix-blend-mode: normal;
+    opacity: calc(var(--wall-opacity, 0.34) * 0.52);
+  }
+
+  .wall-word {
+    font-family: var(--font-title);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 0.8;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1.2px var(--line-strong);
+    opacity: 0.75;
+  }
+
+  .wall-word-display {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    -webkit-text-stroke: 1px var(--line-strong);
+    opacity: 0.62;
+  }
+
+  .wall-strip {
+    padding: 5px 9px;
+    background: var(--scrap);
+    color: var(--ink-black);
+    font-family: var(--font-type);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 12px 20px -16px rgba(23, 18, 15, 0.65);
+    rotate: -1.4deg;
+    opacity: 0.88;
+  }
+
+  .wall-disc {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 42% 38%, rgba(184, 54, 28, 0.16), rgba(143, 0, 0, 0.05) 58%, transparent 72%);
+  }
+
+  .wall-disc::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-image: radial-gradient(circle, var(--screen-ink) 0 0.9px, transparent 1.15px);
+    background-size: 6px 6px;
+    opacity: 0.2;
+  }
+
+  .wall-arc {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px dashed var(--line-strong);
+    opacity: 0.65;
+  }
+
+  .wall-reg svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: var(--reg-ink);
+    stroke-width: 1;
+    opacity: 0.75;
+  }
+
+  @media (max-width: 900px) {
+    .scroll-wall {
+      display: none;
+    }
+  }
+
   /* constructivist field strokes and fills */
   .cf-ray { stroke: var(--ray); stroke-width: 1; }
   .cf-ray-strong { stroke: var(--ray-strong); stroke-width: 2.5; }
@@ -407,6 +647,12 @@
   .cf-satellite-wing { stroke: var(--gold-bright); stroke-width: 2; }
   .cf-star { fill: none; stroke: var(--red); stroke-width: 2.5; }
   .cf-star-ring { fill: none; stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 1 7; }
+  .cf-screen-dot { fill: var(--screen-ink); }
+  .cf-screen-dots { opacity: 0.5; }
+
+  .dark .cf-screen-dots {
+    opacity: 0.36;
+  }
   .cf-word {
     font-family: var(--font-title);
     font-style: italic;
@@ -3704,6 +3950,18 @@
     color: var(--muted);
   }
 
+  .objets-hint {
+    margin-top: 4px;
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    color: var(--vermilion);
+  }
+
+  /* The prints are a toy: a tap sets them swinging. */
+  .objets[data-state="ready"] .objets-stage {
+    cursor: pointer;
+  }
+
   .locale-zh .objets-label,
   .locale-zh .objets-note,
   .locale-zh .objets-catalogue {
@@ -3812,6 +4070,15 @@
   /* Readymades are shown as still prints; their actions are all motion. */
   .readymade-action {
     display: none;
+  }
+
+  /* The mobile is printed, not swung. */
+  .objets-hint {
+    display: none;
+  }
+
+  .objets[data-state="ready"] .objets-stage {
+    cursor: default;
   }
 }
 
