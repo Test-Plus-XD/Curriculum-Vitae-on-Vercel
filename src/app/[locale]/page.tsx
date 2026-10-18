@@ -1,327 +1,310 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Link from 'next/link';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'metadata' });
-  return {
-    title: t('cvTitle'),
-    description: t('cvDescription'),
-  };
-}
-import { Mail, Phone, Github, Linkedin, ExternalLink } from 'lucide-react';
-import { featuredProjects } from '@/lib/projects';
+import { ArrowUpRight } from 'lucide-react';
+import { PROFILE, CONTACTS, getAge } from '@/lib/profile';
+import { PROGRAMME, SEMESTERS } from '@/lib/education';
+import { SKILL_GROUPS, EXPERIENCE, LANGUAGES, CERTIFICATION, ACHIEVEMENTS } from '@/lib/cv';
+import { FEATURED_IDS, PROJECTS, getProject, videosNewestFirst, type Project } from '@/lib/projects';
+import { ALL_COURSES } from '@/lib/education';
+import { pick } from '@/lib/i18n-text';
+import { alternates } from '@/lib/seo';
+import CvSection from '@/components/CvSection';
 import PrintButton from '@/components/PrintButton';
+import TransitionLink from '@/components/transition/TransitionLink';
+import DadaTypography from '@/components/fx/DadaTypography';
+import Scatter from '@/components/fx/Scatter';
+import SheetIntro from '@/components/SheetIntro';
+import Scramble from '@/components/fx/Scramble';
+import CollageHero from '@/components/collage/CollageHero';
+import CutUpPoem from '@/components/collage/CutUpPoem';
+import Stamp from '@/components/collage/Stamp';
+import { Tape } from '@/components/collage/Paper';
+import { parseYouTube } from '@/lib/youtube';
 
-/* ────────────────────────────────────────────────── inline static data */
-type Lang = 'en' | 'zh';
+// The age is derived from the current date, so regenerate the page daily.
+export const revalidate = 86400;
 
-const FINAL_SEMESTER_COURSES = [
-  { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理', grade: 'B' },
-  { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)', grade: 'A+' },
-  { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡', grade: 'A+' },
-  { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通', grade: 'A+' },
-  { code: '06CIT4002', en: 'Final Year Project', zh: '畢業專題', grade: 'A+' },
-];
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  return { title: { absolute: t('cvTitle') }, description: t('cvDescription'), alternates: alternates(locale, '') };
+}
 
-const SKILL_GROUPS: { key: string; items: string[] }[] = [
-  { key: 'languages', items: ['JavaScript/TypeScript', 'Dart', 'Java', 'PHP', 'C#', 'Swift', 'Python'] },
-  { key: 'frameworks', items: ['Flutter', 'Ionic/Angular', 'Express.js', 'Unity'] },
-  { key: 'backendDb', items: ['Firebase', 'MySQL', 'Socket.IO', 'REST APIs'] },
-  { key: 'cloud', items: ['Vercel', 'Railway', 'Google Cloud'] },
-  { key: 'tools', items: ['Git', 'Android Studio', 'Xcode', 'Visual Studio'] },
-];
-
-const CONTACTS = [
-  { icon: Mail, value: 'baldwon0xd@gmail.com', href: 'mailto:baldwon0xd@gmail.com' },
-  { icon: Phone, value: '+852 6701 6557', href: 'tel:+85267016557' },
-  { icon: Github, value: 'Test-Plus-XD', href: 'https://github.com/Test-Plus-XD' },
-  { icon: Linkedin, value: 'LinkedIn', href: 'https://www.linkedin.com/in/test-plus-004601285/' },
-];
-
-/* ───────────────────────────────────────────────────── page component */
-export default async function LandingPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function CvPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations('cv');
+  const tn = await getTranslations('transition');
+  const th = await getTranslations('hero');
+  const tc = await getTranslations('cutup');
+  const L = (text: { en: string; zh: string }) => pick(text, locale);
+  const featured = FEATURED_IDS.map(getProject).filter(Boolean) as Project[];
+  const finalSemester = SEMESTERS[SEMESTERS.length - 1];
+  const printedContacts = CONTACTS.filter((c) => ['email', 'phone', 'github', 'linkedin'].includes(c.kind));
 
-  const t = await getTranslations();
-  const lang: Lang = locale === 'zh-hk' ? 'zh' : 'en';
+  // The collage is cut from the CV itself: real codes, grades, projects and footage.
+  const upper = (text: string) => (locale === 'zh-hk' ? text : text.toUpperCase());
+  const graded = finalSemester.courses.map((c) => `${c.code} ${upper(L(c.name))} ${c.grade}`);
+  const heroThumbs = ['pourrice', '2d-chess', '3d-game'].flatMap((id) => {
+    const project = getProject(id);
+    const video = project && videosNewestFirst(project)[0];
+    const yt = video && parseYouTube(video.url);
+    return yt && project ? [{ id: yt.id, caption: `${upper(L(project.title))} · ${video.date.slice(0, 4)}` }] : [];
+  });
+  const hero = {
+    label: th('label'),
+    kicker: th('kicker'),
+    nameLines: ['NG YU HAM', 'BALDWIN'],
+    zhName: ['吳', '宇', '涵'] as [string, string, string],
+    title: L(PROFILE.title),
+    typed: th('typed', { descriptor: L(PROFILE.descriptor), cgpa: PROGRAMME.cgpa.toFixed(1) }),
+    cue: th('cue'),
+    dragHint: th('drag'),
+    thumbs: heroThumbs,
+    news: { headline: 'ДАДА', lines: [...graded, `CGPA ${PROGRAMME.cgpa} · GPA ${PROGRAMME.finalTermGpa}`] },
+    stamp: { ring: th('stampRing'), centre: PROGRAMME.cgpa.toFixed(1), sub: upper(th('stampSub')) },
+    merz: {
+      snippets: [
+        ...ALL_COURSES.map((c) => `${c.code} ${upper(L(c.name))}${c.grade ? ` ${c.grade}` : ''}`),
+        ...PROJECTS.map((p) => `${upper(L(p.title))} — ${p.tech.slice(0, 3).join(', ')}`),
+      ],
+      numerals: [
+        { value: PROGRAMME.cgpa.toFixed(1), caption: th('numCgpa') },
+        { value: PROGRAMME.finalTermGpa.toFixed(1), caption: th('numTerm') },
+        { value: 'A+', caption: th('numFyp') },
+        { value: String(ALL_COURSES.length), caption: th('numCourses') },
+        { value: String(PROJECTS.reduce((n, p) => n + p.videos.length, 0)), caption: th('numVideos') },
+        { value: String(PROJECTS.length), caption: th('numProjects') },
+        { value: '2026', caption: th('numGrad') },
+        { value: '1916', caption: th('numDada') },
+      ],
+      words: ['ДАДА', 'МЕРЦ', 'КОД', 'DADA', 'MERZ', 'ПУСК', 'HKCT'],
+      cjk: ['倒米', '港', '碼', '夢', '達達'],
+      tickets: ALL_COURSES.map((c) => c.code),
+    },
+  };
 
   return (
-    <div className="cv-page max-w-[850px] mx-auto px-6 py-8 print:py-4 print:px-4">
-      {/* ═══════════════════════════════ HEADER ═══════════════════════ */}
-      <header className="border-b-2 border-slate-800 dark:border-slate-200 pb-4 mb-6 print:pb-3 print:mb-4">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div>
-            <h1 className="text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight print:text-2xl font-title font-light italic glow-heading cv-name-drop">
-              {t('placeholders.name')}
-            </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              {t('placeholders.nameAlt')}
-            </p>
-            <p className="text-base text-slate-600 dark:text-slate-400 mt-1 font-medium">
-              {t('title')}
-            </p>
-          </div>
-
-          {/* Contact info - inline for print-friendly layout */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
-            {CONTACTS.map((c, i) => (
-              <a
-                key={i}
-                href={c.href}
-                target={c.href.startsWith('http') ? '_blank' : undefined}
-                rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="soviet-link flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-slate-700"
-              >
-                <c.icon size={12} className="flex-shrink-0" />
-                <span>{c.value}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Personal Statement */}
-        {/* PLACEHOLDER: Enter personal statement (2-3 sentences) */}
-        {/* <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed print:text-xs">
-          {t('placeholders.personalStatement')}
-        </p> */}
-
-        {/* Print CV button */}
-        <div className="mt-3 flex justify-end">
+    <>
+      <CollageHero {...hero} />
+      <div className="page page-cv">
+        <div className="cv-toolbar no-print">
+          <p className="eyebrow">
+            <span className="eyebrow-dot" aria-hidden="true" />
+            <Scramble text={`${t('document')} · 2026`} />
+          </p>
           <PrintButton />
         </div>
-      </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:gap-4">
-        {/* ═══════════════════════ LEFT COLUMN (2/3 width) ════════════════ */}
-        <div className="lg:col-span-2 space-y-6 print:space-y-4">
+        <SheetIntro>
+          <Tape className="tape-tl sheet-tape no-print" />
+          <Tape className="tape-tr sheet-tape no-print" />
+          <article className="cv-sheet" id="cv-sheet">
+            <span className="sheet-mark sheet-mark-tl no-print" aria-hidden="true" />
+            <span className="sheet-mark sheet-mark-tr no-print" aria-hidden="true" />
+            <span className="sheet-mark sheet-mark-bl no-print" aria-hidden="true" />
+            <span className="sheet-mark sheet-mark-br no-print" aria-hidden="true" />
+            <span className="sheet-stamp no-print" aria-hidden="true">
+              <Stamp ring={th('sheetRing')} centre="2026" sub={upper(th('numGrad'))} size={118} rotate={0} slam={false} />
+            </span>
 
-          {/* ─────────────────────── EDUCATION ─────────────────────── */}
-          <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
-              {t('sections.education')}
-            </h2>
-
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
-              <div>
-                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm print:text-xs">
-                  {t('education.institution')}
-                </h3>
-                <p className="text-sm text-slate-700 dark:text-slate-200 print:text-xs">
-                  {t('education.programmeShort')}
+            <header className="cv-head" data-sheet-part="">
+              <div className="cv-identity">
+                <p className="cv-doc-label">
+                  <Scramble text={t('document')} delay={150} />
                 </p>
+                <DadaTypography as="h1" text={PROFILE.name.en} className="cv-name font-title" colorShift intensity={0.8} />
+                <p className="cv-name-zh" lang="zh-HK">
+                  {PROFILE.name.zh}
+                </p>
+                <p className="cv-role">{L(PROFILE.title)}</p>
+                <p className="cv-descriptor">{L(PROFILE.descriptor)}</p>
               </div>
-              <div className="text-right text-xs text-slate-500 dark:text-slate-400 flex-shrink-0 print:text-[10px]">
-                <p>{t('education.graduation')}</p>
-                <p className="font-medium text-slate-700 dark:text-slate-300">{t('education.gpa')}</p>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-600 dark:text-slate-300 print:text-[10px]">
-              <span>{t('education.code')}</span>
-              <span>•</span>
-              <span>{t('education.level')}</span>
-              <span>•</span>
-              <span>{t('education.duration')}</span>
-            </div>
-
-            {/* Current Semester Preview */}
-            <div className="mt-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 print:p-2 print:bg-transparent print:border print:border-slate-200">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider print:text-[10px]">
-                  {t('education.currentSemester')}
-                </span>
-                <Link
-                  href={`/${locale}/education`}
-                  className="soviet-link print:hidden text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1"
-                >
-                  {t('education.viewDetails')}
-                  <ExternalLink size={10} />
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-                {FINAL_SEMESTER_COURSES.map((course) => (
-                  <div key={course.code} className="text-xs text-slate-600 dark:text-slate-300 print:text-[10px] flex justify-between gap-2">
-                    <span>
-                      <span className="font-mono text-slate-400 dark:text-slate-500">{course.code}</span>
-                      <span className="mx-1">–</span>
-                      <span>{course[lang]}</span>
-                    </span>
-                    <span className="font-semibold text-emerald-700 dark:text-emerald-400 flex-shrink-0">{course.grade}</span>
+              <dl className="cv-contact">
+                {printedContacts.map((c) => (
+                  <div key={c.kind} className="cv-contact-row">
+                    <dt>
+                      <Scramble text={t(`labels.${c.kind as 'email' | 'phone' | 'github' | 'linkedin'}`)} delay={200} />
+                    </dt>
+                    <dd>
+                      <a href={c.href} {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                        <span className="screen-only">{c.label}</span>
+                        <span className="print-only">{c.print}</span>
+                      </a>
+                    </dd>
                   </div>
                 ))}
-              </div>
-            </div>
-          </section>
+                <div className="cv-contact-row">
+                  <dt>
+                    <Scramble text={t('labels.location')} delay={260} />
+                  </dt>
+                  <dd>{L(PROFILE.location)}</dd>
+                </div>
+                <div className="cv-contact-row">
+                  <dt>
+                    <Scramble text={t('labels.age')} delay={300} />
+                  </dt>
+                  <dd>{t('age', { age: getAge() })}</dd>
+                </div>
+              </dl>
+            </header>
 
-          {/* ─────────────────────── FEATURED PROJECTS ─────────────────────── */}
-          <section>
-            <div className="flex items-center justify-between border-b border-slate-300 dark:border-slate-700 pb-1 mb-3">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider print:text-xs font-title italic print:font-sans print:not-italic">
-                {t('sections.featuredProjects')}
-              </h2>
-              <Link
-                href={`/${locale}/projects`}
-                className="soviet-link print:hidden text-xs text-blue-600 dark:text-blue-400"
-              >
-                {t('projects.viewAll')}
-              </Link>
-            </div>
+            <div className="cv-columns">
+              <Scatter variant="rise" className="cv-main" stagger={0.1}>
+                <CvSection title={t('profile')}>
+                  <div className="cv-summary">
+                    {PROFILE.summary.map((p, i) => (
+                      <p key={i}>{L(p)}</p>
+                    ))}
+                  </div>
+                </CvSection>
 
-            <div className="space-y-4 print:space-y-3">
-              {featuredProjects.slice(0, 3).map((project) => (
-                <div key={project.id} className="group">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <Link
-                        href={`/${locale}/projects/${project.id}`}
-                        className="soviet-link font-semibold text-slate-800 dark:text-slate-100 text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors print:text-xs print:pointer-events-none"
-                      >
-                        {project.title[lang]}
-                      </Link>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 line-clamp-2 print:text-[10px]">
-                        {project.description[lang]}
-                      </p>
+                <CvSection title={t('education')}>
+                  <div className="cv-entry">
+                    <div className="cv-entry-head">
+                      <h3 className="cv-entry-title">
+                        <Scramble text={L(PROGRAMME.title)} />
+                      </h3>
+                      <Scramble className="cv-entry-period" text={L(PROGRAMME.period)} />
                     </div>
-                    {project.status === 'in-progress' && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400 rounded flex-shrink-0">
-                        {t('projects.inProgress')}
-                      </span>
-                    )}
+                    <p className="cv-entry-org">
+                      <Scramble text={`${L(PROGRAMME.institution)} · QF ${PROGRAMME.qfLevel} · ${PROGRAMME.code}`} delay={120} />
+                    </p>
+                    <ul className="cv-figures">
+                      <li>
+                        <span className="cv-figure font-title">{PROGRAMME.cgpa.toFixed(1)}</span>
+                        <Scramble className="cv-figure-label" text={t('cgpa')} />
+                      </li>
+                      <li>
+                        <span className="cv-figure font-title">{PROGRAMME.finalTermGpa.toFixed(1)}</span>
+                        <Scramble className="cv-figure-label" text={t('termGpa')} delay={80} />
+                      </li>
+                      <li>
+                        <span className="cv-figure-text">{L(PROGRAMME.graduated)}</span>
+                      </li>
+                    </ul>
+                    <p className="cv-final-label">
+                      <Scramble text={t('finalSemester')} />
+                    </p>
+                    <ul className="cv-grades">
+                      {finalSemester.courses.map((c) => (
+                        <li key={c.code}>
+                          <span>{L(c.name)}</span>
+                          <span className="cv-grade">{c.grade}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <TransitionLink href="/education" label={tn('education')} className="cv-more no-print">
+                      <Scramble text={t('fullRecord')} /> <ArrowUpRight size={14} aria-hidden="true" />
+                    </TransitionLink>
                   </div>
+                </CvSection>
 
-                  <div className="mt-1.5 flex flex-wrap gap-1">
-                    {project.techStack.slice(0, 5).map((tech, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded print:bg-transparent print:border print:border-slate-300"
-                      >
-                        {tech}
-                      </span>
+                <CvSection title={t('featured')}>
+                  {featured.map((p) => (
+                    <div key={p.id} className="cv-entry">
+                      <div className="cv-entry-head">
+                        <h3 className="cv-entry-title">
+                          <TransitionLink href={`/projects/${p.id}`} label={L(p.title)}>
+                            <Scramble text={L(p.title)} />
+                          </TransitionLink>
+                        </h3>
+                        <Scramble className="cv-entry-period" text={L(p.tagline)} />
+                      </div>
+                      <p>{L(p.summary)}</p>
+                      {p.tech.length > 0 && <p className="cv-tech">{p.tech.slice(0, 7).join(' · ')}</p>}
+                    </div>
+                  ))}
+                  <TransitionLink href="/projects" label={tn('projects')} className="cv-more no-print">
+                    <Scramble text={t('allProjects')} /> <ArrowUpRight size={14} aria-hidden="true" />
+                  </TransitionLink>
+                </CvSection>
+
+                <CvSection title={t('experience')}>
+                  {EXPERIENCE.map((e) => (
+                    <div key={e.id} className="cv-entry">
+                      <div className="cv-entry-head">
+                        <h3 className="cv-entry-title">
+                          <Scramble text={L(e.role)} />
+                        </h3>
+                        <Scramble className="cv-entry-period" text={L(e.period)} />
+                      </div>
+                      <p className="cv-entry-org">
+                        <Scramble text={L(e.organisation)} delay={120} />
+                      </p>
+                      <ul className="cv-bullets">
+                        {e.points.map((pt, i) => (
+                          <li key={i}>{L(pt)}</li>
+                        ))}
+                      </ul>
+                      {e.upcoming && <p className="cv-note">{L(e.upcoming)}</p>}
+                    </div>
+                  ))}
+                </CvSection>
+              </Scatter>
+
+              <Scatter variant="rise" className="cv-side" stagger={0.1}>
+                <CvSection title={t('skills')}>
+                  <div className="cv-skills">
+                    {SKILL_GROUPS.map((g) => (
+                      <div key={g.id} className="cv-skill-group">
+                        <h3 className="cv-skill-label">
+                        <Scramble text={L(g.label)} />
+                      </h3>
+                        <p className="cv-skill-items">{g.items.map((i) => L(i)).join(' · ')}</p>
+                      </div>
                     ))}
-                    {project.techStack.length > 5 && (
-                      <span className="text-[10px] text-slate-400">+{project.techStack.length - 5}</span>
-                    )}
                   </div>
+                </CvSection>
 
-                  {/* Links row */}
-                  <div className="mt-1 flex gap-3 print:hidden">
-                    {project.repo && (
-                      <a
-                        href={project.repo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="soviet-link text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
-                      >
-                        <Github size={10} />
-                        {t('projects.viewRepo')}
-                      </a>
-                    )}
-                    {project.platforms?.filter(p => p.repo).slice(0, 2).map((plat, i) => (
-                      <a
-                        key={i}
-                        href={plat.repo!}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="soviet-link text-[10px] text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
-                      >
-                        <Github size={10} />
-                        {plat.name[lang]}
-                      </a>
+                <CvSection title={t('languages')}>
+                  <ul className="cv-langs">
+                    {LANGUAGES.map((l) => (
+                      <li key={l.name.en}>
+                        <Scramble className="cv-lang-name" text={L(l.name)} />
+                        <Scramble className="cv-lang-level" text={L(l.level)} delay={120} />
+                      </li>
                     ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+                  </ul>
+                </CvSection>
 
-          {/* ─────────────────────── WORK EXPERIENCE ─────────────────────── */}
-          <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
-              {t('sections.experience')}
-            </h2>
-
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
-              <div>
-                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm print:text-xs">
-                  {t('experience.hotelIcon')}
-                  <span className="font-normal text-slate-500 dark:text-slate-400 ml-1">
-                    ({locale === 'zh-hk' ? t('experience.hotelIconZh') : '唯港薈'})
-                  </span>
-                </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 print:text-xs">
-                  {t('experience.position')}
-                </p>
-              </div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0 print:text-[10px]">
-                {t('experience.duration')}
-              </span>
-            </div>
-            <p className="mt-1 text-xs text-slate-700 dark:text-slate-200 print:text-[10px]">
-              {t('experience.description')}
-            </p>
-          </section>
-        </div>
-
-        {/* ═══════════════════════ RIGHT COLUMN (1/3 width) ════════════════ */}
-        <div className="space-y-6 print:space-y-4">
-
-          {/* ─────────────────────── SKILLS ─────────────────────── */}
-          <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
-              {t('sections.skills')}
-            </h2>
-
-            <div className="space-y-3 print:space-y-2">
-              {SKILL_GROUPS.map((group) => (
-                <div key={group.key}>
-                  <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 print:text-[10px]">
-                    {t(`skills.${group.key}`)}
-                  </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
-                    {group.items.join(' • ')}
+                <CvSection title={t('certification')}>
+                  <p className="cv-cert">
+                    <Scramble className="cv-lang-name" text={L(CERTIFICATION.name)} />
+                    <span className="cv-cert-result font-title">{L(CERTIFICATION.result)}</span>
                   </p>
-                </div>
-              ))}
-            </div>
-          </section>
+                </CvSection>
 
-          {/* ─────────────────────── CERTIFICATIONS ─────────────────────── */}
-          <section>
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 print:text-xs font-title italic print:font-sans print:not-italic">
-              {t('sections.certifications')}
-            </h2>
-            <p className="text-xs text-slate-700 dark:text-slate-300 print:text-[10px]">
-              {t('certifications.ielts')}
-            </p>
-          </section>
-
-          {/* ─────────────────────── ADDITIONAL INFO ─────────────────────── */}
-          <section className="print:hidden">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider border-b border-slate-300 dark:border-soviet-red/40 pb-1 mb-3 font-title italic">
-              {locale === 'zh-hk' ? '其他資訊' : 'Additional Info'}
-            </h2>
-            <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
-              <p>
-                <span className="font-medium">{locale === 'zh-hk' ? '地區：' : 'Location: '}</span>
-                {t('placeholders.nationality')}
-              </p>
-              {/* PLACEHOLDER: Enter date of birth */}
-              {/* PLACEHOLDER: Enter nationality */}
+                <CvSection title={t('achievements')}>
+                  <ul className="cv-achievements">
+                    {ACHIEVEMENTS.map((a) => (
+                      <li key={a.id}>
+                        <p className="cv-ach-title">
+                          {L(a.title)} <span className="cv-ach-year">{a.year}</span>
+                        </p>
+                        <p className="cv-ach-award">
+                          <Scramble text={L(a.award)} delay={150} />
+                        </p>
+                        <p className="cv-ach-detail">{L(a.detail)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </CvSection>
+              </Scatter>
             </div>
-          </section>
-        </div>
+          </article>
+        </SheetIntro>
+
+        <CutUpPoem
+          text={PROFILE.summary.map((p) => L(p)).join(' ')}
+          title={tc('title')}
+          hint={tc('hint')}
+          shake={tc('shake')}
+          restore={tc('restore')}
+          credit={tc('credit')}
+          resultLabel={tc('result')}
+        />
       </div>
-    </div>
+    </>
   );
 }

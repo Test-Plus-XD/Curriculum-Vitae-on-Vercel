@@ -1,23 +1,18 @@
 'use client';
 
 import { Printer } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import Magnetic from './fx/Magnetic';
+import Scramble from './fx/Scramble';
 
-/**
- * PrintButton — Soviet-styled button to trigger browser print dialog.
- * Hidden on print output itself.
- */
 export default function PrintButton() {
-  const locale = useLocale();
-
+  const t = useTranslations('controls');
   return (
-    <button
-      onClick={() => window.print()}
-      className="print:hidden soviet-print-btn soviet-holo-scan font-mono"
-      aria-label={locale === 'zh-hk' ? '列印履歷' : 'Print CV'}
-    >
-      <Printer size={14} />
-      {locale === 'zh-hk' ? '列印履歷' : 'Print CV'}
-    </button>
+    <Magnetic className="no-print">
+      <button type="button" className="action-button" onClick={() => window.print()}>
+        <Printer size={16} strokeWidth={1.75} aria-hidden="true" />
+        <Scramble text={t('print')} delay={300} />
+      </button>
+    </Magnetic>
   );
 }

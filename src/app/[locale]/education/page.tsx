@@ -1,274 +1,94 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { PROGRAMME, SEMESTERS, ALL_COURSES } from '@/lib/education';
+import { pick } from '@/lib/i18n-text';
+import { alternates } from '@/lib/seo';
+import DadaTypography from '@/components/fx/DadaTypography';
+import GlitchRevealText from '@/components/fx/GlitchRevealText';
+import RevealHeading from '@/components/fx/RevealHeading';
+import Scatter from '@/components/fx/Scatter';
+import TiltCard from '@/components/fx/TiltCard';
+import Counter from '@/components/fx/Counter';
+import Scramble from '@/components/fx/Scramble';
+import SemesterTrack from '@/components/SemesterTrack';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'metadata' });
-  return {
-    title: t('educationTitle'),
-    description: t('educationDescription'),
-  };
-}
-import Link from 'next/link';
-import { ArrowLeft, GraduationCap, BookOpen, Calendar } from 'lucide-react';
-import RetroWave from '@/components/RetroWave';
-import RetroFuturisticCard from '@/components/RetroFuturisticCard';
-import DadaTypography from '@/components/DadaTypography';
-import DadaScatterLayout from '@/components/DadaScatterLayout';
-import GlitchRevealText from '@/components/GlitchRevealText';
-
-/* ────────────────────────────────────────────────── inline static data */
-type Lang = 'en' | 'zh';
-
-interface CourseEntry {
-  code: string;
-  en: string;
-  zh: string;
-  grade?: string;
-  credits?: number;
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  return { title: t('educationTitle'), description: t('educationDescription'), alternates: alternates(locale, '/education') };
 }
 
-const SEMESTERS: { translationKey: string; courses: CourseEntry[]; termGpa?: number }[] = [
-  {
-    translationKey: 'education.term_2025_2026_t2',
-    termGpa: 4.1,
-    courses: [
-      { code: '03CIT4010', en: 'Computer Ethics', zh: '計算機倫理', grade: 'B', credits: 3 },
-      { code: '03CIT4043', en: 'Proprietary Mobile Software Design (iOS)', zh: '專有手機軟件設計 (iOS)', grade: 'A+', credits: 3 },
-      { code: '03CIT4050', en: 'Data Communication and Networking', zh: '數據通信與網絡', grade: 'A+', credits: 3 },
-      { code: '03ENG4005', en: 'Professional English Communication', zh: '專業英語溝通', grade: 'A+', credits: 3 },
-      { code: '06CIT4002', en: 'Final Year Project', zh: '畢業專題', grade: 'A+', credits: 6 },
-    ],
-  },
-  {
-    translationKey: 'education.term_2025_2026_t1',
-    courses: [
-      { code: '03CIT4042', en: 'Software Engineering and Professional Practice', zh: '軟件工程與專業實踐' },
-      { code: '03CIT4044', en: 'Cross-Platform Mobile Application Development', zh: '跨平台手機應用開發' },
-      { code: '03CIT4045', en: '2D Mobile Game Development', zh: '2D 手機遊戲開發' },
-      { code: '03CIT4047', en: 'Open Mobile Software Design', zh: '開放手機軟件設計' },
-    ],
-  },
-  {
-    translationKey: 'education.term_2024_2025_t2',
-    courses: [
-      { code: '03CIT4046', en: '3D Mobile Game Development', zh: '3D 手機遊戲開發' },
-      { code: '03CIT4048', en: 'Introduction to Database Systems', zh: '數據庫系統導論' },
-      { code: '03CIT4052', en: 'Object-Oriented Analysis and Design', zh: '物件導向分析與設計' },
-      { code: '03CIT4054', en: 'PHP Application Development', zh: 'PHP 應用開發' },
-      { code: '03CIT4055', en: 'Open System Administration', zh: '開放系統管理' },
-    ],
-  },
-  {
-    translationKey: 'education.term_2024_2025_t1',
-    courses: [
-      { code: '03CIT3042', en: 'Discrete Mathematics and Statistics', zh: '離散數學與統計' },
-      { code: '03CIT4041', en: 'Game Asset Development', zh: '遊戲資產開發' },
-      { code: '03CIT4049', en: 'Java Programming', zh: 'Java 程序設計' },
-      { code: '03CIT4053', en: 'Technology for Web Development', zh: '網絡開發技術' },
-      { code: '03ENG4004', en: 'Academic English Skills', zh: '學術英語技能' },
-    ],
-  },
-];
-
-/* ───────────────────────────────────────────────────── page component */
-export default async function EducationPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function EducationPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations('education');
+  const L = (text: { en: string; zh: string }) => pick(text, locale);
 
-  const t = await getTranslations();
-  const lang: Lang = locale === 'zh-hk' ? 'zh' : 'en';
-
-  const totalCourses = SEMESTERS.reduce((acc, sem) => acc + sem.courses.length, 0);
+  const stats = [
+    { value: PROGRAMME.cgpa, decimals: 1, label: t('statCgpa'), accent: true },
+    { value: PROGRAMME.finalTermGpa, decimals: 1, label: t('statTermGpa') },
+    { value: ALL_COURSES.length, decimals: 0, label: t('statCourses') },
+    { value: SEMESTERS.length, decimals: 0, label: t('statSemesters') },
+  ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Back link */}
-      <Link
-        href={`/${locale}`}
-        className="soviet-link inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-soviet-orange transition-colors mb-6"
-      >
-        <ArrowLeft size={16} />
-        {locale === 'zh-hk' ? '返回履歷' : 'Back to CV'}
-      </Link>
-
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl text-slate-900 dark:text-white flex items-center gap-3 font-title font-light italic glow-heading">
-          <GraduationCap className="text-blue-600 dark:text-soviet-orange" size={28} />
-          <DadaTypography text={t('sections.education')} as="span" intensity={0.5} scatterOnView />
-        </h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
-          <GlitchRevealText
-            text={locale === 'zh-hk'
-              ? `${totalCourses} 門課程，分佈於 ${SEMESTERS.length} 個學期`
-              : `${totalCourses} courses across ${SEMESTERS.length} semesters`}
-            speed={7}
-            glitchOnHover={false}
-          />
+    <div className="page page-education">
+      <section className="page-hero">
+        <p className="eyebrow">
+          <span className="eyebrow-dot" aria-hidden="true" />
+          <Scramble text={t('eyebrow')} />
         </p>
-      </div>
-
-      {/* Institution Card */}
-      <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 rounded-2xl p-6 mb-4 border border-blue-100 dark:border-soviet-red/40 shadow-sm dark:shadow-none glow-card">
-        <div className="soviet-shimmer" />
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <DadaTypography as="h1" text={t('title')} className="hero-title font-title" colorShift intensity={1} />
+        <GlitchRevealText as="p" text={L(PROGRAMME.institution)} className="hero-subtitle" />
+        <p className="hero-lede">{L(PROGRAMME.title)}</p>
+        <dl className="hero-meta">
           <div>
-            <h2 className="text-xl text-slate-900 dark:text-white font-title font-light italic">
-              <DadaTypography text={t('education.institution')} as="span" intensity={0.4} scatterOnView />
-            </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              <GlitchRevealText text={t('education.institutionZh')} speed={6} />
-            </p>
-            <p className="text-base text-slate-700 dark:text-slate-200 mt-3 font-medium">
-              <GlitchRevealText text={t('education.programme')} speed={7} />
-            </p>
-            <div className="mt-3 flex flex-wrap gap-3">
-              <span className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                <BookOpen size={12} />
-                {t('education.code')}
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                {t('education.level')}
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                {t('education.duration')}
-              </span>
-            </div>
+            <dt>
+              <Scramble text={t('code')} />
+            </dt>
+            <dd>{PROGRAMME.code}</dd>
           </div>
-          <div className="text-right">
-            <div className="inline-flex items-center gap-2 bg-blue-600 dark:bg-soviet-red text-white px-4 py-2 rounded-lg">
-              <Calendar size={16} />
-              <span className="font-semibold">{t('education.graduation')}</span>
-            </div>
-            <p className="mt-2 text-lg font-bold text-blue-600 dark:text-soviet-orange">
-              {t('education.gpa')}
-            </p>
+          <div>
+            <dt>
+              <Scramble text={t('qf')} delay={80} />
+            </dt>
+            <dd>{t('qfLevel', { level: PROGRAMME.qfLevel })}</dd>
           </div>
-        </div>
-      </div>
-
-      <RetroWave />
-
-      {/* Course Timeline */}
-      <div className="space-y-8">
-        {SEMESTERS.map((sem, semIndex) => (
-          <div key={sem.translationKey} className="relative">
-            {/* Timeline connector */}
-            {semIndex < SEMESTERS.length - 1 && (
-              <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 soviet-timeline-line" />
-            )}
-
-            {/* Semester header */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                semIndex === 0
-                  ? 'bg-blue-600 dark:bg-soviet-red'
-                  : 'bg-slate-300 dark:bg-slate-700'
-              }`}>
-                <span className="text-white text-xs font-bold">{SEMESTERS.length - semIndex}</span>
-              </div>
-              <h3 className={`font-title italic ${
-                semIndex === 0
-                  ? 'text-blue-600 dark:text-soviet-orange'
-                  : 'text-slate-700 dark:text-slate-300'
-              }`}>
-                <DadaTypography text={t(sem.translationKey)} as="span" intensity={0.4} scatterOnView />
-                {semIndex === 0 && (
-                  <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 px-2 py-0.5 rounded-full not-italic font-sans font-medium soviet-badge">
-                    {locale === 'zh-hk' ? '最後學期' : 'Final'}
-                  </span>
-                )}
-              </h3>
-            </div>
-
-            {/* Course cards — scattered entrance, then align into grid */}
-            <DadaScatterLayout
-              className="ml-9 grid grid-cols-1 md:grid-cols-2 gap-3"
-              stagger={0.03}
-              delay={0.05 + semIndex * 0.08}
-              intensity={0.2}
-            >
-              {sem.courses.map((course) => (
-                <div
-                  key={course.code}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow glow-card"
-                >
-                  <div className="soviet-shimmer" />
-                  <span className="inline-block font-mono text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded mb-2">
-                    {course.code}
-                  </span>
-                  {course.grade && (
-                    <span className="inline-block ml-2 font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded mb-2">
-                      {course.grade}
-                      {course.credits != null && (
-                        <span className="text-slate-400 dark:text-slate-500 font-normal"> · {course.credits}cr</span>
-                      )}
-                    </span>
-                  )}
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100 font-title italic">
-                    <GlitchRevealText text={course[lang]} speed={6} />
-                  </p>
-                  {lang === 'zh' && (
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                      {course.en}
-                    </p>
-                  )}
-                  {lang === 'en' && (
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                      {course.zh}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </DadaScatterLayout>
+          <div>
+            <dt>
+              <Scramble text={t('mode')} delay={160} />
+            </dt>
+            <dd>{L(PROGRAMME.mode)}</dd>
           </div>
+          <div>
+            <dt>
+              <Scramble text={t('period')} delay={240} />
+            </dt>
+            <dd>{L(PROGRAMME.period)}</dd>
+          </div>
+        </dl>
+        <p className="graduation-badge">
+          <span className="graduation-star" aria-hidden="true">
+            ★
+          </span>
+          <Scramble text={L(PROGRAMME.graduated)} delay={300} />
+        </p>
+      </section>
+
+      <Scatter className="stat-grid" variant="collage">
+        {stats.map((s) => (
+          <TiltCard key={s.label} className={`stat-card ${s.accent ? 'stat-card-accent' : ''}`}>
+            <Counter value={s.value} decimals={s.decimals} className="stat-value font-title" />
+            <Scramble className="stat-label" text={s.label} delay={200} />
+          </TiltCard>
         ))}
-      </div>
+      </Scatter>
 
-      {/* Summary stats — RetroFuturisticCard with scattered entrance */}
-      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
-          <div className="p-4 text-center">
-            <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{totalCourses}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '總課程數' : 'Total Courses'}
-            </p>
-          </div>
-        </RetroFuturisticCard>
-        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
-          <div className="p-4 text-center">
-            <p className="text-2xl font-bold text-slate-900 dark:text-white font-title italic">{SEMESTERS.length}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '學期' : 'Semesters'}
-            </p>
-          </div>
-        </RetroFuturisticCard>
-        <RetroFuturisticCard glowIntensity="high" cornerBrackets holographicBorder>
-          <div className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600 dark:text-soviet-orange font-title italic">3.8</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '累積 GPA' : 'Cumulative GPA'}
-            </p>
-          </div>
-        </RetroFuturisticCard>
-        <RetroFuturisticCard glowIntensity="medium" cornerBrackets>
-          <div className="p-4 text-center">
-            <p className="text-2xl font-bold text-emerald-600 dark:text-soviet-gold font-title italic">2026</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {locale === 'zh-hk' ? '已畢業' : 'Graduated'}
-            </p>
-          </div>
-        </RetroFuturisticCard>
-      </div>
+      <section className="section" aria-labelledby="timeline-heading">
+        <RevealHeading id="timeline-heading" text={t('timeline')} index="§ 01" />
+        <SemesterTrack semesters={SEMESTERS} />
+        <p className="footnote">{t('gradesNote')}</p>
+      </section>
     </div>
   );
 }

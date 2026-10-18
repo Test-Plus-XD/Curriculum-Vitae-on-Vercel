@@ -7,7 +7,7 @@
       "esnext"
     ],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,

@@ -1,385 +1,253 @@
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Github, ExternalLink, Play, Clock, CheckCircle, Circle, Video, Calendar } from 'lucide-react';
-import { projects } from '@/lib/projects';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import Image from 'next/image';
+import { ArrowLeft, ArrowUpRight, Github, Radio } from 'lucide-react';
+import { PROJECT_IDS, buildTimeline, getProject } from '@/lib/projects';
+import { getCourse } from '@/lib/education';
+import { pick } from '@/lib/i18n-text';
+import { alternates } from '@/lib/seo';
+import DadaTypography from '@/components/fx/DadaTypography';
+import RevealHeading from '@/components/fx/RevealHeading';
+import Scatter from '@/components/fx/Scatter';
+import Counter from '@/components/fx/Counter';
+import Magnetic from '@/components/fx/Magnetic';
+import Scramble from '@/components/fx/Scramble';
+import TransitionLink from '@/components/transition/TransitionLink';
+import DevTimeline from '@/components/DevTimeline';
+import OrbitDiagram from '@/components/OrbitDiagram';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string; id: string }>;
-}): Promise<Metadata> {
-  const { locale, id } = await params;
-  const project = projects.find((p) => p.id === id);
-  if (!project) return { title: 'Project' };
-  const lang = locale === 'zh-hk' ? 'zh' : 'en';
-  return {
-    title: project.title[lang],
-    description: project.description[lang],
-  };
-}
-import { projectTimelines, sortTimelineEvents, formatTimelineDate } from '@/lib/timeline';
-import InlineVideo from '@/components/InlineVideo';
-import GlitchRevealText from '@/components/GlitchRevealText';
-import DadaTypography from '@/components/DadaTypography';
-
-type Lang = 'en' | 'zh';
-
-const catColour: Record<string, string> = {
-  mobile: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
-  web: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300',
-  game: 'bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300',
-  backend: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300',
-};
-
-const catLabel: Record<string, { en: string; zh: string }> = {
-  mobile: { en: 'Mobile', zh: '手機應用' },
-  web: { en: 'Web', zh: '網絡' },
-  game: { en: 'Game', zh: '遊戲' },
-  backend: { en: 'Backend', zh: '後端' },
-};
-
-const statusLabel: Record<string, { en: string; zh: string }> = {
-  complete: { en: 'Complete', zh: '已完成' },
-  'in-progress': { en: 'In Progress', zh: '進行中' },
-  pending: { en: 'Pending', zh: '待開始' },
-};
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return projects.map((project) => ({ id: project.id }));
+  return PROJECT_IDS.map((id) => ({ id }));
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ locale: string; id: string }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }): Promise<Metadata> {
+  const { locale, id } = await params;
+  const project = getProject(id);
+  if (!project) return {};
+  return {
+    title: pick(project.title, locale),
+    description: pick(project.summary, locale),
+    alternates: alternates(locale, `/projects/${id}`),
+  };
+}
+
+export default async function ProjectDetailPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-
-  const project = projects.find((p) => p.id === id);
+  const project = getProject(id);
   if (!project) notFound();
 
-  const t = await getTranslations('projects');
-  const lang: Lang = locale === 'zh-hk' ? 'zh' : 'en';
-
-  const timeline = sortTimelineEvents(projectTimelines[id] || []);
+  const t = await getTranslations('project');
+  const tc = await getTranslations('controls');
+  const tp = await getTranslations('projects');
+  const tn = await getTranslations('transition');
+  const L = (text: { en: string; zh: string }) => pick(text, locale);
+  const title = L(project.title);
+  const timeline = buildTimeline(project);
+  let section = 0;
+  const index = () => `§ ${String(++section).padStart(2, '0')}`;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      {/* Back link */}
-      <Link
-        href={`/${locale}/projects`}
-        className="soviet-link inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6"
-      >
-        <ArrowLeft size={16} />
-        {t('backToProjects')}
-      </Link>
+    <div className="page page-detail">
+      <TransitionLink href="/projects" label={tn('projects')} className="back-link">
+        <ArrowLeft size={16} aria-hidden="true" />
+        <Scramble text={tc('back')} />
+      </TransitionLink>
 
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          {project.categories.map((cat) => (
-            <span key={cat} className={`text-xs px-3 py-1 rounded-full font-medium ${catColour[cat]}`}>
-              {catLabel[cat][lang]}
-            </span>
-          ))}
-          <span
-            className={`text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1 ${
-              project.status === 'complete'
-                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                : 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
-            }`}
-          >
-            {project.status === 'complete' ? <CheckCircle size={12} /> : <Clock size={12} />}
-            {statusLabel[project.status][lang]}
-          </span>
-        </div>
-
-        <h1 className="text-2xl sm:text-3xl text-slate-900 dark:text-white font-title font-light italic glow-heading">
-          <DadaTypography text={project.title[lang]} as="span" intensity={0.5} scatterOnView />
-        </h1>
-
-        <p className="mt-3 text-slate-600 dark:text-slate-300 leading-relaxed">
-          <GlitchRevealText text={project.description[lang]} speed={4} glitchOnHover={false} />
-        </p>
-
-        {/* Live PWA — prominent call-to-action */}
-        {project.liveUrl && (
-          <div className="mt-4">
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="soviet-print-btn soviet-holo-scan font-mono"
-            >
-              <ExternalLink size={14} />
-              {t('liveDemo')}
-            </a>
-          </div>
-        )}
-
-        {/* Related Courses */}
-        <div className="mt-4">
-          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-            {t('courses')}
-          </span>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {project.courses.map((course, i) => (
-              <span
-                key={i}
-                className="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded"
-              >
-                <span className="font-mono text-slate-400">{course.code}</span>
-                <span className="mx-1">–</span>
-                {course.name[lang]}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Timeline */}
-        <div className="lg:col-span-2">
-          <h2 className="text-lg text-slate-900 dark:text-white flex items-center gap-2 mb-6 font-title font-light italic glow-heading">
-            <Calendar className="text-blue-600 dark:text-soviet-orange" size={20} />
-            <DadaTypography text={t('timeline')} as="span" intensity={0.4} scatterOnView />
-          </h2>
-
-          {timeline.length > 0 ? (
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 soviet-timeline-line" />
-
-              <div className="space-y-6">
-                {timeline.map((event, idx) => (
-                  <div key={idx} className="relative flex gap-4">
-                    {/* Timeline dot */}
-                    <div
-                      className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        event.type === 'video'
-                          ? 'bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400'
-                          : event.type === 'release'
-                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400'
-                          : 'bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400'
-                      }`}
-                    >
-                      {event.type === 'video' ? (
-                        <Video size={14} />
-                      ) : event.type === 'release' ? (
-                        <CheckCircle size={14} />
-                      ) : (
-                        <Circle size={14} />
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 pb-6">
-                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-slate-900/50 transition-shadow glow-card">
-                        <div className="soviet-shimmer" />
-                        {/* YouTube Embed */}
-                        {event.videoId && event.embedUrl && (
-                          <InlineVideo
-                            embedUrl={event.embedUrl}
-                            title={event.title[lang]}
-                            videoId={event.videoId}
-                          />
-                        )}
-
-                        <div className="p-4">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <h3 className="font-semibold text-slate-800 dark:text-slate-100 font-title italic">
-                                <DadaTypography text={event.title[lang]} as="span" intensity={0.35} scatterOnView />
-                              </h3>
-                              {event.description && (
-                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-                                  {event.description[lang]}
-                                </p>
-                              )}
-                            </div>
-                            <span className="text-xs text-slate-400 dark:text-slate-500 flex-shrink-0 whitespace-nowrap">
-                              {formatTimelineDate(event.date, locale)}
-                            </span>
-                          </div>
-
-                          {event.videoUrl && (
-                            <a
-                              href={event.videoUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mt-3 inline-flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400"
-                            >
-                              <Play size={14} />
-                              {locale === 'zh-hk' ? '觀看影片' : 'Watch Video'}
-                              <ExternalLink size={12} />
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-              {locale === 'zh-hk' ? '暫無時間線數據' : 'No timeline data available'}
-            </div>
-          )}
-        </div>
-
-        {/* Right: Info sidebar */}
-        <div className="space-y-6">
-          {/* Tech Stack */}
-          <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
-            <div className="soviet-shimmer" />
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-              <DadaTypography text={t('techStack')} as="span" intensity={0.3} scatterOnView />
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {project.techStack.map((tech, i) => (
-                <span
-                  key={i}
-                  className="text-sm px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg soviet-tech-tag"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Related Sub-Projects */}
-          {project.relatedProjects && project.relatedProjects.length > 0 && (
-            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
-              <div className="soviet-shimmer" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                <DadaTypography text={t('relatedProjects')} as="span" intensity={0.3} scatterOnView />
-              </h3>
-              <div className="space-y-2">
-                {project.relatedProjects.map((rp, i) => (
-                  <Link
-                    key={i}
-                    href={`/${locale}/projects/${rp.id}`}
-                    className="flex items-center justify-between gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
-                  >
-                    <span className="truncate">{rp.label[lang]}</span>
-                    <ArrowRight size={14} className="flex-shrink-0 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Repositories */}
-          {(project.repo || project.platforms?.some((p) => p.repo)) && (
-            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
-              <div className="soviet-shimmer" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                <DadaTypography text={t('viewRepo')} as="span" intensity={0.3} scatterOnView />
-              </h3>
-              <div className="space-y-2">
-                {project.repo && (
-                  <a
-                    href={project.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="soviet-link flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  >
-                    <Github size={16} />
-                    <span className="truncate">{project.repo.replace('https://github.com/', '')}</span>
-                    <ExternalLink size={12} className="flex-shrink-0" />
-                  </a>
-                )}
-                {project.platforms?.filter((p) => p.repo).map((plat, i) => (
-                  <a
-                    key={i}
-                    href={plat.repo!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="soviet-link flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  >
-                    <Github size={16} />
-                    <span className="truncate">{plat.name[lang]}</span>
-                    <ExternalLink size={12} className="flex-shrink-0" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Platform Components (PourRice only) */}
-          {project.platforms && (
-            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
-              <div className="soviet-shimmer" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                <DadaTypography text={t('pourRicePlatforms')} as="span" intensity={0.3} scatterOnView />
-              </h3>
-              <div className="space-y-3">
-                {project.platforms.map((plat, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <span className="text-sm text-slate-700 dark:text-slate-300">{plat.name[lang]}</span>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded ${
-                        plat.status === 'complete'
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                          : plat.status === 'in-progress'
-                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400'
-                          : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
-                      }`}
-                    >
-                      {statusLabel[plat.status][lang]}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Highlights (PourRice only) */}
-          {project.highlights && (
-            <div className="bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900/50 border border-blue-100 dark:border-blue-900/50 rounded-xl p-5">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                <DadaTypography text={t('highlights')} as="span" intensity={0.3} scatterOnView />
-              </h3>
-              <ul className="space-y-2">
-                {project.highlights[lang].map((h, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
-                    <CheckCircle size={14} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                    {h}
+      <section className={`detail-hero ${id === 'pourrice' ? 'detail-hero-pour-rice' : ''}`}>
+        <div className="detail-hero-layout">
+          <div className="detail-hero-copy">
+            <p className="eyebrow">
+              <span className="eyebrow-dot" aria-hidden="true" />
+              <Scramble text={L(project.tagline)} />
+            </p>
+            <DadaTypography as="h1" text={title} className="hero-title detail-title font-title" colorShift intensity={0.9} />
+            {project.categories.length > 0 && (
+              <ul className="card-cats">
+                {project.categories.map((c) => (
+                  <li key={c} className={`badge badge-${c}`}>
+                    <Scramble text={tp(c)} delay={150} />
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          {/* All Videos */}
-          {project.videos.length > 0 && (
-            <div className="bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/60 dark:to-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 glow-card">
-              <div className="soviet-shimmer" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 font-title italic">
-                <DadaTypography text={`${t('videos')} (${project.videos.length})`} as="span" intensity={0.3} scatterOnView />
-              </h3>
-              <div className="space-y-2">
-                {project.videos.map((video, i) => (
-                  <a
-                    key={i}
-                    href={video.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                  >
-                    <Play size={14} className="text-red-600 dark:text-red-400" />
-                    <span className="truncate">{video.title[lang]}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0">{video.date}</span>
-                  </a>
+            )}
+            <p className="hero-lede">{L(project.summary)}</p>
+            {(project.live || project.repos.length > 0) && (
+              <div className="detail-actions">
+                {project.live && (
+                  <Magnetic>
+                    <a href={project.live.url} target="_blank" rel="noopener noreferrer" className="action-button action-primary">
+                      <Radio size={16} aria-hidden="true" />
+                      <Scramble text={L(project.live.label)} delay={200} />
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </a>
+                  </Magnetic>
+                )}
+                {project.repos.map((r) => (
+                  <Magnetic key={r.url} strength={0.2}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" className="action-button">
+                      <Github size={16} aria-hidden="true" />
+                      <Scramble text={L(r.label)} delay={200} />
+                    </a>
+                  </Magnetic>
                 ))}
               </div>
-            </div>
+            )}
+          </div>
+          {id === 'pourrice' && (
+            <figure className="project-app-icon">
+              <Image
+                src="/images/pour-rice-app-light.png"
+                alt={locale === 'zh-hk' ? 'Pour Rice 倒米應用程式圖示' : 'Pour Rice app icon'}
+                width={480}
+                height={480}
+                className="project-app-icon-light"
+                unoptimized
+              />
+              <Image
+                src="/images/pour-rice-app-dark.png"
+                alt=""
+                width={480}
+                height={480}
+                className="project-app-icon-dark"
+                aria-hidden="true"
+                unoptimized
+              />
+            </figure>
           )}
         </div>
+      </section>
+
+      {project.highlights && (
+        <Scatter as="ul" className="highlight-strip" variant="collage">
+          {project.highlights.map((h) => (
+            <li key={h.label.en} className="highlight">
+              <Counter value={h.value} suffix={h.suffix} className="highlight-value font-title" />
+              <Scramble className="highlight-label" text={L(h.label)} delay={300} />
+            </li>
+          ))}
+        </Scatter>
+      )}
+
+      <div className="detail-grid">
+        <div className="detail-main">
+          <section className="section" aria-labelledby="overview-heading">
+            <RevealHeading id="overview-heading" text={t('overview')} index={index()} />
+            <p className="detail-description">{L(project.description)}</p>
+            {project.details && (
+              <Scatter as="ul" className="detail-points" variant="rise">
+                {project.details.map((d, i) => (
+                  <li key={i}>{L(d)}</li>
+                ))}
+              </Scatter>
+            )}
+          </section>
+
+          {project.platforms && (
+            <section className="section" aria-labelledby="platforms-heading">
+              <RevealHeading id="platforms-heading" text={t('platforms')} index={index()} />
+              <div className="platforms-layout">
+                <OrbitDiagram
+                  core="Firebase"
+                  services={[{ label: 'Vercel API' }, { label: 'Socket.IO' }]}
+                  clients={[
+                    { label: 'PWA', sub: 'Ionic', primary: true },
+                    { label: 'Android', sub: 'Flutter' },
+                    { label: 'iOS', sub: 'Swift' },
+                  ]}
+                />
+                <Scatter as="ul" className="platform-list" variant="rise">
+                  {project.platforms.map((p) => {
+                    const course = p.course ? getCourse(p.course) : undefined;
+                    return (
+                      <li key={p.name.en} className="platform-item">
+                        <p className="platform-name">
+                          <Scramble text={L(p.name)} />
+                          {p.primary && (
+                            <span className="badge badge-primary">
+                              <Scramble text={t('primary')} delay={150} />
+                            </span>
+                          )}
+                        </p>
+                        <p className="platform-stack">
+                          <Scramble text={p.stack} delay={120} />
+                        </p>
+                        {course && (
+                          <p className="platform-course">
+                            <Scramble text={`${course.code} · ${L(course.name)}`} delay={200} />
+                          </p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </Scatter>
+              </div>
+            </section>
+          )}
+
+          <section className="section" aria-labelledby="timeline-heading">
+            <RevealHeading id="timeline-heading" text={t('timeline')} index={index()} />
+            {project.videos.length === 0 && <p className="footnote">{t('noVideos')}</p>}
+            <DevTimeline entries={timeline} />
+          </section>
+        </div>
+
+        <aside className="detail-side">
+          <div className="side-panel">
+            {project.tech.length > 0 && (
+              <div className="side-block">
+                <h2 className="side-title">
+                  <Scramble text={t('tech')} />
+                </h2>
+                <ul className="card-tech">
+                  {project.tech.map((tech) => (
+                    <li key={tech} className="tech-chip">
+                      <Scramble text={tech} delay={100} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="side-block">
+              <h2 className="side-title">
+                <Scramble text={t('courses')} />
+              </h2>
+              <ul className="side-courses">
+                {project.courses.map((code) => {
+                  const course = getCourse(code);
+                  return (
+                    <li key={code}>
+                      <Scramble className="course-code" text={code} />
+                      <Scramble text={course ? L(course.name) : code} delay={120} />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="side-block">
+              <h2 className="side-title">
+                <Scramble text={t('repos')} />
+              </h2>
+              {project.repos.length > 0 ? (
+                <ul className="side-links">
+                  {project.repos.map((r) => (
+                    <li key={r.url}>
+                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="soviet-link">
+                        <Github size={14} aria-hidden="true" />
+                        <Scramble text={L(r.label)} delay={200} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="side-muted">{t('noRepo')}</p>
+              )}
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   );

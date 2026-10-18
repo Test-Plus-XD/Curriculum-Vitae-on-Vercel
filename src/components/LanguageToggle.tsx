@@ -1,36 +1,41 @@
 'use client';
 
-import { useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import { usePathname } from '@/i18n/navigation';
+import TransitionLink from './transition/TransitionLink';
 
+const OPTIONS = [
+  { locale: 'en', label: 'EN', cover: 'English' },
+  { locale: 'zh-hk', label: '繁', cover: '繁體中文' },
+] as const;
+
+/** EN / 繁 segmented switch that keeps the current page and plays the page transition. */
 export default function LanguageToggle() {
+  const t = useTranslations('controls');
   const locale = useLocale();
   const pathname = usePathname();
 
-  const getLocaleUrl = (target: string) => {
-    const stripped = pathname.replace(new RegExp(`^/${locale}`), '') || '/';
-    return `/${target}${stripped}`;
-  };
-
-  const active   = 'font-semibold text-blue-600 dark:text-blue-400';
-  const inactive = 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200';
-
   return (
-    <div className="flex items-center gap-1">
-      <Link
-        href={getLocaleUrl('en')}
-        className={`text-sm transition-colors ${locale === 'en' ? active : inactive}`}
-      >
-        EN
-      </Link>
-      <span className="text-slate-300 dark:text-slate-600 select-none">|</span>
-      <Link
-        href={getLocaleUrl('zh-hk')}
-        className={`text-sm transition-colors ${locale === 'zh-hk' ? active : inactive}`}
-      >
-        繁體
-      </Link>
+    <div className="lang-toggle" role="group" aria-label={t('language')}>
+      {OPTIONS.map((o) =>
+        o.locale === locale ? (
+          <span key={o.locale} className="lang-option is-active" aria-current="true" lang={o.locale}>
+            {o.label}
+          </span>
+        ) : (
+          <TransitionLink
+            key={o.locale}
+            href={pathname}
+            locale={o.locale}
+            label={o.cover}
+            className="lang-option"
+            lang={o.locale}
+            hrefLang={o.locale}
+          >
+            {o.label}
+          </TransitionLink>
+        ),
+      )}
     </div>
   );
 }

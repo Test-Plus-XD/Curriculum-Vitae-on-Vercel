@@ -1,29 +1,61 @@
 'use client';
 
+import { useEffect, useState, type MouseEvent } from 'react';
+import { flushSync } from 'react-dom';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Moon, Sun } from 'lucide-react';
+import { prefersReducedMotion } from '@/lib/gsap';
 
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { ready: Promise<void> };
+};
+
+/**
+ * Light/dark switch. Where the View Transitions API exists, the new theme spreads out from the button as an
+ * expanding circle; elsewhere (or with reduced motion) it switches instantly.
+ */
 export default function ThemeToggle() {
+  const t = useTranslations('controls');
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isDark = mounted && resolvedTheme === 'dark';
 
-  if (!mounted) return <div className="w-9 h-9" />;
-
-  const isDark = resolvedTheme === 'dark';
+  const toggle = (e: MouseEvent<HTMLButtonElement>) => {
+    const next = isDark ? 'light' : 'dark';
+    const doc = document as ViewTransitionDocument;
+    if (!doc.startViewTransition || prefersReducedMotion()) {
+      setTheme(next);
+      return;
+    }
+    const x = e.clientX || window.innerWidth - 40;
+    const y = e.clientY || 32;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const transition = doc.startViewTransition(() => {
+      flushSync(() => setTheme(next));
+    });
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 650, easing: 'cubic-bezier(0.7, 0, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
+        );
+      })
+      // The browser may skip the animation (hidden tab, another transition); the theme has changed anyway.
+      .catch(() => {});
+  };
 
   return (
     <button
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="p-2 rounded-lg text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-      aria-label={isDark ? 'Current theme: dark. Switch to light mode' : 'Current theme: light. Switch to dark mode'}
-      title={isDark ? 'Dark mode' : 'Light mode'}
+      type="button"
+      onClick={toggle}
+      className="icon-button"
+      aria-label={isDark ? t('toLight') : t('toDark')}
+      title={isDark ? t('toLight') : t('toDark')}
     >
-      {isDark ? <Moon size={18} /> : <Sun size={18} />}
+      {isDark ? <Sun size={18} strokeWidth={1.75} /> : <Moon size={18} strokeWidth={1.75} />}
     </button>
   );
 }

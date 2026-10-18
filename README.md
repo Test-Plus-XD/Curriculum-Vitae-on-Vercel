@@ -1,201 +1,64 @@
 # NG Yu Ham Baldwin (吳宇涵)
-## Academic Portfolio & Curriculum Vitae Website
+## Curriculum Vitae & Academic Portfolio
 
-A bilingual (English / Traditional Chinese) portfolio and curriculum vitae website presenting my academic trajectory, technical competencies, and software engineering projects as a Computer Science student at the Hong Kong College of Technology (HKCT).
+A bilingual (English / Traditional Chinese) curriculum vitae and portfolio presenting my studies, technical skills and software projects as a Computer Studies graduate of the Hong Kong College of Technology (HKCT).
 
-Designed and developed with Next.js, React, TypeScript, and Tailwind CSS, this project serves as both:
-- a professional digital CV for employers and collaborators, and
-- a curated academic record of coursework, projects, and final-year capstone development.
+Live site: [test-plus.work](https://www.test-plus.work/en) · 繁體中文: [test-plus.work/zh-hk](https://www.test-plus.work/zh-hk)
 
-## Executive Profile
+It serves as:
+- a professional CV that prints cleanly on A4 for formal applications, and
+- a record of coursework, grades, projects and recorded demonstrations.
 
-This website documents my progression as a full-stack developer through structured academic evidence and project-based outcomes. Core focus areas include:
+## Profile
 
-- **Applied Software Engineering**: Building production-oriented web and mobile systems.
-- **Human-Centred Product Development**: Designing interfaces and workflows that prioritise clarity and usability.
-- **Cross-Platform Implementation**: Delivering projects across web, iOS, Flutter, and game engines.
-- **Evidence-Led Presentation**: Showcasing coursework, grades, technologies, and deliverables in a transparent format.
+Higher Diploma graduate in Computer Studies (Mobile Applications and Game Development), HKCT, May 2026 — final CGPA **3.8**, final-term GPA **4.1**. Hands-on full-stack experience across web, Android and iOS, most fully shown in **Pour Rice**, a cross-platform vegetarian restaurant discovery, booking and promotion platform I designed, built and deployed on my own as my Final Year Project.
 
-## Featured Academic Work
+## What's on the site
 
-### Final Year Project — *Pour Rice*
-A cross-platform vegetarian restaurant discovery platform integrating:
-- intelligent recommendation and AI-assisted interaction,
-- geolocation and nearby venue discovery,
-- real-time messaging and user-centric browsing workflows.
-
-This project is presented as a full case study with technical stack details, development context, and demonstrable outcomes.
-
-### Additional Project Portfolio
-Beyond the capstone, the website includes 8+ projects across:
-- **Mobile Development** (Swift, Flutter, Ionic)
-- **Web Applications** (Next.js, React)
-- **Backend Services** (Node.js, Express, Firebase)
-- **Game Development** (2D/3D interactive systems)
-
-## Website Capabilities
-
-- **Bilingual delivery** with English and Traditional Chinese content.
-- **Structured education timeline** with semester progression, course listings, and GPA references.
-- **Project taxonomy and filtering** by engineering domain.
-- **Print-optimised CV layout** suitable for formal application submission.
-- **Responsive and accessible interface** for desktop and mobile review.
-- **SEO and discoverability features** including metadata, sitemap generation, and locale-aware routing.
-
-## Information Architecture
-
-| Route | Purpose |
+| Route | Content |
 |---|---|
-| `/` | Primary CV landing page and professional summary |
-| `/education` | Academic timeline, coursework, and performance indicators |
-| `/projects` | Portfolio index with category filtering |
-| `/projects/[id]` | Individual project case-study pages |
+| `/` | A collage hero, then the printable CV: profile, education, selected projects, experience, skills, languages, IELTS, achievements |
+| `/education` | Programme facts, results and all 19 courses across four semesters |
+| `/projects` | Eleven course projects, filterable by Mobile / Web / Game / Backend, plus collaborations |
+| `/projects/[id]` | Case studies with highlights, platforms, technology, repositories and a newest-first development timeline of recorded videos |
 
-Available in:
-- English: `/en`
-- Traditional Chinese: `/zh-hk`
+Every page is available in English (`/en`) and Traditional Chinese (`/zh-hk`), in light and dark themes.
 
-## Full Technical Stack
+## Design
 
-### Core Runtime Dependencies
+A Dada photomontage in Soviet poster colours — Schwitters-style *Merz* collage cut from the CV's own data, Lissitzky's red wedge, Rodchenko red and black, torn paper, tape, ink stamps and ransom-note lettering — over a constructivist 1960s space-age background: an aged-paper print in light mode and a night launch site in dark mode. Effects are built with **GSAP**, plus **Three.js** on the landing page:
 
-| Category | Packages |
+- **Background** — a canvas star field with parallax and shooting stars, beneath a constructivist SVG composition (red sun, orbit rings with satellites, diagonal bands, rays) that draws itself in and re-arranges itself on every page change.
+- **Collage** — a landing photomontage with a ransom-note name, label-maker title, name chop, ink stamp and draggable duotone scraps of project footage, floating over a Three.js *Merzbau* of torn CV scraps, a red wedge and a Tatlin tower; a Tzara-style cut-up poem; courses as ticket stubs and collaborations as newspaper clippings.
+- **Elements** — deconstructed Dada typography, Cyrillic text-scramble load-ins on labels across the site, scattered card entrances, line-mask headings, count-up figures, 3D tilt cards with spotlight, magnetic buttons, a targeting cursor, a Flip-animated project filter, a pinned horizontal semester track and an animated orbit diagram of Pour Rice's architecture.
+- **Transitions** — torn red and black slabs that sweep across between pages while the destination name is pasted up from cut-out letters, a circular reveal for theme changes, and video players that grow out of their thumbnails.
+
+Everything respects `prefers-reduced-motion`, and the CV prints as a plain black-and-white document whatever state the animations are in.
+
+## Technology
+
+| Area | Packages |
 |---|---|
-| Framework & UI | `next@16`, `react@19`, `react-dom@19` |
-| Language & Validation | `typescript@5`, `zod` |
-| Styling | `tailwindcss@4`, `@tailwindcss/postcss`, `postcss`, `autoprefixer` |
+| Framework | `next@16`, `react@19`, `typescript@5` |
+| Styling | `tailwindcss@4`, `@tailwindcss/postcss` |
+| Animation | `gsap@3.15`, `@gsap/react` (ScrollTrigger, SplitText, Flip, DrawSVG, MotionPath, CustomEase, Draggable, Inertia) |
+| 3D | `three` (landing-page Merzbau, lazy-loaded) |
 | Internationalisation | `next-intl` |
-| Motion & Effects | `framer-motion`, `react-wavify` |
-| Theming | `next-themes` |
-| UI Assets | `lucide-react` |
-| Analytics & Performance | `@vercel/analytics`, `@vercel/speed-insights` |
+| Theming & icons | `next-themes`, `lucide-react` |
+| Analytics | `@vercel/analytics`, `@vercel/speed-insights` |
+| Testing | `vitest`, `@testing-library/react`, `fast-check`, `jsdom` |
 
-### Development & Testing Tooling
-
-| Category | Packages |
-|---|---|
-| Unit / Component Testing | `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom` |
-| Property-Based Testing | `fast-check` |
-| Build & Tooling | `@vitejs/plugin-react`, `@vitest/ui`, `@types/node`, `@types/react`, `@types/react-dom` |
-
-### Build Scripts
-
-```bash
-npm run dev      # Start development server
-npm run build    # Create production build
-npm run start    # Start production server
-npm run lint     # Run linter (configured via Next.js)
-npm run test     # Run Vitest test suites
-```
-
-## Local Development
+## Development
 
 ```bash
 npm install
-npm run dev
-```
-
-Production build:
-
-```bash
-npm run build
+npm run dev       # http://localhost:3000
+npm test          # unit and data-integrity tests
+npm run build     # production build (all pages statically generated)
 npm run start
 ```
 
-## Full Repository Structure
-
-```text
-.
-├── ARCHITECTURE.md
-├── CLAUDE.md
-├── LICENSE
-├── README.md
-├── middleware.ts
-├── next.config.mjs
-├── package.json
-├── postcss.config.js
-├── tailwind.extension.json
-├── tsconfig.json
-├── vitest.config.ts
-├── vitest.setup.ts
-├── public/
-│   └── dada/
-│       ├── collage-1-dark.svg
-│       ├── collage-1.svg
-│       ├── collage-2-dark.svg
-│       ├── collage-2.svg
-│       ├── collage-3-dark.svg
-│       ├── collage-3.svg
-│       ├── collage-4-dark.svg
-│       ├── collage-4.svg
-│       ├── collage-5-dark.svg
-│       └── collage-5.svg
-└── src/
-    ├── app/
-    │   ├── globals.css
-    │   ├── layout.tsx
-    │   ├── sitemap.ts
-    │   └── [locale]/
-    │       ├── layout.tsx
-    │       ├── page.tsx
-    │       ├── education/
-    │       │   └── page.tsx
-    │       └── projects/
-    │           ├── layout.tsx
-    │           ├── page.tsx
-    │           └── [id]/
-    │               └── page.tsx
-    ├── components/
-    │   ├── AnimatedCard.tsx
-    │   ├── CosmicStarfield.tsx
-    │   ├── DadaCollage.tsx
-    │   ├── DadaScatterLayout.tsx
-    │   ├── DadaTypography.tsx
-    │   ├── DeconstructedGrid.example.tsx
-    │   ├── DeconstructedGrid.tsx
-    │   ├── EnhancedBackground.example.tsx
-    │   ├── EnhancedBackground.tsx
-    │   ├── Footer.tsx
-    │   ├── GlitchRevealText.tsx
-    │   ├── GlitchText.tsx
-    │   ├── Header.tsx
-    │   ├── InlineVideo.tsx
-    │   ├── LanguageToggle.tsx
-    │   ├── LocaleSetter.tsx
-    │   ├── MorseCodeTicker.tsx
-    │   ├── PrintButton.tsx
-    │   ├── ProjectCard.tsx
-    │   ├── RetroFuturisticCard.example.tsx
-    │   ├── RetroFuturisticCard.tsx
-    │   ├── RetroWave.tsx
-    │   ├── SovietBackground.tsx
-    │   ├── SovietCursorGlow.tsx
-    │   ├── SovietParticles.tsx
-    │   ├── SovietPropagandaPoster.tsx
-    │   ├── SovietTelemetry.tsx
-    │   ├── TemporalMotifs.example.tsx
-    │   ├── TemporalMotifs.tsx
-    │   ├── ThemeProvider.tsx
-    │   ├── ThemeToggle.tsx
-    │   ├── TimeRewindTransition.example.tsx
-    │   ├── TimeRewindTransition.tsx
-    │   └── VideoEmbed.tsx
-    ├── i18n/
-    │   └── request.ts
-    ├── lib/
-    │   ├── aesthetics.test.ts
-    │   ├── aesthetics.ts
-    │   ├── projects.ts
-    │   ├── timeline.ts
-    │   └── videos.ts
-    └── messages/
-        ├── en.json
-        └── zh-hk.json
-```
-
-## Professional Objective
-
-This portfolio is intended to communicate not only what I have built, but how I think and work: with technical rigour, academic discipline, and a commitment to maintainable, user-focused software.
+Content lives in typed, bilingual data modules under `src/lib/` (`profile.ts`, `education.ts`, `cv.ts`, `projects.ts`) and interface labels in `src/messages/`. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for how the site is put together.
 
 ## Licence
 
