@@ -8,3 +8,7 @@ measuring_tape_01     Kuutti Siitonen    https://polyhaven.com/a/measuring_tape_
 vintage_pocket_watch  Tal Swicegood      https://polyhaven.com/a/vintage_pocket_watch
 round_spectacles      Sean Buckley       https://polyhaven.com/a/round_spectacles
 painted_wooden_stool  Kirill Sannikov    https://polyhaven.com/a/painted_wooden_stool
+cross_pein_hammer     Tics               https://polyhaven.com/a/cross_pein_hammer
+wooden_spoon          Ronnie Barter      https://polyhaven.com/a/wooden_spoon
+vintage_stapler       Mateusz Sadek      https://polyhaven.com/a/vintage_stapler
+vintage_telephone_wall_clock  Adrian C           https://polyhaven.com/a/vintage_telephone_wall_clock

@@ -72,7 +72,10 @@ describe('projects', () => {
 
 describe('readymade models', () => {
   // The CC0 models the readymades load from /public/models (see CREDITS.txt there).
-  const MODELS = ['marble_bust_01', 'vintage_pocket_watch', 'measuring_tape_01', 'round_spectacles', 'painted_wooden_stool'];
+  const MODELS = [
+    'marble_bust_01', 'vintage_pocket_watch', 'measuring_tape_01', 'round_spectacles', 'painted_wooden_stool',
+    'cross_pein_hammer', 'wooden_spoon', 'vintage_stapler', 'vintage_telephone_wall_clock',
+  ];
 
   it('ships every glTF with its buffers and textures, and no transmission pass', () => {
     for (const name of MODELS) {

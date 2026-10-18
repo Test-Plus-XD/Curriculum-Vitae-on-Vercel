@@ -12,6 +12,7 @@ import Scramble from '@/components/fx/Scramble';
 import { Tape } from '@/components/collage/Paper';
 import ProjectsFilterGrid from '@/components/ProjectsFilterGrid';
 import ReadymadeFigure from '@/components/readymade/ReadymadeFigure';
+import ObjetsFigure from '@/components/objets/ObjetsFigure';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -34,6 +35,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
         </p>
         <DadaTypography as="h1" text={t('title')} className="hero-title font-title" colorShift intensity={1} />
         <p className="hero-lede">{t('intro')}</p>
+        <ObjetsFigure />
         <ReadymadeFigure work="duchamp" number={2} />
       </section>
 

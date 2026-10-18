@@ -16,16 +16,17 @@
 6. [Animation architecture](#animation-architecture)
 7. [Collage system](#collage-system)
 8. [Readymades](#readymades)
-9. [Page transitions](#page-transitions)
-10. [Background stage](#background-stage)
-11. [Pages](#pages)
-12. [Styling and theming](#styling-and-theming)
-13. [Fonts](#fonts)
-14. [Print](#print)
-15. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
-16. [Testing](#testing)
-17. [Adding content](#adding-content)
-18. [Deployment](#deployment)
+9. [Found-object mobile](#found-object-mobile)
+10. [Page transitions](#page-transitions)
+11. [Background stage](#background-stage)
+12. [Pages](#pages)
+13. [Styling and theming](#styling-and-theming)
+14. [Fonts](#fonts)
+15. [Print](#print)
+16. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
+17. [Testing](#testing)
+18. [Adding content](#adding-content)
+19. [Deployment](#deployment)
 
 ---
 
@@ -62,13 +63,14 @@ Every route is statically generated for both locales (33 pages at build time). P
 │   │   ├── fx/                       # Reusable GSAP effects
 │   │   ├── collage/                  # Dada collage system and the Three.js Merzbau
 │   │   ├── readymade/                # Three.js readymades: figure, canvas, stage, print pass, works/
+│   │   ├── objets/                   # Found-object mobile: figure, canvas, scene, catalogue
 │   │   ├── transition/               # Page-transition provider and link
 │   │   └── *.tsx                     # Page sections and site chrome
 │   ├── i18n/                         # routing.ts · navigation.ts · request.ts
 │   ├── lib/                          # Data modules and pure helpers (+ *.test.ts)
 │   └── messages/                     # en.json · zh-hk.json
 ├── public/images/                    # Header amplifier monogram, Pour Rice app icons
-├── public/models/                    # CC0 glTF models for the readymades + CREDITS.txt
+├── public/models/                    # CC0 glTF models for the readymades and the mobile + CREDITS.txt
 ├── next.config.mjs                   # next-intl plugin, Turbopack root, pourrice-ios redirect
 ├── postcss.config.js                 # @tailwindcss/postcss
 ├── vitest.config.ts · vitest.setup.ts
@@ -223,6 +225,36 @@ Models stay in their own units (metres) inside a scaled `body` group, nested in 
 
 ---
 
+## Found-object mobile
+
+The fourth Dada piece and the only one that is a *mobile* rather than a single pedestal: four everyday objects — a cross-pein hammer, a wooden spoon, a vintage stapler and a vintage telephone wall clock — hung from a wire drawn on the page and printed through the readymade halftone pass, so the scans read as two-colour newspaper cut-outs. It sits in the `/projects` hero under the lede on narrow screens, and from 1024 px in the hero's left column beside Readymade № 2. The four models are CC0 Poly Haven scans (`cross_pein_hammer`, `wooden_spoon`, `vintage_stapler`, `vintage_telephone_wall_clock`), credited in `public/models/CREDITS.txt`.
+
+**Loading.** `ObjetsFigure` is the figure: SVG wire, strings, clamps, tape ends and "№ 1…4" catalogue tags, a red `RIEN / NI UTILE NI NEUF` stamp from the shared `Stamp` component, and a typewritten label card listing the objects. Like the readymades it watches the stage with an `IntersectionObserver` (400 px margin) and, once the browser is idle, mounts `ObjetsCanvas` through `next/dynamic`; until the prints arrive a dotted cutting line with scissors holds its place. WebGL failure or a failed build hides the figure (`[data-state="failed"]`). The canvas and the SVG rig are `aria-hidden`; the label card stays real text. It is `no-print`, and every visible string comes from the `objets` namespace.
+
+**Catalogue** (`objects.ts`). One entry per object: model folder, catalogue size (the longest side in world units), idle spin in rad/s (the sign sets the direction) and the `turn` applied before the object is measured. `FOUND_OBJECTS` order is the left-to-right order and indexes the layout arrays.
+
+**Scene** (`scene.ts`). `buildObjets(stage, { narrow })` loads the four glTFs through the readymade asset loader (`readymade/assets.ts`: one cached `GLTFLoader`, `measure()` and `eachMaterial()`), then hangs each one:
+
+1. Apply the catalogue turn first, so the measured top is the point the string will hold.
+2. `measure()` gives the bounding box and centre; the object is scaled so its longest side matches the catalogue size times the spot's scale.
+3. Three nested groups keep the motions apart: `hang` (the string's pivot, swinging like a pendulum) → `spin` (the slow idle turn) → `body` (scale and offset) → the scanned object. `body.position` moves the object's top centre onto the pivot, so the pendulum turns where the string meets the print.
+
+Two hand-tuned compositions, `WIDE` and `NARROW`, place the objects at staggered heights and depths so the group reads as a mobile rather than a row of specimens. The wide camera is 32° at z 8.6; the narrow one 36° at z 6.4, because a phone frame is smaller and the prints should not shrink again. The composition is chosen when the piece is built, from a `max-width: 900px` media query; a later resize resizes the canvas and re-syncs the rig but does not lay the objects out again. Models load with `Promise.allSettled`: one missing asset is skipped and the rest still hang, while fewer than two is treated as a failure. Each material gets `envMapIntensity` 0.62 and a slight blue-white colour push, pulling the warm scans towards newsprint — less of the red plate, more of the black screen, so the silhouettes stay legible at this size.
+
+**Strings and anchors.** The 3D prints and the SVG wire are two renderers over one composition. Every frame `anchor(index, out)` takes the `hang` group's world position, projects it through the camera to normalised device coordinates and maps it to CSS pixels inside the stage. `ObjetsCanvas.syncRig()` rewrites the rig from those points: the SVG viewBox to the stage size, the wire's `d`, the tape ends at the wire height, and for each object the string's `x1/x2/y1/y2`, its clamp rectangle and its catalogue tag transform (the tag scale steps down on narrow stages). Because the strings are rewritten rather than assumed, they stay tied to the prints through the drop-in, the pendulum swing and the camera sway.
+
+**Motion and lifecycle.** The canvas creates the readymade stage, then calls the factory returned by `buildObjets` inside its `useGSAP` context — wrapped in the `useGSAP` callback's own `contextSafe`, because the build is asynchronous and the timeline, `ScrollTrigger` and `quickTo` tweens it creates must join the canvas's context and revert with it. The factory makes a paused timeline of `from` tweens on additive offset objects: the objects drop from above the wire with `bounce.out`, swing and twirl in from either side, staggered by 0.09 s. Because the entrance animates separate offsets (`fall`, `swing`, `twirl`) that `update()` adds to the idle pose, the two never fight; reverting the context leaves the mobile hung. `update(time, dt)` accumulates each object's idle spin, adds the perpetual pendulum sway and moves the camera with pointer parallax (through `gsap.quickTo`) and scroll progress from a `ScrollTrigger` on the figure. `intro.play()` waits for both `fx:reveal` (via `onPageReveal`) and the first intersection, so the drop is never played behind the page-transition cover.
+
+An `IntersectionObserver` stops the frame callback while the figure is off-screen, and the ticker is only added in full motion. Coarse pointers cap the loop at about 30 fps (one frame per 1/31 s), and pointer parallax listens to mouse and pen only — a finger scrolling past never tilts the mobile. Reduced motion skips the ticker and the reveal entirely: the intro jumps to `progress(1)`, one `update(0, 0)` runs and one frame is rendered. Cleanup removes the ticker callback, listeners, observers and the reveal subscription, then disposes the stage, which frees every geometry, material and texture, the print pass and the renderer.
+
+**Print options.** The mobile reuses the readymade stage and print pass with a finer screen and more ink than the big pieces, because these prints are smaller and their mid-tones must not silt up into red mud: `cell` 3, `margin` 5, a shadow plate at `[6, 8]` and 0.38 strength, `black` 0.13, `white` 0.8, `gamma` 1.3. The result is the same two-colour halftone, misregistered red plate and hand-cut paper margin, paper-coloured in both themes.
+
+**Styling.** The `objets trouvés` block in `globals.css` follows the readymades: the stage is a 16:9.6 box (4:3 below 900 px), the SVG wire, red clamps, tape ends and paper tags are plain CSS, the dotted cutting line (✂) fades out once `[data-state="ready"]`, and the typewritten label re-scopes the paper tokens so it stays readable in dark mode. The stamp is hidden below 900 px.
+
+**Adding or replacing an object.** Put the model in `public/models/<name>/` (glTF + `.bin` + 512 px JPEG textures, no `KHR` extensions), add an entry to `FOUND_OBJECTS` in `objects.ts`, credit it in `CREDITS.txt`, and add it to `MODELS` in `data.test.ts`, which checks every model's files and credit (nine today). The layout arrays are indexed by catalogue order, so add a spot in both `WIDE` and `NARROW` when the count changes.
+
+---
+
 ## Page transitions
 
 `TransitionProvider` renders a fixed cover (red slab and ink slab, both torn along their long edges by `tornSlab()` clip-paths, with a grid, star and label) and exposes `navigate(href, { label, locale })`. It tracks a phase — `idle → covering → waiting → revealing → idle`:
@@ -261,7 +293,7 @@ In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper s
 |---|---|
 | `/` | `CollageHero` (screen only), then the toolbar (eyebrow + `PrintButton`), `SheetIntro` → taped `article.cv-sheet` with marks and an inked `Stamp`, header (identity + `dl` contacts with screen/print variants), two `Scatter` columns of `CvSection`s, then `CutUpPoem` (screen only). Hero content is built from the real data (final grades, featured footage). |
 | `/education` | Hero (DadaTypography, GlitchRevealText institution, programme facts in a 2 × 2 grid, graduation badge) with Readymade № 1 in a second column from 1024 px, stat cards (`TiltCard` + `Counter`), `RevealHeading`, `SemesterTrack` of perforated ticket-stub courses, grade note. |
-| `/projects` | Hero with Readymade № 2, `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, torn-edged soft-duotone thumbnails or `PosterArt`, stretched link), Collaborations as newspaper clippings with Unbounded headlines and 15 px body copy (private repositories have no link). |
+| `/projects` | Hero with the found-object mobile under the lede (left column beside Readymade № 2 from 1024 px), `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, torn-edged soft-duotone thumbnails or `PosterArt`, stretched link), Collaborations as newspaper clippings with Unbounded headlines and 15 px body copy (private repositories have no link). |
 | 404 | Outlined "404", ransom-note title, home link, and Readymade № 3 beside them from 1024 px. |
 | `/projects/[id]` | Back link, hero (badges, live and repository actions in `Magnetic`; Pour Rice shows its app icon), highlight counters, overview and key points, platforms (`OrbitDiagram` + list) for multi-platform projects, `DevTimeline` (newest first, kraft-paper milestone notes) with `InlineVideo`s, sticky sidebar (tech, courses, repositories). `dynamicParams = false`. |
 
@@ -316,7 +348,7 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 | `profile.test.ts` | Age boundaries in Hong Kong time; contact links |
 | `youtube.test.ts` | URL parsing and embed URLs |
 | `text-fx.test.ts` | Lossless segmentation (fast-check), CJK splitting, PRNG determinism, displacement clamps, glitch pools and frames, the glyph cycler holding each noise glyph for its hold time |
-| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, readymade labels in both languages, every model's files present and credited (no transmission pass), British spelling |
+| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, readymade labels in both languages, every one of the nine models' files present and credited (no transmission pass), British spelling |
 | `collage.test.ts` | Seeded PRNG range and determinism, shuffle as a permutation, torn clip-paths (only the requested sides, inside the box), torn slabs, ransom glyphs (deterministic, bare spaces, no paper repeated on neighbours), lossless cut-up in English and Chinese |
 
 ---
@@ -326,6 +358,7 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 - **New project**: add an entry to `PROJECTS` in `src/lib/projects.ts` (unique `id`, bilingual fields, course codes that exist in `education.ts`, ISO dates). The route, sitemap entry and static params follow automatically. Run `npm test`.
 - **New video**: append to the project's `videos` with its date and kind; the card thumbnails and the newest-first timeline update automatically.
 - **New UI label**: add the key to both `messages/en.json` and `messages/zh-hk.json`.
+- **New found object**: drop the model folder in `public/models/<name>/` (glTF + `.bin` + 512 px JPEG textures, no extensions), add an entry to `FOUND_OBJECTS` in `src/components/objets/objects.ts`, and credit it in `CREDITS.txt`; add it to `MODELS` in `data.test.ts`.
 - **New effect**: build it in `components/fx/` following the component pattern above.
 
 ---

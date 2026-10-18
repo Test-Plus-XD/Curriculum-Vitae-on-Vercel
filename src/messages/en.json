@@ -169,5 +169,20 @@
       "note": "A flat-iron with fourteen tacks on its sole: a useful object made useless, like a link to a page that is not here.",
       "action": "Hammer it again"
     }
+  },
+  "objets": {
+    "label": "Found-object mobile",
+    "series": "Mobile · objets trouvés",
+    "after": "After the readymades of Marcel Duchamp",
+    "note": "Four things found around the house and hung on a wire: a hammer, a spoon, a stapler and a telephone clock. Not one of them is useful.",
+    "names": {
+      "hammer": "Hammer",
+      "spoon": "Spoon",
+      "stapler": "Stapler",
+      "clock": "Telephone clock"
+    },
+    "stampRing": "★ Objets trouvés ★ Mobile № 4 ★ ",
+    "stampCentre": "RIEN",
+    "stampSub": "NI UTILE NI NEUF"
   }
 }

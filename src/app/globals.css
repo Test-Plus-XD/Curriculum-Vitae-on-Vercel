@@ -3532,6 +3532,210 @@
     cursor: default;
   }
 
+  /* -------------------------------------------------------- objets trouvés */
+  /* A mobile of everyday objects, printed as halftone cut-outs and hung from a wire drawn on the page. */
+  .objets {
+    position: relative;
+    width: min(100%, 720px);
+    margin: 24px 0 0;
+  }
+
+  .objets[data-state="failed"] {
+    display: none;
+  }
+
+  .objets-stage {
+    position: relative;
+    aspect-ratio: 16 / 9.6;
+  }
+
+  /* Before the prints arrive: just the wire, the strings and the cutting line. */
+  .objets-rig {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.9s var(--ease-out) 0.15s;
+  }
+
+  .objets[data-state="ready"] .objets-rig {
+    opacity: 1;
+  }
+
+  .objets-arm {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    /* A misregistered second impression, as on a cheap two-colour press. */
+    filter: drop-shadow(1.6px 0.8px 0 rgba(200, 35, 26, 0.5));
+  }
+
+  .objets-string {
+    stroke: var(--ink);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    opacity: 0.82;
+  }
+
+  /* The little red clamp pinching each string to the wire. */
+  .objets-clamp {
+    fill: var(--vermilion);
+    stroke: var(--ink-black);
+    stroke-width: 0.7;
+  }
+
+  /* Yellowed tape holding the ends of the wire to the page. */
+  .objets-tape {
+    fill: var(--tape);
+    stroke: rgba(23, 18, 15, 0.16);
+    stroke-width: 0.7;
+  }
+
+  /* The rejected-exhibit stamp, pasted into the corner the objects leave empty. */
+  .objets-stamp {
+    position: absolute;
+    left: 1%;
+    bottom: 1%;
+    z-index: 3;
+  }
+
+  .objets-tag {
+    filter: drop-shadow(2px 2px 0 rgba(23, 18, 15, 0.12));
+  }
+
+  .objets-tag rect {
+    fill: var(--scrap);
+    stroke: var(--line-strong);
+    stroke-width: 0.8;
+  }
+
+  .objets-tag text {
+    fill: var(--ink-black);
+    font-family: var(--font-type);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  .objets-canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .objets-cut {
+    position: absolute;
+    inset: 10% 3% 18%;
+    border: 2px dashed var(--line-strong);
+    pointer-events: none;
+    transition: opacity 0.8s var(--ease-out);
+  }
+
+  .objets-cut::before {
+    content: "✂";
+    position: absolute;
+    top: -14px;
+    left: 14px;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .objets[data-state="ready"] .objets-cut {
+    opacity: 0;
+  }
+
+  .objets-label {
+    --ink: var(--ink-black);
+    --muted: #5f5446;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: start;
+    gap: 2px;
+    width: min(92%, 330px);
+    margin: -30px 0 0 auto;
+    padding: 13px 16px 12px;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.05) 0 1px, transparent 1px 22px) 0 5px,
+      var(--scrap);
+    color: var(--ink-black);
+    font-family: var(--font-type);
+    font-size: 12px;
+    line-height: 1.55;
+    rotate: 1.3deg;
+    box-shadow: 0 16px 26px -20px rgba(23, 18, 15, 0.55);
+  }
+
+  .objets-label .tape-tl {
+    top: -11px;
+    left: -18px;
+    width: 66px;
+  }
+
+  .objets-kicker {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+  }
+
+  .objets-after {
+    color: var(--muted);
+  }
+
+  .objets-note {
+    margin-top: 3px;
+  }
+
+  .objets-catalogue {
+    margin-top: 6px;
+    padding-top: 5px;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+
+  .locale-zh .objets-label,
+  .locale-zh .objets-note,
+  .locale-zh .objets-catalogue {
+    font-family: var(--font-zh);
+  }
+
+  @media (max-width: 900px) {
+    .objets {
+      width: min(100%, 560px);
+      margin-inline: auto;
+    }
+
+    .objets-stage {
+      aspect-ratio: 4 / 3;
+    }
+
+    .objets-label {
+      width: min(100%, 400px);
+      padding: 11px 14px 10px;
+      font-size: 11.5px;
+      margin-top: -26px;
+    }
+
+    .objets-catalogue {
+      font-size: 10px;
+    }
+
+    .objets-stamp {
+      display: none;
+    }
+  }
+
   @media (min-width: 1024px) {
     .page-hero.has-readymade {
       display: grid;

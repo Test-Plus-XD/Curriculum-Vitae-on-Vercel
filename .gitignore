@@ -18,6 +18,9 @@
 
 # misc
 .DS_Store
+
+# local visual-verification scratch (screenshots, headless-browser harness output)
+/session-state/
 *.pem
 
 # debug

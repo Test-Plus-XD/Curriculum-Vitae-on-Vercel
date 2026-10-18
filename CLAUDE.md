@@ -3,7 +3,7 @@
 **Owner**: NG Yu Ham Baldwin | 吳宇涵
 
 ## Project Overview
-Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background. Animated with **GSAP**, plus **Three.js**: a Merzbau on the landing page and three **readymades** (Hausmann's head on Education, Duchamp's bicycle wheel on Projects, Man Ray's iron on the 404) printed live as halftone photomontage cut-outs. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
+Bilingual (Traditional Chinese / British English) CV and portfolio built with Next.js 16 (App Router) for Vercel. The visual identity is **"Merz" — a Dada photomontage in Soviet poster colours**: Schwitters-style collage cut from the CV's own data (course codes, grades, project footage), Lissitzky's red wedge, Rodchenko red/black, torn paper, tape, ink stamps, ransom-note lettering — over a constructivist space-age background. Animated with **GSAP**, plus **Three.js**: a Merzbau on the landing page and four **Dada set pieces** rendered live as halftone photomontage cut-outs — three **readymades** (Hausmann's head on Education, Duchamp's bicycle wheel on Projects, Man Ray's iron on the 404) and a hanging **found-object mobile** of four everyday scans on the Projects hero. The CV sheet itself stays formal and prints as a clean black-and-white A4 document.
 
 ## Critical Requirements
 1. **Bilingual**: every visible string exists in EN and ZH-HK (data: `{ en, zh }` pairs; UI: `src/messages/*.json`, same keys in both — tested).
@@ -21,7 +21,7 @@ Bilingual (Traditional Chinese / British English) CV and portfolio built with Ne
 - next-intl 4.8 (`src/i18n/routing.ts`, `navigation.ts`, `request.ts`; locale routing in `src/proxy.ts` — Next 16's replacement for `middleware.ts`)
 - next-themes 0.4 (class strategy, `enableColorScheme={false}`)
 - **gsap 3.15 + @gsap/react 2.1** — plugins: ScrollTrigger, SplitText, Flip, DrawSVG, MotionPath, CustomEase, Draggable, Inertia (all free, from the public `gsap` package)
-- **three 0.186** — the Merzbau scene and the readymades, lazy-loaded (`next/dynamic`, `ssr: false`) once the page is idle and the figure is near the viewport; CC0 glTF models from Poly Haven in `public/models/` (credits in `public/models/CREDITS.txt`)
+- **three 0.186** — the Merzbau scene, the readymades and the found-object mobile, lazy-loaded (`next/dynamic`, `ssr: false`) once the page is idle and the figure is near the viewport; CC0 glTF models from Poly Haven in `public/models/` (credits in `public/models/CREDITS.txt`)
 - lucide-react icons, @vercel/analytics, @vercel/speed-insights
 - vitest + @testing-library + fast-check (`npm test`)
 
@@ -48,6 +48,7 @@ src/
 │   ├── DevTimeline · InlineVideo · OrbitDiagram
 │   ├── collage/                               # Dada collage system (see below)
 │   ├── readymade/                             # Three.js readymades: figure, canvas, stage, print pass, works/
+│   ├── objets/                                # Found-object mobile: catalogue, scene, canvas, figure
 │   ├── transition/TransitionProvider · TransitionLink
 │   └── fx/                                    # Reusable GSAP effects (see below)
 ├── i18n/ routing.ts · navigation.ts · request.ts
@@ -66,7 +67,7 @@ src/
 ├── messages/ en.json · zh-hk.json
 └── proxy.ts
 public/images/        # Header amplifier monogram, Pour Rice app icons
-public/models/        # CC0 glTF models for the readymades (textures shrunk for the web) + CREDITS.txt
+public/models/        # CC0 glTF models for the readymades and the mobile (textures shrunk for the web) + CREDITS.txt
 ```
 
 ## Content: where to edit
@@ -75,6 +76,7 @@ public/models/        # CC0 glTF models for the readymades (textures shrunk for 
 - **Skills, jobs, languages, achievements** → `src/lib/cv.ts`
 - **Projects, videos, milestones, collaborations** → `src/lib/projects.ts` (ids are route slugs; `FEATURED_IDS` picks the three on the CV; dates are ISO `YYYY-MM-DD`; `approximate: true` shows a milestone as "approx. Month Year")
 - **UI labels** → `src/messages/*.json` (keep keys identical in both files — tested)
+- **Found-object mobile** — the four objects (model folder, catalogue size, idle spin and hanging turn) are catalogued in `src/components/objets/objects.ts`; its label, stamp and object names are the `objets` namespace in `src/messages/*.json`.
 - **Pour Rice** includes its native Swift iOS app (12 videos, platforms list, iOS start milestone). The old `/projects/pourrice-ios` URL permanently redirects to `/projects/pourrice` (`next.config.mjs`).
 - Development timelines are rendered **newest first** (`buildTimeline`); a same-day milestone sits below that day's videos.
 - The collage hero is assembled in `[locale]/page.tsx` from real data — change the data and the collage follows.
@@ -116,7 +118,7 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 ## Pages
 - **`/` CV** — (1) **collage hero** (screen only): ransom-note name, label-maker title, typewritten descriptor, vermilion name chop, ink stamp, newsprint scrap and draggable duotone scraps of project footage over the Three.js Merzbau; scrolling scatters it. (2) **CV sheet**: taped paper sheet with registration marks and an inked stamp; header (DadaTypography name, contacts, age), profile, education with final-semester grades, three featured projects, experience, skills, languages, IELTS, achievements. Feeds out like printer paper (`SheetIntro`). (3) **Cut-up poem** (screen only): Tzara-style "shake the bag" toy over the profile text.
 - **`/education`** — hero with GlitchRevealText institution, programme facts and **Readymade № 1** (Hausmann's head, beside the text from 1024 px, below it on phones), counter stat cards, **pinned horizontal semester track** (≥ 1024 px with full motion; stacked otherwise) of taped sheets holding **ticket-stub** courses.
-- **`/projects`** — hero with **Readymade № 2** (Duchamp's bicycle wheel: drag across it to spin); category filter re-flowing the grid with **Flip**; taped cards with torn-edged, lightly duotoned thumbnails (full colour on hover) or a generated poster; collaborations as newspaper clippings (body copy at the card size, 15 px).
+- **`/projects`** — hero with the **found-object mobile** (four everyday scans hung from a wire, below the lede and beside Readymade № 2 from 1024 px) and **Readymade № 2** (Duchamp's bicycle wheel: drag across it to spin); category filter re-flowing the grid with **Flip**; taped cards with torn-edged, lightly duotoned thumbnails (full colour on hover) or a generated poster; collaborations as newspaper clippings (body copy at the card size, 15 px).
 - **404** — ransom-note "Signal lost" beside **Readymade № 3** (Man Ray's tack-studded iron).
 - **`/projects/[id]`** — hero + live/repo actions, highlight counters, overview, Pour Rice **orbit diagram** of its platforms, newest-first timeline (kraft-paper milestone notes, video thumbnails opening a FLIP modal), sticky sidebar (tech, courses, repos).
 
@@ -170,6 +172,17 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 
 Each work loads its assets, builds the **assembled** scene, then returns a factory that makes a paused GSAP timeline of `from` tweens with labels (so reverting leaves it assembled) plus `update/look/drag/scroll/act`. Models live in bust/stool units (metres) inside a scaled group. To add a model: download the 1k glTF from Poly Haven (CC0) into `public/models/<name>/`, shrink textures to 512–1024 px, drop maps the print look doesn't need and any `KHR_materials_transmission` (expensive extra pass), and add it to `CREDITS.txt` (a test checks the files and the credit).
 
+**Found-object mobile (objets/trouvés, `src/components/objets/`)** — the mobile on the `/projects` hero: four everyday CC0 scans (a cross-pein hammer, a wooden spoon, a vintage stapler and a vintage telephone wall clock) hung from a wire drawn in SVG. It sits under the lede on narrow screens and in the hero's left column beside Readymade № 2 from 1024 px. Each object hangs from a Group pivot so it swings like a pendulum, with a child Group turning it slowly; the scan is turned into its hanging pose and measured first, so its top centre becomes the pivot the string holds.
+
+| File | What it does |
+|---|---|
+| `objects.ts` | The catalogue: model folder, catalogue size, idle spin (rad/s, the sign sets the direction) and the turn applied before measuring, per object. |
+| `scene.ts` | `buildObjets(stage, { narrow })`: loads the glTFs through the readymade asset loader, hangs the four objects in the WIDE or NARROW layout, sets the camera (32° at z 8.6 wide, 36° at z 6.4 narrow), and returns a factory for the paused GSAP intro plus `update/look/scroll/anchor`. |
+| `ObjetsCanvas.tsx` | The dynamic-imported client canvas: creates the readymade stage with the mobile's print options, plays the drop-in once the page is revealed and the figure is in view, drives it on `gsap.ticker` while visible (about 30 fps on coarse pointers, one still frame under reduced motion), and rewrites the SVG strings and catalogue tags from the projected anchors every frame. |
+| `ObjetsFigure.tsx` | The `<figure>`: mounts the canvas once the page is idle and the figure is near the viewport (a dotted ✂ cutting line holds the place), draws the wire, strings, clamps, tape and "№ 1…4" hanging tags, and carries the red `RIEN / NI UTILE NI NEUF` stamp and a typewritten label card listing the four objects. Hidden if WebGL fails; screen only (`no-print`). |
+
+The `anchor()` projection ties the two renderers together: each frame the hanging point is projected to CSS pixels and the figure's SVG strings, clamps, tape ends and catalogue tags are rewritten to match, so they stay tied through the drop-in, the pendulum swing and the camera sway. The halftone print pass is reused — with a finer screen and more ink (cell 3, margin 5, red shadow [6, 8] at 0.38, black 0.13, white 0.8, gamma 1.3) — so the objects print as two-colour newspaper cut-outs with hand-cut paper margins and a misregistered red shadow plate, paper-coloured in both themes. There is no action button: the motion is the idle turn, the entrance, pointer parallax and scroll sway. The canvas and the SVG rig are `aria-hidden`; the label card stays real text, and the stamp and catalogue tags are drawn as crisp DOM text rather than into the canvas. Every visible string comes from the `objets` namespace, and its styles are the `objets trouvés` block after the readymades in `src/app/globals.css`. `data.test.ts` checks all nine models' files and credits.
+
 **Page transitions** (`components/transition/`): `TransitionLink` asks `TransitionProvider` to sweep a red slab and an ink slab — **torn along their long edges** (`tornSlab`) — across while the destination is pasted up from cut-out letters; the route changes under the cover, then the slabs sweep off and `fx:reveal` releases entrance animations. `<html data-cover="on|off">` reflects the state. The latest click wins; modified clicks, same-page links, hidden tabs and reduced motion bypass it; timer failsafes navigate (0.9 s) and uncover (1.5 s). **Language switches do a full page load** of the translated URL. The theme toggle uses a View Transitions circular reveal where supported.
 
 ## Styling
@@ -192,7 +205,7 @@ Accent faces are not preloaded. `body.locale-zh` switches the body font; Chinese
 
 ## Print
 - `@media print` + `@page { size: A4; margin: 12mm 13mm }`; colours forced to black/white and `color-scheme: light !important`.
-- Hidden: header, footer, background, cursor, cover, collage hero, cut-up poem, readymades, buttons, stamps, tape, registration marks (`.no-print`).
+- Hidden: header, footer, background, cursor, cover, collage hero, cut-up poem, readymades, the found-object mobile, buttons, stamps, tape, registration marks (`.no-print`).
 - Anything GSAP left mid-animation is forced visible and untransformed; scramble text that has not resolved prints its real text (`.glitch-base`); counters restore their value on `beforeprint`.
 - Verify with Chrome/Edge print-to-PDF in **both locales and both themes**.
 
@@ -201,7 +214,7 @@ Accent faces are not preloaded. `body.locale-zh` switches the body font; Chinese
 npm install
 npm run dev
 npm run build
-npm test          # vitest run (data integrity, age, YouTube parsing, text-fx, collage generators, readymade models)
+npm test          # vitest run (data integrity, age, YouTube parsing, text-fx, collage generators, readymade and found-object models)
 npm run test:ui
 ```
 
