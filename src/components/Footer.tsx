@@ -3,6 +3,7 @@ import { Github, Linkedin, Mail, MessageCircle, Phone, Youtube } from 'lucide-re
 import { CONTACTS, SITE, type ContactKind } from '@/lib/profile';
 import MorseCodeTicker from './fx/MorseCodeTicker';
 import DadaTypography from './fx/DadaTypography';
+import Scramble from './fx/Scramble';
 
 const ICONS: Record<ContactKind, typeof Mail> = {
   email: Mail,
@@ -28,7 +29,9 @@ export default async function Footer() {
           </p>
         </div>
         <div className="footer-contact">
-          <h2 className="eyebrow">{t('contact')}</h2>
+          <h2 className="eyebrow">
+            <Scramble text={t('contact')} />
+          </h2>
           <ul>
             {CONTACTS.map((c) => {
               const Icon = ICONS[c.kind];
@@ -41,7 +44,7 @@ export default async function Footer() {
                     {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   >
                     <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
-                    <span>{c.label}</span>
+                    <Scramble text={c.label} delay={120} />
                   </a>
                 </li>
               );
@@ -50,8 +53,8 @@ export default async function Footer() {
         </div>
       </div>
       <div className="footer-base">
-        <span>© {year} NG Yu Ham Baldwin</span>
-        <span>{t('built')}</span>
+        <Scramble text={`© ${year} NG Yu Ham Baldwin`} />
+        <Scramble text={t('built')} delay={150} />
         <a href={SITE.source} target="_blank" rel="noopener noreferrer" className="soviet-link">
           {t('source')}
         </a>

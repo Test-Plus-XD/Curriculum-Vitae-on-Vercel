@@ -6,6 +6,7 @@ import { gsap, useGSAP, Flip, ScrollTrigger, FULL_MOTION, prefersReducedMotion }
 import { markReady, playOnReveal } from '@/lib/reveal';
 import { CATEGORIES, type Category, type Project } from '@/lib/projects';
 import ProjectCard from './ProjectCard';
+import Scramble from './fx/Scramble';
 
 type Filter = 'all' | Category;
 
@@ -111,7 +112,7 @@ export default function ProjectsFilterGrid({ projects }: { projects: Project[] }
             onClick={() => choose(f)}
           >
             {filter === f && <span data-pill data-flip-id="pill" className="filter-pill" aria-hidden="true" />}
-            <span className="filter-label">{t(f)}</span>
+            <Scramble className="filter-label" text={t(f)} delay={150} />
             <span className="filter-count">{count(f)}</span>
           </button>
         ))}

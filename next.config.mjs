@@ -10,6 +10,14 @@ const nextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  // The Swift iOS app is now part of the Pour Rice case study; keep old links working.
+  async redirects() {
+    return ['en', 'zh-hk'].map((locale) => ({
+      source: `/${locale}/projects/pourrice-ios`,
+      destination: `/${locale}/projects/pourrice`,
+      permanent: true,
+    }));
+  },
 };
 
 export default withNextIntl(nextConfig);

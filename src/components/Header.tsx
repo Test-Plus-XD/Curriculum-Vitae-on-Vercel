@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { usePathname } from '@/i18n/navigation';
 import { gsap, useGSAP, ScrollTrigger, FULL_MOTION } from '@/lib/gsap';
 import TransitionLink from './transition/TransitionLink';
@@ -99,18 +100,61 @@ export default function Header() {
     { scope: headerRef, dependencies: [active] },
   );
 
+  // Let the amplifier send a short visual shout from its orange-circle pivot.
+  useGSAP(
+    () => {
+      const header = headerRef.current;
+      const monogram = header?.querySelector<HTMLElement>('.monogram');
+      const amplifier = monogram?.querySelector<HTMLElement>('.monogram-mark img');
+      const names = monogram?.querySelectorAll<HTMLElement>('[data-shout-name]');
+      const waves = monogram?.querySelectorAll<HTMLElement>('[data-shout-wave]');
+      if (!monogram || !amplifier || !names?.length || !waves?.length) return;
+
+      const mm = gsap.matchMedia();
+      mm.add(FULL_MOTION, () => {
+        let shoutTimeline: gsap.core.Timeline | undefined;
+        let automaticShout: gsap.core.Tween | undefined;
+        const shout = () => {
+          automaticShout?.kill();
+          automaticShout = undefined;
+          shoutTimeline?.kill();
+          shoutTimeline = gsap.timeline();
+          shoutTimeline
+            .fromTo(waves, { autoAlpha: 0, scale: 0.35 }, { autoAlpha: 0.7, scale: 2.8, duration: 0.58, stagger: 0.11, ease: 'power2.out', transformOrigin: 'center center' }, 0)
+            .to(amplifier, { rotation: -9, scale: 1.08, duration: 0.16, ease: 'power2.out', transformOrigin: '24% 74%' }, 0)
+            .to(amplifier, { rotation: 0, scale: 1, duration: 0.62, ease: 'elastic.out(1, 0.42)' }, 0.12)
+            .fromTo(names, { x: -7, scaleX: 0.86, opacity: 0.84 }, { x: 0, scaleX: 1, opacity: 1, duration: 0.72, stagger: 0.06, ease: 'elastic.out(1, 0.45)', transformOrigin: 'left center' }, 0.05);
+        };
+        monogram.addEventListener('mouseenter', shout);
+        monogram.addEventListener('focusin', shout);
+        automaticShout = gsap.delayedCall(1.2, shout);
+        return () => {
+          monogram.removeEventListener('mouseenter', shout);
+          monogram.removeEventListener('focusin', shout);
+          automaticShout?.kill();
+          shoutTimeline?.kill();
+        };
+      });
+      return () => mm.revert();
+    },
+    { scope: headerRef },
+  );
+
   return (
     <header ref={headerRef} className="site-header no-print">
       <div className="header-inner">
         <TransitionLink href="/" label={tt('cv')} className="monogram" aria-label={t('home')} data-header-item="">
           <span className="monogram-mark" aria-hidden="true">
-            <svg viewBox="-50 -50 100 100">
-              <polygon points="0,-40 9.4,-13 38,-12.4 15.2,5 23.5,33 0,16.5 -23.5,33 -15.2,5 -38,-12.4 -9.4,-13" />
-            </svg>
+            <Image src="/images/amplifier.png" alt="" width={750} height={695} priority />
+            <span className="monogram-wave" data-shout-wave="" />
+            <span className="monogram-wave" data-shout-wave="" />
+            <span className="monogram-wave" data-shout-wave="" />
           </span>
           <span className="monogram-text">
-            <span className="font-title">NG Yu Ham</span>
-            <span className="monogram-zh" lang="zh-HK">
+            <span className="font-title" data-shout-name="">
+              NG Yu Ham
+            </span>
+            <span className="monogram-zh" lang="zh-HK" data-shout-name="">
               吳宇涵
             </span>
           </span>
@@ -118,7 +162,7 @@ export default function Header() {
 
         <nav aria-label={t('label')} className="site-nav" data-header-item="">
           <ul>
-            {NAV.map((item) => (
+            {NAV.map((item, i) => (
               <li key={item.key}>
                 <TransitionLink
                   href={item.href}
@@ -130,7 +174,7 @@ export default function Header() {
                   <span className="nav-index" aria-hidden="true">
                     {item.index}
                   </span>
-                  <GlitchText text={t(item.key)} className="nav-label" />
+                  <GlitchText text={t(item.key)} className="nav-label" loadIn delay={250 + i * 140} />
                 </TransitionLink>
               </li>
             ))}

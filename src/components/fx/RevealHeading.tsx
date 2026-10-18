@@ -3,6 +3,7 @@
 import { useRef, type ElementType } from 'react';
 import { gsap, useGSAP, SplitText, FULL_MOTION } from '@/lib/gsap';
 import { markReady, playOnReveal } from '@/lib/reveal';
+import Scramble from './Scramble';
 
 interface Props {
   text: string;
@@ -59,7 +60,7 @@ export default function RevealHeading({ text, as: Tag = 'h2', className, index, 
     <div ref={ref} className={`reveal-heading ${className ?? ''}`} data-fx-hide="">
       {index && (
         <span data-index="" className="section-index" aria-hidden="true">
-          {index}
+          <Scramble text={index} delay={250} />
         </span>
       )}
       <Tag id={id} data-heading="" className="font-title section-title">

@@ -9,6 +9,7 @@ import RevealHeading from '@/components/fx/RevealHeading';
 import Scatter from '@/components/fx/Scatter';
 import TiltCard from '@/components/fx/TiltCard';
 import Counter from '@/components/fx/Counter';
+import Scramble from '@/components/fx/Scramble';
 import SemesterTrack from '@/components/SemesterTrack';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -35,26 +36,34 @@ export default async function EducationPage({ params }: { params: Promise<{ loca
       <section className="page-hero">
         <p className="eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          {t('eyebrow')}
+          <Scramble text={t('eyebrow')} />
         </p>
         <DadaTypography as="h1" text={t('title')} className="hero-title font-title" colorShift intensity={1} />
         <GlitchRevealText as="p" text={L(PROGRAMME.institution)} className="hero-subtitle" />
         <p className="hero-lede">{L(PROGRAMME.title)}</p>
         <dl className="hero-meta">
           <div>
-            <dt>{t('code')}</dt>
+            <dt>
+              <Scramble text={t('code')} />
+            </dt>
             <dd>{PROGRAMME.code}</dd>
           </div>
           <div>
-            <dt>{t('qf')}</dt>
+            <dt>
+              <Scramble text={t('qf')} delay={80} />
+            </dt>
             <dd>{t('qfLevel', { level: PROGRAMME.qfLevel })}</dd>
           </div>
           <div>
-            <dt>{t('mode')}</dt>
+            <dt>
+              <Scramble text={t('mode')} delay={160} />
+            </dt>
             <dd>{L(PROGRAMME.mode)}</dd>
           </div>
           <div>
-            <dt>{t('period')}</dt>
+            <dt>
+              <Scramble text={t('period')} delay={240} />
+            </dt>
             <dd>{L(PROGRAMME.period)}</dd>
           </div>
         </dl>
@@ -62,7 +71,7 @@ export default async function EducationPage({ params }: { params: Promise<{ loca
           <span className="graduation-star" aria-hidden="true">
             ★
           </span>
-          {L(PROGRAMME.graduated)}
+          <Scramble text={L(PROGRAMME.graduated)} delay={300} />
         </p>
       </section>
 
@@ -70,7 +79,7 @@ export default async function EducationPage({ params }: { params: Promise<{ loca
         {stats.map((s) => (
           <TiltCard key={s.label} className={`stat-card ${s.accent ? 'stat-card-accent' : ''}`}>
             <Counter value={s.value} decimals={s.decimals} className="stat-value font-title" />
-            <span className="stat-label">{s.label}</span>
+            <Scramble className="stat-label" text={s.label} delay={200} />
           </TiltCard>
         ))}
       </Scatter>

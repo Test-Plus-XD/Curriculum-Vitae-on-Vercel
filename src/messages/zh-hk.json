@@ -6,7 +6,7 @@
     "educationTitle": "學歷",
     "educationDescription": "香港專業進修學校電腦學高級文憑（流動應用及遊戲開發）：四個學期共 19 個科目，最終累積平均績點 3.8。",
     "projectsTitle": "項目",
-    "projectsDescription": "十二個涵蓋流動應用、網頁、遊戲及後端開發的學術項目，包括畢業專題 Pour Rice 倒米。"
+    "projectsDescription": "十一個涵蓋流動應用、網頁、遊戲及後端開發的學術項目，包括畢業專題 Pour Rice 倒米。"
   },
   "nav": {
     "label": "主要導覽",
@@ -89,7 +89,7 @@
     "videos": "{count, plural, =0 {沒有影片} other {# 段影片}}",
     "view": "查看詳情",
     "collaborations": "協作項目",
-    "collaborationsIntro": "於朋友擁有的程式庫中作出的貢獻，不屬於十二個課程項目之列。",
+    "collaborationsIntro": "於朋友擁有的程式庫中作出的貢獻，不屬於課程項目之列。",
     "publicRepo": "公開程式庫",
     "privateRepo": "私人程式庫",
     "owner": "擁有者：{owner}",
@@ -106,7 +106,6 @@
     "repos": "程式庫",
     "noRepo": "沒有公開程式庫",
     "courses": "相關科目",
-    "related": "相關項目",
     "approx": "約",
     "presentation": "簡報",
     "operation": "操作示範",
@@ -123,5 +122,31 @@
     "title": "訊號中斷",
     "body": "找不到此頁面。",
     "home": "返回履歷"
+  },
+  "hero": {
+    "label": "拼貼介紹",
+    "kicker": "拼貼作品集 · № 2026",
+    "typed": "{descriptor} · 港專 · 累積平均績點 {cgpa}",
+    "cue": "閱讀履歷",
+    "drag": "每張紙片都可以拿起移動。",
+    "stampRing": "港專 ★ 累積平均績點 ★ 2026 ★ ",
+    "stampSub": "香港",
+    "numCgpa": "最終累積平均績點",
+    "numTerm": "最後學期平均績點",
+    "numFyp": "畢業專題",
+    "numCourses": "科目",
+    "numVideos": "錄影片段",
+    "numProjects": "項目",
+    "numGrad": "畢業",
+    "numDada": "伏爾泰酒館",
+    "sheetRing": "港專 ★ 香港 ★ 港專 ★ "
+  },
+  "cutup": {
+    "title": "製作達達主義簡介",
+    "hint": "把簡介剪成碎片，搖一搖紙袋，讀出掉出來的句子。",
+    "shake": "搖一搖紙袋",
+    "restore": "還原",
+    "credit": "向特里斯坦・查拉 1920 年的達達詩歌配方致敬。",
+    "result": "目前排列"
   }
 }

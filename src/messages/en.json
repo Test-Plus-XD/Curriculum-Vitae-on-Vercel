@@ -6,7 +6,7 @@
     "educationTitle": "Education",
     "educationDescription": "Higher Diploma in Computer Studies (Mobile Applications and Game Development) at HKCT: 19 courses across four semesters, final CGPA 3.8.",
     "projectsTitle": "Projects",
-    "projectsDescription": "Twelve academic projects across mobile, web, game and backend development, including the Pour Rice Final Year Project."
+    "projectsDescription": "Eleven academic projects across mobile, web, game and backend development, including the Pour Rice Final Year Project."
   },
   "nav": {
     "label": "Main navigation",
@@ -89,7 +89,7 @@
     "videos": "{count, plural, =0 {No videos} one {# video} other {# videos}}",
     "view": "View details",
     "collaborations": "Collaborations",
-    "collaborationsIntro": "Contributions to repositories owned by a friend, outside the twelve course projects.",
+    "collaborationsIntro": "Contributions to repositories owned by a friend, outside the course projects.",
     "publicRepo": "Public repository",
     "privateRepo": "Private repository",
     "owner": "Owner: {owner}",
@@ -106,7 +106,6 @@
     "repos": "Repositories",
     "noRepo": "No public repository",
     "courses": "Related courses",
-    "related": "Related project",
     "approx": "approx.",
     "presentation": "Presentation",
     "operation": "Operation",
@@ -123,5 +122,31 @@
     "title": "Signal lost",
     "body": "This page could not be found.",
     "home": "Return to the CV"
+  },
+  "hero": {
+    "label": "Collage introduction",
+    "kicker": "Merz portfolio · № 2026",
+    "typed": "{descriptor} · HKCT · CGPA {cgpa}",
+    "cue": "Read the CV",
+    "drag": "Every scrap can be picked up and moved.",
+    "stampRing": "HKCT ★ FINAL CGPA ★ 2026 ★ ",
+    "stampSub": "Hong Kong",
+    "numCgpa": "Final CGPA",
+    "numTerm": "Final-term GPA",
+    "numFyp": "Final Year Project",
+    "numCourses": "Courses",
+    "numVideos": "Recorded videos",
+    "numProjects": "Projects",
+    "numGrad": "Graduated",
+    "numDada": "Cabaret Voltaire",
+    "sheetRing": "HKCT ★ HONG KONG ★ HKCT ★ "
+  },
+  "cutup": {
+    "title": "Make a Dadaist profile",
+    "hint": "Cut the profile into words, shake the bag, and read whatever falls out.",
+    "shake": "Shake the bag",
+    "restore": "Restore",
+    "credit": "After Tristan Tzara’s recipe for a Dadaist poem, 1920.",
+    "result": "Current arrangement"
   }
 }

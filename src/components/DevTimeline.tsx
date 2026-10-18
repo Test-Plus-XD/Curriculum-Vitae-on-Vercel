@@ -8,6 +8,8 @@ import { markReady, playOnReveal } from '@/lib/reveal';
 import { formatDate, formatMonth, pick } from '@/lib/i18n-text';
 import type { TimelineEntry } from '@/lib/projects';
 import InlineVideo from './InlineVideo';
+import Scramble from './fx/Scramble';
+import { Tape } from './collage/Paper';
 
 /**
  * Development record, newest first. The spine fills as you scroll back through it, each entry slides in
@@ -62,18 +64,27 @@ export default function DevTimeline({ entries }: { entries: TimelineEntry[] }) {
             <span className="timeline-node" aria-hidden="true" />
             {e.type === 'milestone' ? (
               <div className="timeline-milestone">
+                <Tape className="tape-top" />
                 <p className="timeline-date">
                   <Flag size={14} aria-hidden="true" />
                   {e.milestone.approximate && <span className="timeline-approx">{t('approx')} </span>}
-                  {e.milestone.approximate ? formatMonth(e.date, locale) : formatDate(e.date, locale)}
+                  <Scramble text={e.milestone.approximate ? formatMonth(e.date, locale) : formatDate(e.date, locale)} delay={250} />
                 </p>
-                <p className="timeline-title font-title">{pick(e.milestone.title, locale)}</p>
-                <span className="badge">{t('milestone')}</span>
+                <p className="timeline-title font-title">
+                  <Scramble text={pick(e.milestone.title, locale)} delay={350} />
+                </p>
+                <span className="badge">
+                  <Scramble text={t('milestone')} delay={450} />
+                </span>
               </div>
             ) : (
               <div className="timeline-video">
-                <p className="timeline-date">{formatDate(e.date, locale)}</p>
-                <p className="timeline-title font-title">{pick(e.video.title, locale)}</p>
+                <p className="timeline-date">
+                  <Scramble text={formatDate(e.date, locale)} delay={250} />
+                </p>
+                <p className="timeline-title font-title">
+                  <Scramble text={pick(e.video.title, locale)} delay={350} />
+                </p>
                 <InlineVideo video={e.video} />
               </div>
             )}

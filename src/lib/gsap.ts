@@ -4,14 +4,15 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import { Flip } from 'gsap/Flip';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { CustomEase } from 'gsap/CustomEase';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { Draggable } from 'gsap/Draggable';
+import { InertiaPlugin } from 'gsap/InertiaPlugin';
 
 // The one place plugins are registered; every client component imports gsap from here.
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, Flip, DrawSVGPlugin, CustomEase, MotionPathPlugin);
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Flip, DrawSVGPlugin, CustomEase, MotionPathPlugin, Draggable, InertiaPlugin);
 
 // "soviet": a hard, mechanical snap — fast out, firm landing.
 CustomEase.create('soviet', 'M0,0 C0.08,0.72 0.18,0.98 0.42,1 0.66,1.01 0.8,1 1,1');
@@ -32,4 +33,4 @@ export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && window.matchMedia(REDUCED_MOTION).matches;
 }
 
-export { gsap, useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, Flip, DrawSVGPlugin, MotionPathPlugin };
+export { gsap, useGSAP, ScrollTrigger, SplitText, Flip, DrawSVGPlugin, MotionPathPlugin, Draggable, InertiaPlugin };

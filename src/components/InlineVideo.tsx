@@ -8,6 +8,7 @@ import { gsap, useGSAP, prefersReducedMotion } from '@/lib/gsap';
 import { formatDate, pick } from '@/lib/i18n-text';
 import { embedUrl, parseYouTube, thumbnailUrl } from '@/lib/youtube';
 import type { Video } from '@/lib/projects';
+import Scramble from './fx/Scramble';
 
 /**
  * YouTube thumbnail that opens a player. The player frame grows out of the thumbnail (FLIP: measured from
@@ -146,8 +147,10 @@ export default function InlineVideo({ video }: { video: Video }) {
           <Play size={20} fill="currentColor" />
         </span>
         <span className="video-thumb-meta" aria-hidden="true">
-          <span className={`badge badge-kind-${video.kind}`}>{tp(video.kind)}</span>
-          <span className="video-thumb-date">{formatDate(video.date, locale)}</span>
+          <span className={`badge badge-kind-${video.kind}`}>
+            <Scramble text={tp(video.kind)} delay={200} />
+          </span>
+          <Scramble className="video-thumb-date" text={formatDate(video.date, locale)} delay={300} />
         </span>
       </button>
 

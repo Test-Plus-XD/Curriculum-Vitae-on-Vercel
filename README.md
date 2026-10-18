@@ -17,20 +17,21 @@ Higher Diploma graduate in Computer Studies (Mobile Applications and Game Develo
 
 | Route | Content |
 |---|---|
-| `/` | Printable CV: profile, education, selected projects, experience, skills, languages, IELTS, achievements |
+| `/` | A collage hero, then the printable CV: profile, education, selected projects, experience, skills, languages, IELTS, achievements |
 | `/education` | Programme facts, results and all 19 courses across four semesters |
-| `/projects` | Twelve course projects, filterable by Mobile / Web / Game / Backend, plus collaborations |
+| `/projects` | Eleven course projects, filterable by Mobile / Web / Game / Backend, plus collaborations |
 | `/projects/[id]` | Case studies with highlights, platforms, technology, repositories and a newest-first development timeline of recorded videos |
 
 Every page is available in English (`/en`) and Traditional Chinese (`/zh-hk`), in light and dark themes.
 
 ## Design
 
-An evolved Soviet constructivist / 1960s space-age poster with Dada accents: an aged-paper print in light mode and a night launch site in dark mode. Effects are built with **GSAP**:
+A Dada photomontage in Soviet poster colours — Schwitters-style *Merz* collage cut from the CV's own data, Lissitzky's red wedge, Rodchenko red and black, torn paper, tape, ink stamps and ransom-note lettering — over a constructivist 1960s space-age background: an aged-paper print in light mode and a night launch site in dark mode. Effects are built with **GSAP**, plus **Three.js** on the landing page:
 
 - **Background** — a canvas star field with parallax and shooting stars, beneath a constructivist SVG composition (red sun, orbit rings with satellites, diagonal bands, rays) that draws itself in and re-arranges itself on every page change.
-- **Elements** — deconstructed Dada typography, Cyrillic glitch-reveal text, scattered card entrances, line-mask headings, count-up figures, 3D tilt cards with spotlight, magnetic buttons, a targeting cursor, a Flip-animated project filter, a pinned horizontal semester track and an animated orbit diagram of Pour Rice's architecture.
-- **Transitions** — constructivist slab wipes between pages with the destination name scrambling in, a circular reveal for theme changes, and video players that grow out of their thumbnails.
+- **Collage** — a landing photomontage with a ransom-note name, label-maker title, name chop, ink stamp and draggable duotone scraps of project footage, floating over a Three.js *Merzbau* of torn CV scraps, a red wedge and a Tatlin tower; a Tzara-style cut-up poem; courses as ticket stubs and collaborations as newspaper clippings.
+- **Elements** — deconstructed Dada typography, Cyrillic text-scramble load-ins on labels across the site, scattered card entrances, line-mask headings, count-up figures, 3D tilt cards with spotlight, magnetic buttons, a targeting cursor, a Flip-animated project filter, a pinned horizontal semester track and an animated orbit diagram of Pour Rice's architecture.
+- **Transitions** — torn red and black slabs that sweep across between pages while the destination name is pasted up from cut-out letters, a circular reveal for theme changes, and video players that grow out of their thumbnails.
 
 Everything respects `prefers-reduced-motion`, and the CV prints as a plain black-and-white document whatever state the animations are in.
 
@@ -40,7 +41,8 @@ Everything respects `prefers-reduced-motion`, and the CV prints as a plain black
 |---|---|
 | Framework | `next@16`, `react@19`, `typescript@5` |
 | Styling | `tailwindcss@4`, `@tailwindcss/postcss` |
-| Animation | `gsap@3.15`, `@gsap/react` (ScrollTrigger, SplitText, ScrambleText, Flip, DrawSVG, MotionPath, CustomEase) |
+| Animation | `gsap@3.15`, `@gsap/react` (ScrollTrigger, SplitText, Flip, DrawSVG, MotionPath, CustomEase, Draggable, Inertia) |
+| 3D | `three` (landing-page Merzbau, lazy-loaded) |
 | Internationalisation | `next-intl` |
 | Theming & icons | `next-themes`, `lucide-react` |
 | Analytics | `@vercel/analytics`, `@vercel/speed-insights` |

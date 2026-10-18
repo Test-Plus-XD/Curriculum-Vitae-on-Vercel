@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import GlitchText from '@/components/fx/GlitchText';
+import RansomText from '@/components/collage/RansomText';
 import TransitionLink from '@/components/transition/TransitionLink';
 
 export default async function NotFound() {
@@ -10,7 +10,7 @@ export default async function NotFound() {
       <p className="code-404 font-title" aria-hidden="true">
         404
       </p>
-      <GlitchText as="h1" text={t('title')} className="hero-title font-title" glitchOnMount />
+      <RansomText as="h1" text={t('title')} className="ransom-404" />
       <p className="hero-lede">{t('body')}</p>
       <TransitionLink href="/" label={tn('cv')} className="action-button action-primary">
         {t('home')}

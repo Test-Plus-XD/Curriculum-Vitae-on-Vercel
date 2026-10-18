@@ -55,8 +55,6 @@ export interface Project {
   platforms?: Platform[];
   milestones: Milestone[];
   videos: Video[];
-  /** Parent or sibling project id. */
-  related?: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -106,7 +104,10 @@ export const PROJECTS: Project[] = [
       { name: bi('Vercel backend API', 'Vercel 後端 API'), stack: 'Express.js · Firebase · Algolia · Stripe · Gemini' },
       { name: bi('Railway real-time server', 'Railway 即時伺服器'), stack: 'Socket.IO' },
     ],
-    milestones: [{ date: '2025-10-01', title: bi('Project development started', '項目開發展開') }],
+    milestones: [
+      { date: '2025-10-01', title: bi('Project development started', '項目開發展開') },
+      { date: '2026-01-01', title: bi('Native Swift iOS app started', '原生 Swift iOS 應用程式開發展開'), approximate: true },
+    ],
     videos: [
       { url: 'https://youtube.com/shorts/ZJHVqbcWlck', date: '2025-11-02', kind: 'operation', title: bi('Flutter Assignment 1', 'Flutter 作業一') },
       { url: 'https://youtu.be/ybg66eH3-hI', date: '2025-11-12', kind: 'operation', title: bi('Ionic Operation', 'Ionic 操作示範') },
@@ -116,6 +117,9 @@ export const PROJECTS: Project[] = [
       { url: 'https://youtu.be/rXnUfZ1FnUE', date: '2025-12-29', kind: 'presentation', title: bi('Flutter Presentation', 'Flutter 簡報') },
       { url: 'https://youtu.be/SsHJJNL3MKs', date: '2026-04-30', kind: 'demo', title: bi('FYP Overview Demo (live backend)', '畢業專題總覽示範（連線後端）') },
       { url: 'https://youtu.be/CTI5XFZ7POQ', date: '2026-05-04', kind: 'presentation', title: bi('FYP Technical Overview', '畢業專題技術總覽簡報') },
+      { url: 'https://youtube.com/shorts/yT6ES-SnVKU', date: '2026-03-15', kind: 'operation', title: bi('Swift iOS Assignment 1', 'Swift iOS 作業一') },
+      { url: 'https://youtube.com/shorts/c5yJIbbt8Wg', date: '2026-04-03', kind: 'operation', title: bi('Swift iOS Assignment 2', 'Swift iOS 作業二') },
+      { url: 'https://youtu.be/r9jqsguKJlE', date: '2026-04-28', kind: 'operation', title: bi('Swift iOS Project Operation', 'Swift iOS 項目操作示範') },
       { url: 'https://youtu.be/DMCyLYqmvcw', date: '2026-05-07', kind: 'demo', title: bi('FYP PWA Demo', '畢業專題 PWA 示範') },
     ],
   },
@@ -345,27 +349,6 @@ export const PROJECTS: Project[] = [
     repos: [],
     milestones: [{ date: '2026-01-01', title: bi('Coursework started', '課業展開'), approximate: true }],
     videos: [{ url: 'https://youtu.be/JHXK4-w5x38', date: '2026-05-03', kind: 'presentation', title: bi('Computer Ethics Project Presentation', '計算機倫理專題簡報') }],
-  },
-  {
-    id: 'pourrice-ios',
-    title: bi('Pour Rice — Swift iOS', 'Pour Rice 倒米 — Swift iOS'),
-    tagline: bi('Native iOS platform of Pour Rice', 'Pour Rice 原生 iOS 平台'),
-    categories: ['mobile'],
-    summary: bi('The native iOS component of Pour Rice, sharing its backend with the other platforms.', 'Pour Rice 的原生 iOS 平台，與其他平台共用後端。'),
-    description: bi(
-      'The native iOS platform component of Pour Rice, built with Swift for the Proprietary Mobile Software Design course and sharing backend infrastructure with the other Pour Rice platforms.',
-      'Pour Rice 的原生 iOS 平台，為「專有手機軟件設計」科目以 Swift 開發，並與 Pour Rice 其他平台共用後端基礎設施。',
-    ),
-    courses: ['03CIT4043'],
-    tech: ['Swift'],
-    repos: [{ label: bi('iOS Assignment'), url: 'https://github.com/Test-Plus-XD/iOS-Assignment' }],
-    milestones: [{ date: '2026-01-01', title: bi('Swift iOS development started', 'Swift iOS 開發展開'), approximate: true }],
-    videos: [
-      { url: 'https://youtube.com/shorts/yT6ES-SnVKU', date: '2026-03-15', kind: 'operation', title: bi('iOS Assignment 1', 'iOS 作業一') },
-      { url: 'https://youtube.com/shorts/c5yJIbbt8Wg', date: '2026-04-03', kind: 'operation', title: bi('iOS Assignment 2', 'iOS 作業二') },
-      { url: 'https://youtu.be/r9jqsguKJlE', date: '2026-04-28', kind: 'operation', title: bi('iOS Project Operation', 'iOS 項目操作示範') },
-    ],
-    related: 'pourrice',
   },
 ];
 

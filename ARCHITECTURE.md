@@ -2,7 +2,7 @@
 
 **Author**: NG Yu Ham Baldwin 吳宇涵
 **Stack**: Next.js 16 App Router · React 19 · TypeScript · Tailwind CSS 4 · next-intl · GSAP 3.15
-**Purpose**: Bilingual (EN / 繁體中文) constructivist space-age CV and portfolio with a printable CV
+**Purpose**: Bilingual (EN / 繁體中文) CV and portfolio — a Dada photomontage in Soviet poster colours over a constructivist space-age background — with a printable CV
 
 ---
 
@@ -14,22 +14,23 @@
 4. [Data layer](#data-layer)
 5. [Rendering model](#rendering-model)
 6. [Animation architecture](#animation-architecture)
-7. [Page transitions](#page-transitions)
-8. [Background stage](#background-stage)
-9. [Pages](#pages)
-10. [Styling and theming](#styling-and-theming)
-11. [Fonts](#fonts)
-12. [Print](#print)
-13. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
-14. [Testing](#testing)
-15. [Adding content](#adding-content)
-16. [Deployment](#deployment)
+7. [Collage system](#collage-system)
+8. [Page transitions](#page-transitions)
+9. [Background stage](#background-stage)
+10. [Pages](#pages)
+11. [Styling and theming](#styling-and-theming)
+12. [Fonts](#fonts)
+13. [Print](#print)
+14. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
+15. [Testing](#testing)
+16. [Adding content](#adding-content)
+17. [Deployment](#deployment)
 
 ---
 
 ## Overview
 
-Every route is statically generated for both locales (35 pages at build time). Pages are **server components** that read typed data modules and render real, complete HTML; interactive and animated parts are small **client islands** that only add motion on top. Consequences:
+Every route is statically generated for both locales (33 pages at build time). Pages are **server components** that read typed data modules and render real, complete HTML; interactive and animated parts are small **client islands** that only add motion on top. Consequences:
 
 - The site is fully readable without JavaScript (the pre-hide CSS has a 3 s failsafe).
 - Every animated element has a meaningful final state that also prints.
@@ -47,10 +48,10 @@ Every route is statically generated for both locales (35 pages at build time). P
 │   │   ├── layout.tsx                # Pass-through root layout
 │   │   ├── not-found.tsx             # Global 404 (outside a locale)
 │   │   ├── globals.css               # Tokens, themes, components, reduced motion, print
-│   │   ├── icon.svg · robots.ts · sitemap.ts
+│   │   ├── icon.png · robots.ts · sitemap.ts
 │   │   └── [locale]/
 │   │       ├── layout.tsx            # <html>/<body>, fonts, providers, background, header, footer
-│   │       ├── page.tsx              # CV sheet
+│   │       ├── page.tsx              # Collage hero + CV sheet + cut-up poem
 │   │       ├── education/page.tsx
 │   │       ├── projects/page.tsx
 │   │       ├── projects/[id]/page.tsx
@@ -58,12 +59,14 @@ Every route is statically generated for both locales (35 pages at build time). P
 │   │       └── [...rest]/page.tsx    # Sends unknown paths to the localised 404
 │   ├── components/
 │   │   ├── fx/                       # Reusable GSAP effects
+│   │   ├── collage/                  # Dada collage system and the Three.js Merzbau
 │   │   ├── transition/               # Page-transition provider and link
 │   │   └── *.tsx                     # Page sections and site chrome
 │   ├── i18n/                         # routing.ts · navigation.ts · request.ts
 │   ├── lib/                          # Data modules and pure helpers (+ *.test.ts)
 │   └── messages/                     # en.json · zh-hk.json
-├── next.config.mjs                   # next-intl plugin, Turbopack root
+├── public/images/                    # Header amplifier monogram, Pour Rice app icons
+├── next.config.mjs                   # next-intl plugin, Turbopack root, pourrice-ios redirect
 ├── postcss.config.js                 # @tailwindcss/postcss
 ├── vitest.config.ts · vitest.setup.ts
 ├── CLAUDE.md                         # Project rules for AI agents
@@ -91,7 +94,8 @@ Every route is statically generated for both locales (35 pages at build time). P
 | `profile.ts` | Name, title, descriptor, location, summary, contacts (screen label + print form), `getAge(now)` evaluated in Hong Kong time from May 2005 |
 | `education.ts` | Programme facts, four semesters, 19 courses (bilingual names, final-semester grades and credits), `getCourse()` |
 | `cv.ts` | Skill groups, experience (with an optional "next phase" note), languages, IELTS, achievements |
-| `projects.ts` | 12 projects (categories, bilingual copy, courses, tech, repos, live link, highlights, platforms, milestones, videos), `FEATURED_IDS`, `COLLABORATIONS`, `buildTimeline()` (newest first), `videosNewestFirst()` |
+| `projects.ts` | 11 projects (categories, bilingual copy, courses, tech, repos, live link, highlights, platforms, milestones, videos), `FEATURED_IDS`, `COLLABORATIONS`, `buildTimeline()` (newest first), `videosNewestFirst()`. Pour Rice includes its native Swift iOS app (12 videos); `/projects/pourrice-ios` redirects permanently to `/projects/pourrice` (`next.config.mjs`) |
+| `collage.ts` | Seeded collage generators: `rng`, `hashSeed`, `shuffled`, `tornClipPath()`, `tornSlab()`, `ransomGlyphs()` (neighbouring letters never share a paper), `cutUp()` |
 | `youtube.ts` | `parseYouTube()` (youtu.be, Shorts, watch, embed), thumbnails, privacy-enhanced embed URLs |
 | `i18n-text.ts` | `Bilingual` type, `bi()`, `pick()`, `formatDate()`, `formatMonth()` |
 | `text-fx.ts` | Pure text-effect helpers: segmentation, seeded PRNG, displacements, glitch glyph pools |
@@ -107,6 +111,7 @@ The CV page exports `revalidate = 86400`, so the displayed age stays current wit
 └── NextIntlClientProvider
     └── ThemeProvider (next-themes, client)
         └── TransitionProvider (client: cover + navigate())
+            ├── CollageDefs (shared SVG filters, aria-hidden)
             ├── BackgroundStage (client, fixed, aria-hidden)
             ├── Header (client)
             ├── <main> page (server) ── client islands: DadaTypography, Scatter, Counter, SemesterTrack, …
@@ -114,14 +119,14 @@ The CV page exports `revalidate = 86400`, so the displayed age stays current wit
             └── CursorReticle (client)
 ```
 
-An inline script in `<head>` adds `js-fx` to `<html>` and sets `data-cover="off"` before first paint.
+`<html>` is rendered with `className="js-fx …"` and `data-cover="off"`, so the pre-hide applies from the first byte without an inline script; a `<noscript><style>` block un-hides everything when JavaScript is off.
 
 ---
 
 ## Animation architecture
 
 ### One registration point
-`src/lib/gsap.ts` imports GSAP and every plugin, registers them once (`useGSAP`, ScrollTrigger, SplitText, ScrambleTextPlugin, Flip, DrawSVGPlugin, CustomEase, MotionPathPlugin), creates the custom eases `soviet` and `rewind`, and exports the media-query constants `FULL_MOTION`, `REDUCED_MOTION`, `FINE_POINTER`. Components import from here only.
+`src/lib/gsap.ts` imports GSAP and every plugin, registers them once (`useGSAP`, ScrollTrigger, SplitText, Flip, DrawSVGPlugin, CustomEase, MotionPathPlugin, Draggable, InertiaPlugin), creates the custom eases `soviet` and `rewind`, and exports the media-query constants `FULL_MOTION`, `REDUCED_MOTION`, `FINE_POINTER`. Components import from here only.
 
 ### Component pattern
 ```tsx
@@ -151,7 +156,8 @@ Rules this pattern encodes:
 | Component | Technique |
 |---|---|
 | `DadaTypography` | Text segmented into nowrap word groups, fixed-width spaces and breakable CJK glyphs; each glyph is a transform target. Seeded Park–Miller PRNG, first paint clamped to ±2 px, alignment scheduled with two rAFs and a 10 ms failsafe, hover re-scatters with a fresh seed (×1.8), springs approximated with `back.out` eases and per-glyph stagger; optional hue/drop-shadow misregistration. Plain text until mounted. |
-| `GlitchText` | rAF loop resolving one character per `max(4, speed)` ms; unresolved characters drawn from Cyrillic + symbol pools (English) or Bauhaus glyphs only (Chinese) in an `aria-hidden` overlay while the base text keeps the layout. Triggers: view (once, −30 px margin, 100 ms delay), mount (200 ms), hover. |
+| `GlitchText` | rAF loop resolving one character per `max(4, speed)` ms; unresolved characters drawn from Cyrillic + symbol pools (English) or Bauhaus glyphs only (Chinese) in an `aria-hidden` overlay while the base text keeps the layout. Triggers: view (once, −30 px margin, 100 ms delay), mount (200 ms), hover. `loadIn` mode paints glyph noise before the first frame and resolves once the page is revealed and the text is in view; the base text is hidden with `opacity`, never `visibility`, so it stays accessible and prints. |
+| `Scramble` | `GlitchText` in `loadIn` mode without hover replay — the header nav's randomise effect used as a load-in across the site (labels, badges, dates, chips, course codes, buttons, CV entries, timeline titles). |
 | `Scatter` | `ScrollTrigger.batch` entrances: `scatter` (+32 px diagonal and slight rotation), `collage` (+48 px), `rise`; fade-only for reduced motion. |
 | `RevealHeading` | `SplitText` with `mask: 'lines'` and `autoSplit` (re-splits after font load), lines rise, rule extends, index slides in. |
 | `Counter` | Tweens a number on scroll; formats with thousands separators; restores the server value before printing. |
@@ -167,11 +173,29 @@ Rules this pattern encodes:
 
 ---
 
+## Collage system
+
+The site's Dada layer: Schwitters' *Merz* (collage built from the scraps at hand), here cut from the CV's own data. Everything lives in `src/components/collage/` and draws its randomness from the seeded generators in `lib/collage.ts`, so server and client render identical shapes.
+
+| Component | Technique |
+|---|---|
+| `CollageDefs` | One hidden SVG with shared filters: `fx-ink` / `fx-ink-soft` (turbulence-displaced rubber-stamp ink), `fx-duotone` (luminance → red/black print, for the hero's photo scraps), `fx-duotone-soft` (the duotone composited over the original at about one third, `feComposite arithmetic k2=0.66 k3=0.34`, for card and video thumbnails, which return to full colour on hover), and the `fx-dots` halftone pattern. |
+| `RansomText` | `ransomGlyphs()` gives each letter its own paper (scrap, red, ink, newsprint, kraft, bare), face (display, title or body; never the typewriter face) and tilt. Letters paste in with a stagger and flutter on hover; the real string is kept in an sr-only span. |
+| `Stamp` | Ring text on a `useId` circular `textPath`, a centre numeral, `fx-ink`; slams on (scale 1.6 → 1, rotation jolt) when scrolled into view. |
+| `Paper` | `Tape`, `Torn` (a `tornClipPath()` polygon and paper shadow), `NewsScrap`, `Seal` (a vermilion 白文 name chop), `LabelTape` (embossed Dymo strip). |
+| `CollageHero` | Screen-only landing photomontage: kicker, ransom-note name, label-tape title, typed descriptor and cue (all with `Scramble`), three duotone footage scraps, seal, newsprint and stamp. Fragments paste in, become `Draggable` with inertia on fine pointers and scatter as the page scrolls. `MerzbauScene` is imported with `next/dynamic` once the browser is idle. |
+| `MerzbauScene` | Three.js scene behind the hero: torn paper scraps painted on canvases from CV data (17 on desktop, 10 on narrow screens) drifting in depth and flipping on hover (raycasting), a Lissitzky red wedge piercing a white disc, and a Tatlin-tower helix. The camera moves in a little with scroll; fog follows the theme; rendering pauses off-screen and in hidden tabs; reduced motion renders one frame; geometries, materials, textures and the renderer are disposed on unmount. |
+| `CutUpPoem` | Tzara's recipe for a Dada poem: the profile summary cut into slips (`cutUp()`), "shaken" with `Flip`, restorable; each arrangement is announced in a polite live region. Screen only. |
+
+Paper surfaces (course tickets, collaboration clippings, milestone notes) keep their paper colour in both themes and re-scope the text tokens so their contents stay readable in dark mode.
+
+---
+
 ## Page transitions
 
-`TransitionProvider` renders a fixed cover (red slab, ink slab with a grid, star and label) and exposes `navigate(href, { label, locale })`. It tracks a phase — `idle → covering → waiting → revealing → idle`:
+`TransitionProvider` renders a fixed cover (red slab and ink slab, both torn along their long edges by `tornSlab()` clip-paths, with a grid, star and label) and exposes `navigate(href, { label, locale })`. It tracks a phase — `idle → covering → waiting → revealing → idle`:
 
-1. **covering** — `navigate` sets `<html data-cover="on">`, sweeps the slabs in (`xPercent` −125 → 0, `rewind` ease) and scrambles the destination label in with ScrambleText. Further clicks in this phase only retarget the cover (the latest click wins).
+1. **covering** — `navigate` sets `<html data-cover="on">`, sweeps the slabs in (`xPercent` −125 → 0, `rewind` ease) and pastes the destination label up from cut-out ransom letters that fly in. Further clicks in this phase only retarget the cover (the latest click wins).
 2. **waiting** — when the sweep completes (or after a 0.9 s timer, so stalled animation frames can never block navigation) it calls `router.push()` and arms a 1.5 s reveal failsafe.
 3. **revealing** — when `usePathname()` (from `next/navigation`) changes, it waits two frames, sweeps the slabs out, sets `data-cover="off"` and dispatches `fx:reveal` from a fresh task.
 4. `playOnReveal()` in each component runs its entrance at that moment.
@@ -201,10 +225,10 @@ In light mode the CV variant is quieter (field 30 %, canvas 50 %) so the paper s
 
 | Route | Composition |
 |---|---|
-| `/` | Toolbar (eyebrow + `PrintButton`), `SheetIntro` → `article.cv-sheet` with marks and stamp, header (identity + `dl` contacts with screen/print variants), two `Scatter` columns of `CvSection`s. |
-| `/education` | Hero (DadaTypography, GlitchRevealText institution, programme facts, graduation badge), stat cards (`TiltCard` + `Counter`), `RevealHeading`, `SemesterTrack`, grade note. |
-| `/projects` | Hero, `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, split thumbnails or `PosterArt`, stretched link), Collaborations (`Scatter` of `TiltCard`s; private repositories have no link). |
-| `/projects/[id]` | Back link, hero (badges, live and repository actions in `Magnetic`), highlight counters, overview and key points, platforms (`OrbitDiagram` + list) for multi-platform projects, `DevTimeline` (newest first) with `InlineVideo`s, sticky sidebar. `dynamicParams = false`. |
+| `/` | `CollageHero` (screen only), then the toolbar (eyebrow + `PrintButton`), `SheetIntro` → taped `article.cv-sheet` with marks and an inked `Stamp`, header (identity + `dl` contacts with screen/print variants), two `Scatter` columns of `CvSection`s, then `CutUpPoem` (screen only). Hero content is built from the real data (final grades, featured footage). |
+| `/education` | Hero (DadaTypography, GlitchRevealText institution, programme facts, graduation badge), stat cards (`TiltCard` + `Counter`), `RevealHeading`, `SemesterTrack` of perforated ticket-stub courses, grade note. |
+| `/projects` | Hero, `ProjectsFilterGrid` of `ProjectCard`s (`TiltCard`, torn-edged soft-duotone thumbnails or `PosterArt`, stretched link), Collaborations as newspaper clippings with Unbounded headlines (private repositories have no link). |
+| `/projects/[id]` | Back link, hero (badges, live and repository actions in `Magnetic`; Pour Rice shows its app icon), highlight counters, overview and key points, platforms (`OrbitDiagram` + list) for multi-platform projects, `DevTimeline` (newest first, kraft-paper milestone notes) with `InlineVideo`s, sticky sidebar (tech, courses, repositories). `dynamicParams = false`. |
 
 ---
 
@@ -223,6 +247,8 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 - **Noto Serif Display** (variable weight and width, normal + italic, Latin + Cyrillic) → `--ff-title`; `.font-title` renders light italic, numerals use `font-stretch` for a condensed constructivist look.
 - **LINE Seed JP** 400/700 → `--ff-en` (English body).
 - **Iansui** 400 → `--ff-zh` (Chinese body and `lang="zh-HK"` elements); not preloaded, since its CJK slices load on demand.
+- **Unbounded** (variable, Latin + Cyrillic) → `--ff-display`: stamps, cut-out letters, label tape, clipping headlines. Not preloaded.
+- **Special Elite** → `--ff-type`: typewritten scraps, ticket serials, cut-up slips; never used at display sizes. Not preloaded.
 
 ---
 
@@ -231,7 +257,8 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 `@media print` turns the CV into a two-page A4 document:
 
 - `@page { size: A4; margin: 12mm 13mm }`, all colour tokens redefined to black/white, `color-scheme: light !important`.
-- Chrome and decoration are hidden (`.no-print`, header, footer, background, cover, cursor, modal).
+- Chrome and decoration are hidden (`.no-print`, header, footer, background, cover, cursor, modal, collage hero, cut-up poem, tape, stamps).
+- Scramble text that has not resolved prints its real text (`.glitch-base { opacity: 1 !important }`, overlay hidden).
 - Shadows, filters, text shadows, animations and transitions are removed inside `<main>`; GSAP leftovers (`opacity`, transforms, `clip-path`) are overridden for `[data-fx-hide]` content and the sheet.
 - Print-specific type scale in pt; contact rows switch to printable URLs (`.print-only`); entries avoid breaking across pages.
 
@@ -254,7 +281,8 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 | `profile.test.ts` | Age boundaries in Hong Kong time; contact links |
 | `youtube.test.ts` | URL parsing and embed URLs |
 | `text-fx.test.ts` | Lossless segmentation (fast-check), CJK splitting, PRNG determinism, displacement clamps, glitch pools and frames |
-| `data.test.ts` | 12 projects / 30 unique videos / 19 courses, references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, British spelling |
+| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, British spelling |
+| `collage.test.ts` | Seeded PRNG range and determinism, shuffle as a permutation, torn clip-paths (only the requested sides, inside the box), torn slabs, ransom glyphs (deterministic, bare spaces, no paper repeated on neighbours), lossless cut-up in English and Chinese |
 
 ---
 

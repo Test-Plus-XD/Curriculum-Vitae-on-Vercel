@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
-import { Iansui, LINE_Seed_JP, Noto_Serif_Display } from 'next/font/google';
+import { Iansui, LINE_Seed_JP, Noto_Serif_Display, Special_Elite, Unbounded } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/next';
@@ -11,6 +11,7 @@ import { SITE } from '@/lib/profile';
 import ThemeProvider from '@/components/ThemeProvider';
 import TransitionProvider from '@/components/transition/TransitionProvider';
 import BackgroundStage from '@/components/fx/BackgroundStage';
+import CollageDefs from '@/components/collage/CollageDefs';
 import CursorReticle from '@/components/fx/CursorReticle';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -31,6 +32,22 @@ const en = LINE_Seed_JP({
   variable: '--ff-en',
   display: 'swap',
   adjustFontFallback: false,
+});
+
+// Collage accents: a constructivist display face (with Cyrillic) and a typewriter. Decorative, so not preloaded.
+const display = Unbounded({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--ff-display',
+  display: 'swap',
+  preload: false,
+});
+
+const type = Special_Elite({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--ff-type',
+  display: 'swap',
+  preload: false,
 });
 
 const zh = Iansui({
@@ -65,8 +82,9 @@ export const viewport: Viewport = {
   ],
 };
 
-// Runs before first paint: lets CSS pre-hide elements that GSAP will animate in, so nothing flashes.
-const FX_BOOT = "document.documentElement.classList.add('js-fx');document.documentElement.dataset.cover='off';";
+// `js-fx` lets CSS pre-hide elements that GSAP will animate in, so nothing flashes before hydration. It is
+// rendered on <html> directly (no inline script); without JavaScript the <noscript> style shows everything.
+const NO_SCRIPT_CSS = '[data-fx-hide]{opacity:1!important;animation:none!important}';
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -77,11 +95,14 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html
       lang={locale === 'zh-hk' ? 'zh-HK' : 'en-GB'}
-      className={`${title.variable} ${en.variable} ${zh.variable}`}
+      className={`js-fx ${title.variable} ${en.variable} ${zh.variable} ${display.variable} ${type.variable}`}
+      data-cover="off"
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: FX_BOOT }} />
+        <noscript>
+          <style>{NO_SCRIPT_CSS}</style>
+        </noscript>
       </head>
       {/* Browser extensions often add attributes to <body>; don't treat that as a hydration error. */}
       <body className={locale === 'zh-hk' ? 'locale-zh' : 'locale-en'} suppressHydrationWarning>
@@ -91,6 +112,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
               <a href="#main" className="skip-link">
                 {t('skip')}
               </a>
+              <CollageDefs />
               <BackgroundStage />
               <Header />
               <main id="main" className="site-main">

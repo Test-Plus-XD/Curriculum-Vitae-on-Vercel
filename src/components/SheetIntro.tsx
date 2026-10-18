@@ -25,6 +25,7 @@ export default function SheetIntro({ children }: { children: ReactNode }) {
         gsap.set(q('.sheet-mark'), { scale: 0, opacity: 0 });
         gsap.set(q('.sheet-stamp'), { opacity: 0, scale: 2.4, rotation: -32 });
         gsap.set(q('.cv-head > *'), { opacity: 0, y: 28 });
+        gsap.set(q('.sheet-tape'), { opacity: 0, scaleX: 0.2 });
         markReady(root);
         return playOnReveal(contextSafe, () => {
           gsap
@@ -34,6 +35,7 @@ export default function SheetIntro({ children }: { children: ReactNode }) {
             .to(q('.cv-head > *'), { opacity: 1, y: 0, duration: 1, stagger: 0.12 }, 0.45)
             .to(q('.sheet-stamp'), { opacity: 0.9, scale: 1, rotation: -12, duration: 0.45, ease: 'power4.in' }, 1.3)
             .to(sheet, { x: 2, y: 1, duration: 0.05, yoyo: true, repeat: 3, ease: 'none' }, 1.75)
+            .to(q('.sheet-tape'), { opacity: 1, scaleX: 1, duration: 0.35, stagger: 0.15, ease: 'back.out(2)' }, 1.1)
             .set(sheet, { clearProps: 'clipPath,x,y' });
         });
       });

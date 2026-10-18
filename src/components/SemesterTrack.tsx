@@ -6,6 +6,8 @@ import { gsap, useGSAP, ScrollTrigger, FULL_MOTION } from '@/lib/gsap';
 import { markReady, playOnReveal } from '@/lib/reveal';
 import { pick } from '@/lib/i18n-text';
 import type { Semester } from '@/lib/education';
+import Scramble from './fx/Scramble';
+import { Tape } from './collage/Paper';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 const TRAVEL = `(min-width: 1024px) and ${FULL_MOTION}`;
@@ -140,6 +142,8 @@ export default function SemesterTrack({ semesters }: { semesters: Semester[] }) 
         <ol className="track" data-track="">
           {semesters.map((s, i) => (
             <li key={s.id} className="semester-panel" data-panel="" aria-labelledby={`sem-${s.id}`}>
+              <Tape className="tape-tl" />
+              <Tape className="tape-tr" />
               <div className="panel-head">
                 <span className="panel-numeral font-title" data-numeral="" aria-hidden="true">
                   {ROMAN[i]}
@@ -148,13 +152,15 @@ export default function SemesterTrack({ semesters }: { semesters: Semester[] }) 
                   <h3 id={`sem-${s.id}`} className="panel-title font-title">
                     {pick(s.label, locale)}
                   </h3>
-                  <p className="panel-count">{t('courseCount', { count: s.courses.length })}</p>
+                  <p className="panel-count">
+                    <Scramble text={t('courseCount', { count: s.courses.length })} />
+                  </p>
                 </div>
               </div>
               <ul className="course-grid">
                 {s.courses.map((c) => (
                   <li key={c.code} className="course-card" data-course="">
-                    <span className="course-code">{c.code}</span>
+                    <Scramble className="course-code" text={c.code} delay={350} />
                     <span className="course-name">{pick(c.name, locale)}</span>
                     <span className="course-alt" lang={locale === 'zh-hk' ? 'en-GB' : 'zh-HK'}>
                       {pick(c.name, locale === 'zh-hk' ? 'en' : 'zh-hk')}

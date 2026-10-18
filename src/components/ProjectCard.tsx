@@ -9,6 +9,9 @@ import { parseYouTube, thumbnailUrl } from '@/lib/youtube';
 import TiltCard from './fx/TiltCard';
 import TransitionLink from './transition/TransitionLink';
 import PosterArt from './PosterArt';
+import Scramble from './fx/Scramble';
+import { Tape } from './collage/Paper';
+import { hashSeed, tornClipPath } from '@/lib/collage';
 
 /** Project card: split video thumbnails (or generated poster), categories, summary, stack and a stretched link. */
 export default function ProjectCard({ project }: { project: Project }) {
@@ -23,7 +26,11 @@ export default function ProjectCard({ project }: { project: Project }) {
 
   return (
     <TiltCard as="article" className="project-card" max={5}>
-      <div className={`card-media ${thumbs.length === 2 ? 'is-split' : ''}`}>
+      <Tape className="tape-top" />
+      <div
+        className={`card-media ${thumbs.length === 2 ? 'is-split' : ''}`}
+        style={{ clipPath: tornClipPath(hashSeed(project.id), { sides: ['bottom'], depth: 10, teeth: 26 }) }}
+      >
         {thumbs.length > 0 ? (
           thumbs.map((th, i) => (
             // eslint-disable-next-line @next/next/no-img-element -- YouTube CDN thumbnails, already sized
@@ -43,7 +50,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         {project.videos.length > 0 && (
           <span className="card-video-count">
             <PlayCircle size={14} aria-hidden="true" />
-            {t('videos', { count: project.videos.length })}
+            <Scramble text={t('videos', { count: project.videos.length })} delay={300} />
           </span>
         )}
       </div>
@@ -52,7 +59,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           <ul className="card-cats">
             {project.categories.map((c) => (
               <li key={c} className={`badge badge-${c}`}>
-                {t(c)}
+                <Scramble text={t(c)} delay={150} />
               </li>
             ))}
           </ul>
@@ -62,13 +69,15 @@ export default function ProjectCard({ project }: { project: Project }) {
             {title}
           </TransitionLink>
         </h3>
-        <p className="card-tagline">{pick(project.tagline, locale)}</p>
+        <p className="card-tagline">
+          <Scramble text={pick(project.tagline, locale)} delay={200} />
+        </p>
         <p className="card-summary">{pick(project.summary, locale)}</p>
         {project.tech.length > 0 && (
           <ul className="card-tech">
             {project.tech.slice(0, 4).map((tech) => (
               <li key={tech} className="tech-chip">
-                {tech}
+                <Scramble text={tech} delay={250} />
               </li>
             ))}
             {extraTech > 0 && <li className="tech-chip tech-chip-more">+{extraTech}</li>}
@@ -80,7 +89,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             {project.courses.length > 1 && ` +${project.courses.length - 1}`}
           </span>
           <span className="card-cta" aria-hidden="true">
-            {t('view')} <ArrowRight size={14} />
+            <Scramble text={t('view')} delay={350} /> <ArrowRight size={14} />
           </span>
         </div>
       </div>

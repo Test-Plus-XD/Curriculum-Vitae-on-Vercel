@@ -18,8 +18,8 @@ function bilinguals(value: unknown, out: Bilingual[] = []): Bilingual[] {
 }
 
 describe('projects', () => {
-  it('has twelve projects with unique ids', () => {
-    expect(PROJECTS).toHaveLength(12);
+  it('has eleven projects with unique ids', () => {
+    expect(PROJECTS).toHaveLength(11);
     expect(new Set(PROJECT_IDS).size).toBe(PROJECT_IDS.length);
   });
 
@@ -34,9 +34,10 @@ describe('projects', () => {
     for (const p of PROJECTS) for (const pl of p.platforms ?? []) if (pl.course) expect(getCourse(pl.course)).toBeDefined();
   });
 
-  it('links related and featured projects that exist', () => {
-    for (const p of PROJECTS) if (p.related) expect(getProject(p.related)).toBeDefined();
+  it('features projects that exist, and folds the Swift iOS app into Pour Rice', () => {
     for (const id of FEATURED_IDS) expect(getProject(id)).toBeDefined();
+    expect(getProject('pourrice-ios')).toBeUndefined();
+    expect(getProject('pourrice')!.videos).toHaveLength(12);
   });
 
   it('uses valid ISO dates and https repository links', () => {

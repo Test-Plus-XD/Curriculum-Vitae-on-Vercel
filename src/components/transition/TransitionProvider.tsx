@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl';
 import { getPathname, useRouter } from '@/i18n/navigation';
 import { gsap, prefersReducedMotion } from '@/lib/gsap';
 import { REVEAL_EVENT } from '@/lib/reveal';
-import { GLITCH_CHARS } from '@/lib/text-fx';
+import { hashSeed, ransomGlyphs, tornSlab } from '@/lib/collage';
 
 interface NavigateOptions {
   label?: string;
@@ -25,10 +25,13 @@ export const usePageTransition = () => useContext(TransitionContext);
 const COVER_FAILSAFE_MS = 900;
 /** If the new route has not rendered by then, uncover anyway so the page is never stuck behind the cover. */
 const REVEAL_FAILSAFE_MS = 1500;
+/** Torn long edges for the two slabs: paper ripped, not cut. */
+const RED_EDGE = tornSlab(1916, [12, 0], [100, 88]);
+const INK_EDGE = tornSlab(1920, [16, 4], [100, 84], 18);
 
 /**
- * Constructivist page transition. A red slab and an ink slab sweep across on a diagonal while the
- * destination name scrambles in; the route changes under the cover, then the slabs sweep off and entrance
+ * Torn-paper page transition. A red slab and an ink slab, ripped along their long edges, sweep across on a diagonal while the
+ * destination name is pasted up from cut-out letters; the route changes under the cover, then the slabs sweep off and entrance
  * animations are released (`fx:reveal`). Reduced motion navigates instantly.
  *
  * The cover's tweens deliberately live outside any GSAP context: their callbacks start other components'
@@ -99,13 +102,49 @@ export default function TransitionProvider({ children }: { children: ReactNode }
       };
       const cover = coverRef.current;
       const label = cover?.querySelector<HTMLElement>('[data-cover-label]');
-      const scramble = (text?: string) => {
-        if (label && text) gsap.to(label, { duration: 0.35, scrambleText: { text, chars: GLITCH_CHARS, speed: 0.6 } });
+      // The destination is pasted up from cut-out letters, each flying in at its own angle.
+      const paste = (text?: string) => {
+        if (!label || !text) return;
+        gsap.killTweensOf(label.children);
+        label.replaceChildren(
+          ...ransomGlyphs(text, hashSeed(text)).map((g) => {
+            const span = document.createElement('span');
+            span.textContent = g.char;
+            if (g.space) {
+              span.className = 'ransom-gap';
+              return span;
+            }
+            span.className = `ransom-l ransom-${g.paper} ransom-f-${g.font}`;
+            span.dataset.r = String(g.rotate);
+            span.dataset.y = String(g.lift);
+            return span;
+          }),
+        );
+        gsap.fromTo(
+          label.querySelectorAll<HTMLElement>('.ransom-l'),
+          {
+            opacity: 0,
+            x: () => gsap.utils.random(-80, 80),
+            y: () => gsap.utils.random(-120, 120),
+            rotation: () => gsap.utils.random(-70, 70),
+            scale: 1.6,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            y: (_i, el: HTMLElement) => Number(el.dataset.y),
+            rotation: (_i, el: HTMLElement) => Number(el.dataset.r),
+            scale: 1,
+            duration: 0.42,
+            ease: 'back.out(2)',
+            stagger: { each: 0.025, from: 'random' },
+          },
+        );
       };
 
       // Still sweeping in: the latest click wins — retarget and relabel the cover.
       if (phaseRef.current === 'covering') {
-        scramble(options.label);
+        paste(options.label);
         return;
       }
       if (phaseRef.current !== 'idle' || prefersReducedMotion() || !cover || document.visibilityState === 'hidden') {
@@ -125,7 +164,7 @@ export default function TransitionProvider({ children }: { children: ReactNode }
       gsap.set(cover, { autoAlpha: 1 });
       gsap.set(q('[data-slab]'), { xPercent: -125 });
       gsap.set(q('[data-cover-content]'), { opacity: 0, y: 24 });
-      if (label) label.textContent = '';
+      label?.replaceChildren();
       setCovered(true);
       gsap
         .timeline({ onComplete: proceed })
@@ -138,7 +177,7 @@ export default function TransitionProvider({ children }: { children: ReactNode }
           { rotation: 0, scale: 1, duration: 0.5, ease: 'back.out(2)' },
           0.25,
         )
-        .add(() => scramble(targetRef.current.options.label), 0.3);
+        .add(() => paste(targetRef.current.options.label), 0.22);
       later(proceed, COVER_FAILSAFE_MS);
     },
     [locale, router, reveal],
@@ -179,13 +218,13 @@ export default function TransitionProvider({ children }: { children: ReactNode }
     <TransitionContext.Provider value={{ navigate }}>
       {children}
       <div ref={coverRef} className="page-cover no-print" aria-hidden="true">
-        <div data-slab="red" className="cover-slab cover-slab-red" />
-        <div data-slab="ink" className="cover-slab cover-slab-ink" />
+        <div data-slab="red" className="cover-slab cover-slab-red" style={{ clipPath: RED_EDGE }} />
+        <div data-slab="ink" className="cover-slab cover-slab-ink" style={{ clipPath: INK_EDGE }} />
         <div data-cover-content className="cover-content">
           <svg data-cover-star viewBox="-50 -50 100 100" className="cover-star">
             <polygon points="0,-46 11,-15 44,-14 18,6 27,38 0,19 -27,38 -18,6 -44,-14 -11,-15" />
           </svg>
-          <span data-cover-label className="cover-label font-title" />
+          <span data-cover-label className="cover-label ransom-letters" />
         </div>
       </div>
     </TransitionContext.Provider>
