@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
-import { cutUp, hashSeed, ransomGlyphs, rng, shuffled, tornClipPath, tornSlab } from './collage';
+import { cutUp, hashSeed, ransomGlyphs, rng, shuffled, tornCirclePath, tornClipPath, tornPolygonPath, tornSlab } from './collage';
 
 describe('rng', () => {
   it('is deterministic and stays in [0, 1)', () => {
@@ -92,5 +92,48 @@ describe('tornSlab', () => {
     expect(points[0]).toMatch(/^calc\(100% [+-] [\d.]+px\) 0%$/);
     expect(points[4]).toMatch(/^calc\(88% [+-] [\d.]+px\) 100%$/);
     expect(points[9]).toMatch(/^calc\(12% [+-] [\d.]+px\) 0%$/);
+  });
+});
+
+/** The numbers of an SVG path made only of M/L/Z commands, as [x, y] pairs. */
+const pathPoints = (d: string) =>
+  d
+    .replace(/[MZ]/g, '')
+    .split('L')
+    .map((p) => p.trim().split(' ').map(Number) as [number, number]);
+
+describe('tornPolygonPath', () => {
+  const square: [number, number][] = [[0, 0], [100, 0], [100, 100], [0, 100]];
+
+  it('is a closed, deterministic path', () => {
+    const d = tornPolygonPath(square, 11, 4, 20);
+    expect(d).toMatch(/^M[-\d.]+ [-\d.]+(L[-\d.]+ [-\d.]+)+Z$/);
+    expect(tornPolygonPath(square, 11, 4, 20)).toBe(d);
+    expect(tornPolygonPath(square, 12, 4, 20)).not.toBe(d);
+  });
+
+  it('keeps the corners and stays within the tear depth of each edge', () => {
+    const points = pathPoints(tornPolygonPath(square, 3, 5, 20));
+    expect(points).toHaveLength(20);
+    for (const corner of square) expect(points).toContainEqual(corner);
+    for (const [x, y] of points) {
+      expect(x).toBeGreaterThanOrEqual(-5);
+      expect(x).toBeLessThanOrEqual(105);
+      expect(y).toBeGreaterThanOrEqual(-5);
+      expect(y).toBeLessThanOrEqual(105);
+    }
+  });
+});
+
+describe('tornCirclePath', () => {
+  it('only tears inwards', () => {
+    const points = pathPoints(tornCirclePath(50, 9, 4, 40));
+    expect(points).toHaveLength(40);
+    for (const [x, y] of points) {
+      const r = Math.hypot(x, y);
+      expect(r).toBeLessThanOrEqual(50.1);
+      expect(r).toBeGreaterThanOrEqual(45.9);
+    }
+    expect(tornCirclePath(50, 9, 4, 40)).toBe(tornCirclePath(50, 9, 4, 40));
   });
 });

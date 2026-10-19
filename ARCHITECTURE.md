@@ -17,16 +17,17 @@
 7. [Collage system](#collage-system)
 8. [Readymades](#readymades)
 9. [Found-object mobile](#found-object-mobile)
-10. [Page transitions](#page-transitions)
-11. [Background stage](#background-stage)
-12. [Pages](#pages)
-13. [Styling and theming](#styling-and-theming)
-14. [Fonts](#fonts)
-15. [Print](#print)
-16. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
-17. [Testing](#testing)
-18. [Adding content](#adding-content)
-19. [Deployment](#deployment)
+10. [Opening sequence](#opening-sequence)
+11. [Page transitions](#page-transitions)
+12. [Background stage](#background-stage)
+13. [Pages](#pages)
+14. [Styling and theming](#styling-and-theming)
+15. [Fonts](#fonts)
+16. [Print](#print)
+17. [Accessibility and reduced motion](#accessibility-and-reduced-motion)
+18. [Testing](#testing)
+19. [Adding content](#adding-content)
+20. [Deployment](#deployment)
 
 ---
 
@@ -64,6 +65,7 @@ Every route is statically generated for both locales (33 pages at build time). P
 │   │   ├── collage/                  # Dada collage system and the Three.js Merzbau
 │   │   ├── readymade/                # Three.js readymades: figure, canvas, stage, print pass, works/
 │   │   ├── objets/                   # Found-object mobile: figure, canvas, scene, catalogue
+│   │   ├── opening/                  # Title sequence on a fresh visit: gate, labels, timeline, stage, hand, low-poly layer, ribbon
 │   │   ├── transition/               # Page-transition provider and link
 │   │   └── *.tsx                     # Page sections and site chrome
 │   ├── i18n/                         # routing.ts · navigation.ts · request.ts
@@ -124,7 +126,7 @@ The CV page exports `revalidate = 86400`, so the displayed age stays current wit
             └── CursorReticle (client)
 ```
 
-`<html>` is rendered with `className="js-fx …"` and `data-cover="off"`, so the pre-hide applies from the first byte without an inline script; a `<noscript><style>` block un-hides everything when JavaScript is off.
+`<html>` is rendered with `className="js-fx …"` and `data-cover="off"`, so the pre-hide applies from the first byte; a `<noscript><style>` block un-hides everything when JavaScript is off. The only inline script is the opening's gate (see *Opening sequence*), which may switch `data-cover` on before the first paint.
 
 ---
 
@@ -255,6 +257,21 @@ An `IntersectionObserver` stops the frame callback while the figure is off-scree
 
 ---
 
+## Opening sequence
+
+a six-second title sequence on a fresh visit, choreographed after the first seconds of a Bauhaus-style motion-graphics reference (timing only: none of its text or art is used) and translated into Merz: torn paper, Soviet red/ink/kraft on creased graph paper, halftone and misregistered plates, 3D printed through the readymade pass.
+
+- **When it plays** — `gate.ts` is the one inline script in `<head>` (`[locale]/layout.tsx`). Before the first paint it sets `html[data-opening="on"]` and `data-cover="on"` only for a reload, or a navigation from outside the site (empty or cross-origin referrer); language switches, back/forward and links opened from the site skip it, and it never plays under `prefers-reduced-motion`. `?intro=1` forces it, `?intro=0` skips it; in development `?intro=1&at=2.5` holds it at a moment (callbacks on the way still run) and `window.__opening` exposes the timeline. The gate's decision table is tested (`gate.test.ts`).
+- **Beats** (`labels.ts`, seconds): `lamp` 0.1 paper lit up from black, two discs part · `morph` 1.25 cut-to-cut torn shapes (disc + bolt → sliver → triangle → Malevich's tilted square → Lissitzky's wedge pierces it) · `build` 1.75 the poster snaps together (nucleus, C-ring, orbits, bars, dials, pen nib, caption = the name, typewritten slug) · `breathe` 1.95 wedge sweeps, orbits multiply · `scatter` 2.75 the name tears off as ransom letters along an arc, the slug scrambles · `tilt` 3.25 ring and orbits turn in CSS 3D, slabs fan in · `whip` 3.6 whip pan past an "МЕРЦ·2026" slab · `collage`/`hand` 3.9 a 3D hand rises with Sputnik on its fingertip · `launch` 4.75 Sputnik flies a hook trailing a torn red/ink ribbon · `window` 5.35 the ribbon opens a window onto the live page (`fx:reveal` fires here, so the page's entrances play inside it) and the camera pushes into it · `end` 6.0.
+- **Camera** — a virtual camera (`cam`: pan, roll, zoom; one tween chain in `timeline.ts`) moves through scene A the whole time: a dolly in from a wide rolled frame, a jolt on `build`, a long drift and roll into the whip. It is applied to the `[data-op="cam"]` wrapper and read by the low-poly layer, so the two parallax against each other.
+- **Low-poly layer** (`poly.ts`) — one full-screen transparent three.js canvas: flat-shaded Platonic solids and a five-sided wedge in the poster papers, outlined in ink, tumbling at depth around the poster (swept off with the whip), and the low-poly Sputnik that flies the ribbon (the SVG Sputnik is the fallback). No halftone pass full-screen (too costly); built from primitives.
+- **Hand** (`scene.ts`) — the WebXR "generic hand" (MIT, `public/models/generic_hand/`, credited in `CREDITS.txt`). Its 25 joints are siblings in the file, so they are re-parented into finger chains; joints curl about local x and fan about local z (`POSE`). A lathe forearm, Sputnik and two orbit rings are built from primitives; everything prints through the readymade pass in a canvas the size of the hand's box. If three.js or the model is late, or WebGL fails, the baked print `public/images/opening/hand.webp` rises instead (re-bake it from the live canvas if the pose changes; `PRINT_TIP` in `timeline.ts` is its fingertip).
+- **Ribbon window** (`ribbon.ts`, pure and tested) — the overlay's `clip-path: path(evenodd, viewport + hole)` is rewritten every frame from a sampled flight path with width, twist and per-sample tears; the rims are SVG quads. For the reveal the streamer is scaled about a point inside it while that point is carried to the screen centre, which never folds the outline, so even-odd stays correct until the window covers the screen.
+- **Rules** — everything lives in one GSAP context in `OpeningSequence.tsx` (the hand's and solids' tweens are added to the master when their modules load); the reveal is dispatched from `setTimeout(…, 0)`; Strict Mode's revert/re-run is handled by a run counter. Any key, click, tap, wheel or touch scroll skips it (fade out, cover lifted); a background tab starts it when first looked at. JS removes the CSS failsafe (8.5 s) once it runs and keeps its own (end + 1.9 s). While it plays, `TransitionProvider` leaves the cover on, and the Merzbau, readymade and mobile canvases and the background poster's draw-in wait for the reveal.
+- **Copy** — the `opening` namespace (`skip`, `caption`, `slugTop`, `slugBottom`, `strip`); "МЕРЦ·2026" is decorative Cyrillic like the hero's words. Styles are the `opening sequence` block in `globals.css` (screen only; hidden under reduced motion and in print).
+
+---
+
 ## Page transitions
 
 `TransitionProvider` renders a fixed cover (red slab and ink slab, both torn along their long edges by `tornSlab()` clip-paths, with a grid, star and label) and exposes `navigate(href, { label, locale })`. It tracks a phase — `idle → covering → waiting → revealing → idle`:
@@ -331,7 +348,7 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 `@media print` turns the CV into a two-page A4 document:
 
 - `@page { size: A4; margin: 12mm 13mm }`, all colour tokens redefined to black/white, `color-scheme: light !important`.
-- Chrome and decoration are hidden (`.no-print`, header, footer, background, cover, cursor, modal, collage hero, cut-up poem, tape, stamps).
+- Chrome and decoration are hidden (`.no-print`, header, footer, background, cover, opening sequence, cursor, modal, collage hero, cut-up poem, tape, stamps).
 - Scramble text that has not resolved prints its real text (`.glitch-base { opacity: 1 !important }`, overlay hidden).
 - Shadows, filters, text shadows, animations and transitions are removed inside `<main>`; GSAP leftovers (`opacity`, transforms, `clip-path`) are overridden for `[data-fx-hide]` content and the sheet.
 - Print-specific type scale in pt; contact rows switch to printable URLs (`.print-only`); entries avoid breaking across pages.
@@ -355,8 +372,9 @@ Loaded with `next/font/google` and exposed as CSS variables on `<html>`:
 | `profile.test.ts` | Age boundaries in Hong Kong time; contact links |
 | `youtube.test.ts` | URL parsing and embed URLs |
 | `text-fx.test.ts` | Lossless segmentation (fast-check), CJK splitting, PRNG determinism, displacement clamps, glitch pools and frames, the glyph cycler holding each noise glyph for its hold time |
-| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, readymade labels in both languages, every one of the nine models' files present and credited (no transmission pass), British spelling |
-| `collage.test.ts` | Seeded PRNG range and determinism, shuffle as a permutation, torn clip-paths (only the requested sides, inside the box), torn slabs, ransom glyphs (deterministic, bare spaces, no paper repeated on neighbours), lossless cut-up in English and Chinese |
+| `data.test.ts` | 11 projects / 30 unique videos / 19 courses, the Swift iOS app folded into Pour Rice (12 videos), references between data, ISO dates, newest-first timelines, private collaborations unlinked, bilingual completeness, matching message keys, readymade labels and the opening's copy in both languages, every one of the ten models' files present and credited (no transmission pass), British spelling |
+| `opening/gate.test.ts` · `ribbon.test.ts` · `timeline.test.ts` | When the opening plays (reload, outside referrer, `?intro`, reduced motion, back/forward); ribbon geometry (closed, finite, deterministic, no window while thin, covers the viewport once pushed in); labels in order, six seconds |
+| `collage.test.ts` | Seeded PRNG range and determinism, shuffle as a permutation, torn clip-paths (only the requested sides, inside the box), torn slabs, torn polygon and disc paths, ransom glyphs (deterministic, bare spaces, no paper repeated on neighbours), lossless cut-up in English and Chinese |
 
 ---
 

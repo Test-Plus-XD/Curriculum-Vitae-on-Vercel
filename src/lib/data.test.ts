@@ -75,13 +75,15 @@ describe('readymade models', () => {
   const MODELS = [
     'marble_bust_01', 'vintage_pocket_watch', 'measuring_tape_01', 'round_spectacles', 'painted_wooden_stool',
     'cross_pein_hammer', 'wooden_spoon', 'vintage_stapler', 'vintage_telephone_wall_clock',
+    // The opening's hand (MIT, not Poly Haven): no textures at all.
+    'generic_hand',
   ];
 
   it('ships every glTF with its buffers and textures, and no transmission pass', () => {
     for (const name of MODELS) {
       const dir = join(process.cwd(), 'public', 'models', name);
       const gltf = JSON.parse(readFileSync(join(dir, `${name}.gltf`), 'utf8'));
-      for (const { uri } of [...gltf.buffers, ...gltf.images]) expect(existsSync(join(dir, uri)), `${name}: ${uri}`).toBe(true);
+      for (const { uri } of [...gltf.buffers, ...(gltf.images ?? [])]) expect(existsSync(join(dir, uri)), `${name}: ${uri}`).toBe(true);
       expect(gltf.extensionsUsed ?? []).not.toContain('KHR_materials_transmission');
     }
   });
@@ -128,6 +130,12 @@ describe('bilingual content', () => {
         const label = messages.readymade[work];
         for (const key of ['artist', 'title', 'note', 'action'] as const) expect(label[key].trim(), `${work}.${key}`).not.toBe('');
       }
+    }
+  });
+
+  it('words the opening in both languages', () => {
+    for (const messages of [en, zh]) {
+      for (const key of ['skip', 'caption', 'slugTop', 'slugBottom', 'strip'] as const) expect(messages.opening[key].trim(), key).not.toBe('');
     }
   });
 

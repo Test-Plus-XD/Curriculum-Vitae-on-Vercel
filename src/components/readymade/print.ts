@@ -118,7 +118,8 @@ const fragmentShader = /* glsl */ `
     float d = length(fract(q) - 0.5);
     float radius = sqrt(clamp(amount, 0.0, 1.0)) * 0.7071;
     float aa = 0.75 / (uCell * uPx);
-    return 1.0 - smoothstep(radius - aa, radius + aa, d);
+    // No ink, no dot: without the step, anti-aliasing leaves a half-strength dot in every empty cell.
+    return (1.0 - smoothstep(radius - aa, radius + aa, d)) * step(0.0001, amount);
   }
 
   vec3 aces(vec3 x) {

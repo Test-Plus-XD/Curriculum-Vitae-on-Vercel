@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import Scramble from '../fx/Scramble';
 import { Tape } from '../collage/Paper';
+import { onPageReveal } from '@/lib/reveal';
 import type { WorkName } from './works';
 
 const ReadymadeCanvas = dynamic(() => import('./ReadymadeCanvas'), { ssr: false });
@@ -48,8 +49,10 @@ export default function ReadymadeFigure({ work, number, className = '' }: Props)
       },
       { rootMargin: '400px 0px' },
     );
-    io.observe(el);
+    // Not while the opening (or a page transition) covers the page: one WebGL scene at a time.
+    const offReveal = onPageReveal(() => io.observe(el));
     return () => {
+      offReveal();
       io.disconnect();
       if (idle) w.cancelIdleCallback?.(idle);
       clearTimeout(timer);

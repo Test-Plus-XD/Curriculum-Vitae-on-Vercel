@@ -1,7 +1,8 @@
-3D models used by the "Readymade" figures (src/components/readymade/).
+3D models used by the "Readymade" figures (src/components/readymade/), the found-object mobile
+(src/components/objets/) and the opening sequence (src/components/opening/).
 
-All models are from Poly Haven (https://polyhaven.com) and are released under CC0 1.0
-(public domain). Textures were downscaled for the web; some maps were removed.
+Poly Haven (https://polyhaven.com), released under CC0 1.0 (public domain). Textures were downscaled
+for the web; some maps were removed.
 
 marble_bust_01        Rico Cilliers      https://polyhaven.com/a/marble_bust_01
 measuring_tape_01     Kuutti Siitonen    https://polyhaven.com/a/measuring_tape_01
@@ -15,3 +16,37 @@ vintage_telephone_wall_clock  Adrian C           https://polyhaven.com/a/vintage
 
 The halftone prints in public/images/press/ are renders of these same CC0 models, made with the
 site's own print pass (src/components/readymade/print.ts) and used as the scrolling background wall.
+
+generic_hand          WebXR Input Profiles, "generic-hand" right hand
+                      https://github.com/immersive-web/webxr-input-profiles
+                      (npm @webxr-input-profiles/assets 1.0.19, dist/profiles/generic-hand/right.glb,
+                      split from GLB into glTF + .bin, otherwise unchanged). Released under the MIT licence:
+
+  MIT License
+
+  Copyright (c) 2019 Amazon
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is furnished
+  to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice (including the next
+  paragraph) shall be included in all copies or substantial portions of the
+  Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+  OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Textures outside public/models:
+
+public/images/opening/paper-crease.webp
+                      Baked from the normal map of "Paper003" by ambientCG (https://ambientcg.com/a/Paper003),
+                      released under CC0 1.0 (public domain): lit from the upper left and kept as a
+                      transparent shadow/highlight layer for the opening's paper plate.

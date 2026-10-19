@@ -185,5 +185,12 @@
     "stampCentre": "無用",
     "stampSub": "不新也不實用",
     "swingHint": "點擊印張，讓它們搖晃起來。"
+  },
+  "opening": {
+    "skip": "略過片頭",
+    "caption": "吳宇涵",
+    "slugTop": "個人履歷 · 香港特別行政區",
+    "slugBottom": "軟件開發人員 · 2026",
+    "strip": "個人履歷"
   }
 }

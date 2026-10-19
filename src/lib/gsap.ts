@@ -18,6 +18,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Flip, DrawSVGPlugin, Cust
 CustomEase.create('soviet', 'M0,0 C0.08,0.72 0.18,0.98 0.42,1 0.66,1.01 0.8,1 1,1');
 // "rewind": slow start, sharp middle, long settle — used by page transitions.
 CustomEase.create('rewind', 'M0,0 C0.6,0 0.25,1 1,1');
+// "whip": a camera whip-pan — almost no start, a violent middle, a long smear into place (the opening).
+CustomEase.create('whip', 'M0,0 C0.5,0 0.18,0.98 0.4,0.995 0.6,1.004 0.8,1 1,1');
 
 gsap.defaults({ ease: 'soviet', duration: 0.8 });
 

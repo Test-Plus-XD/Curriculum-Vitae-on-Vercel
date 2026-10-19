@@ -17,6 +17,8 @@ import { createPrintPass, type PrintOptions } from './print';
 export interface StageOptions {
   fov?: number;
   print?: Partial<PrintOptions>;
+  /** Highest device pixel ratio to render at (default 2, or 1.5 on touch devices). */
+  maxPixelRatio?: number;
 }
 
 export interface Stage {
@@ -43,7 +45,7 @@ export function createStage(canvas: HTMLCanvasElement, host: HTMLElement, option
   // Shader compiler chatter (e.g. Direct3D precision notes) only matters while developing.
   renderer.debug.checkShaderErrors = process.env.NODE_ENV !== 'production';
   const coarse = window.matchMedia('(pointer: coarse)').matches;
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, options.maxPixelRatio ?? (coarse ? 1.5 : 2));
   renderer.setPixelRatio(pixelRatio);
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.autoClear = true;

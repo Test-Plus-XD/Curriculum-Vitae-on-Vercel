@@ -185,5 +185,12 @@
     "stampCentre": "RIEN",
     "stampSub": "NI UTILE NI NEUF",
     "swingHint": "Tap the prints to set them swinging."
+  },
+  "opening": {
+    "skip": "Skip intro",
+    "caption": "NG YU HAM BALDWIN",
+    "slugTop": "Curriculum vitae · Hong Kong SAR",
+    "slugBottom": "Software developer · 2026",
+    "strip": "Curriculum vitae"
   }
 }

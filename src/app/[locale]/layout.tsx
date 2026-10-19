@@ -16,6 +16,8 @@ import CollageDefs from '@/components/collage/CollageDefs';
 import CursorReticle from '@/components/fx/CursorReticle';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import OpeningSequence from '@/components/opening/OpeningSequence';
+import { OPENING_GATE } from '@/components/opening/gate';
 import '../globals.css';
 
 const title = Noto_Serif_Display({
@@ -84,7 +86,8 @@ export const viewport: Viewport = {
 };
 
 // `js-fx` lets CSS pre-hide elements that GSAP will animate in, so nothing flashes before hydration. It is
-// rendered on <html> directly (no inline script); without JavaScript the <noscript> style shows everything.
+// rendered on <html> directly; without JavaScript the <noscript> style shows everything. The one inline script
+// is the opening's gate: it decides before the first paint whether this visit opens with the title sequence.
 const NO_SCRIPT_CSS = '[data-fx-hide]{opacity:1!important;animation:none!important}';
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
@@ -104,6 +107,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <noscript>
           <style>{NO_SCRIPT_CSS}</style>
         </noscript>
+        <script dangerouslySetInnerHTML={{ __html: OPENING_GATE }} />
       </head>
       {/* Browser extensions often add attributes to <body>; don't treat that as a hydration error. */}
       <body className={locale === 'zh-hk' ? 'locale-zh' : 'locale-en'} suppressHydrationWarning>
@@ -121,6 +125,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 {children}
               </main>
               <Footer />
+              <OpeningSequence />
               <CursorReticle />
             </TransitionProvider>
           </ThemeProvider>

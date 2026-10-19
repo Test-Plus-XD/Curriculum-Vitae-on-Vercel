@@ -197,12 +197,14 @@ export default function TransitionProvider({ children }: { children: ReactNode }
   }, [rawPathname, reveal]);
 
   useEffect(() => {
-    setCovered(false);
+    // The opening sequence holds the cover on a fresh visit and lifts it itself.
+    if (document.documentElement.dataset.opening !== 'on') setCovered(false);
     const cover = coverRef.current;
     // Coming back from the bfcache after a language switch: make sure the old cover is gone.
     const onShow = (e: PageTransitionEvent) => {
       if (!e.persisted || !cover) return;
       gsap.set(cover, { autoAlpha: 0 });
+      delete document.documentElement.dataset.opening;
       setCovered(false);
       phaseRef.current = 'idle';
     };

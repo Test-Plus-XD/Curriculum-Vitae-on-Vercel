@@ -131,6 +131,46 @@ export function cutUp(text: string, locale: string): string[] {
   return slips;
 }
 
+type Point2 = [number, number];
+
+const fmt = (n: number) => String(Math.round(n * 10) / 10);
+
+/**
+ * An SVG path (`d`) for a polygon cut out of paper by hand: every edge is split into short runs and each
+ * point is nudged across the edge by up to `depth` user units (shallow fibres with an occasional deeper bite),
+ * so a clean geometric shape reads as torn. Deterministic for a seed, so server and client draw the same scrap.
+ */
+export function tornPolygonPath(points: readonly Point2[], seed: number, depth = 4, step = 16): string {
+  const rand = rng(seed);
+  const out: Point2[] = [];
+  points.forEach(([x0, y0], i) => {
+    const [x1, y1] = points[(i + 1) % points.length];
+    const length = Math.hypot(x1 - x0, y1 - y0);
+    const runs = Math.max(1, Math.round(length / step));
+    // Unit normal of this edge (which side is "out" does not matter: the tear goes both ways).
+    const nx = length ? -(y1 - y0) / length : 0;
+    const ny = length ? (x1 - x0) / length : 0;
+    for (let k = 0; k < runs; k++) {
+      const t = k / runs;
+      const bite = k === 0 ? 0 : (rand() * 2 - 1) * depth * (k % 3 === 0 ? 1 : 0.4);
+      out.push([x0 + (x1 - x0) * t + nx * bite, y0 + (y1 - y0) * t + ny * bite]);
+    }
+  });
+  return `M${out.map(([x, y]) => `${fmt(x)} ${fmt(y)}`).join('L')}Z`;
+}
+
+/** A torn paper disc of radius `r` centred on the origin, as an SVG path; the tear only ever eats inwards. */
+export function tornCirclePath(r: number, seed: number, depth = 3, teeth = 56): string {
+  const rand = rng(seed);
+  const pts: string[] = [];
+  for (let k = 0; k < teeth; k++) {
+    const a = (k / teeth) * Math.PI * 2;
+    const rr = r - (k % 4 === 0 ? 0.5 + rand() * 0.5 : rand() * 0.4) * depth;
+    pts.push(`${fmt(Math.cos(a) * rr)} ${fmt(Math.sin(a) * rr)}`);
+  }
+  return `M${pts.join('L')}Z`;
+}
+
 /**
  * A slanted slab with hand-torn long edges, for the page-transition cover. The left edge runs from
  * `left[0]`% at the top to `left[1]`% at the bottom (likewise the right edge); every point is nudged up to

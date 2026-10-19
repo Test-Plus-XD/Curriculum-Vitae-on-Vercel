@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { gsap, useGSAP, ScrollTrigger, FULL_MOTION, FINE_POINTER } from '@/lib/gsap';
+import { playOnReveal } from '@/lib/reveal';
 
 export type FieldVariant = 'cv' | 'education' | 'projects' | 'detail';
 
@@ -83,14 +84,17 @@ export default function ConstructivistField({ variant }: { variant: FieldVariant
       applyPose(svg, pose, 0);
 
       const mm = gsap.matchMedia();
-      mm.add(FULL_MOTION, () => {
+      mm.add(FULL_MOTION, (_ctx, contextSafe) => {
         const q = gsap.utils.selector(svg);
-        gsap
-          .timeline({ delay: 0.15 })
+        // The poster draws in once the page is revealed (straight away unless the opening or a transition
+        // covers it), so on a fresh visit it draws itself through the opening's ribbon window.
+        const drawIn = gsap
+          .timeline({ paused: true, delay: 0.15 })
           .from(q('[data-draw]'), { drawSVG: '0%', duration: 2.2, ease: 'expo.inOut', stagger: 0.04 })
           .from(q('[data-layer="disc"] [data-spin]'), { scale: 0, transformOrigin: '50% 50%', duration: 1.6, ease: 'expo.out' }, 0)
           .from(q('[data-layer="band"] [data-band]'), { scaleX: 0, transformOrigin: '0% 50%', duration: 1.6, ease: 'expo.inOut' }, 0.2)
           .from(q('[data-word]'), { opacity: 0, y: 60, duration: 1.4, ease: 'expo.out' }, 0.6);
+        const offReveal = playOnReveal(contextSafe, () => drawIn.play());
 
         gsap.to(q('[data-layer="star"] [data-spin]'), { rotation: 360, svgOrigin: '0 0', duration: 80, repeat: -1, ease: 'none' });
         gsap.to(q('[data-layer="disc"] [data-ring-dash]'), { rotation: -360, svgOrigin: '0 0', duration: 140, repeat: -1, ease: 'none' });
@@ -125,6 +129,7 @@ export default function ConstructivistField({ variant }: { variant: FieldVariant
             scrollTrigger: { start: 0, end: 'max', scrub: 0.8, invalidateOnRefresh: true },
           });
         });
+        return offReveal;
       });
 
       mm.add(`${FULL_MOTION} and ${FINE_POINTER}`, () => {

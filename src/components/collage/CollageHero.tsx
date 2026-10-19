@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { gsap, useGSAP, ScrollTrigger, Draggable, FULL_MOTION, FINE_POINTER, prefersReducedMotion } from '@/lib/gsap';
-import { markReady, playOnReveal } from '@/lib/reveal';
+import { markReady, onPageReveal, playOnReveal } from '@/lib/reveal';
 import { thumbnailUrl } from '@/lib/youtube';
 import type { MerzbauContent } from './MerzbauScene';
 import RansomText from './RansomText';
@@ -49,18 +49,24 @@ export default function CollageHero(props: CollageHeroProps) {
   const merz = useMemo(() => props.merz, [props.merz]);
   const onFail = useCallback(() => setShowScene(false), []);
 
-  // Mount the WebGL scene once the page is idle, so it never competes with first paint.
+  // Mount the WebGL scene once the page is revealed and idle, so it never competes with first paint or with
+  // the opening sequence's own WebGL hand.
   useEffect(() => {
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    if (w.requestIdleCallback) {
-      const id = w.requestIdleCallback(() => setShowScene(true), { timeout: 1500 });
-      return () => w.cancelIdleCallback?.(id);
-    }
-    const t = window.setTimeout(() => setShowScene(true), 600);
-    return () => clearTimeout(t);
+    let id = 0;
+    let t = 0;
+    const offReveal = onPageReveal(() => {
+      if (w.requestIdleCallback) id = w.requestIdleCallback(() => setShowScene(true), { timeout: 1500 });
+      else t = window.setTimeout(() => setShowScene(true), 600);
+    });
+    return () => {
+      offReveal();
+      if (id) w.cancelIdleCallback?.(id);
+      clearTimeout(t);
+    };
   }, []);
 
   useGSAP(
