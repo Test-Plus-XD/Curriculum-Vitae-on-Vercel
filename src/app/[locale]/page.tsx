@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function CvPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const currentYear = new Intl.DateTimeFormat('en-HK', { timeZone: 'Asia/Hong_Kong', year: 'numeric' }).format(new Date());
   const t = await getTranslations('cv');
   const tn = await getTranslations('transition');
   const th = await getTranslations('hero');
@@ -53,7 +54,7 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
   });
   const hero = {
     label: th('label'),
-    kicker: th('kicker'),
+    kicker: th('kicker', { year: currentYear }),
     nameLines: ['NG YU HAM', 'BALDWIN'],
     zhName: ['吳', '宇', '涵'] as [string, string, string],
     title: L(PROFILE.title),

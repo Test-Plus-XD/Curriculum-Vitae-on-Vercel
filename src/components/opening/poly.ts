@@ -15,6 +15,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   OctahedronGeometry,
+  PMREMGenerator,
   PerspectiveCamera,
   Plane,
   Raycaster,
@@ -25,6 +26,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { gsap } from '@/lib/gsap';
 import { makeSolids, type SolidShape } from './solids';
 
@@ -35,11 +37,11 @@ import { makeSolids, type SolidShape } from './solids';
  * parallax; and the low-poly Sputnik that flies the ribbon once it leaves the hand. Which bodies turn up, where
  * they hang and how large they are is thrown fresh for every visit (see solids.ts).
  *
- * No halftone pass here (it would cost too much full-screen): flat shading in poster colours reads as printed
- * paper next to the SVG art. Built from primitives, so there is nothing to load.
+ * No halftone pass here (it would cost too much full-screen): lightly reflective poster colours and brushed-metal
+ * linework echo the printed SVG art. Built from primitives, so there is nothing to load.
  */
 
-/** Poster papers (sRGB). Ink is lifted a little so its facets still read. */
+/** Poster colours in sRGB; ink stays reserved for fine linework and Sputnik's antennae. */
 const PAPER = {
   red: '#c8231a',
   ink: '#2a221d',
@@ -75,9 +77,10 @@ export interface PolyPiece {
   dispose(): void;
 }
 
+// Add a soft enamel sheen while keeping the paper colours and sharp facets legible.
 function outlined(geometry: BufferGeometry, color: string, edges: LineBasicMaterial) {
   const group = new Group();
-  group.add(new Mesh(geometry, new MeshStandardMaterial({ color, flatShading: true, roughness: 0.92, metalness: 0 })));
+  group.add(new Mesh(geometry, new MeshStandardMaterial({ color, flatShading: true, roughness: 0.42, metalness: 0.24, envMapIntensity: 0.75 })));
   group.add(new LineSegments(new EdgesGeometry(geometry, 1), edges));
   return group;
 }
@@ -115,10 +118,26 @@ export function buildPoly(
   const scene = new Scene();
   const camera = new PerspectiveCamera(35, 1, 0.1, 60);
   camera.position.set(0, 0, 10);
-  const hemi = new HemisphereLight(0xfff4e0, 0x3a2a20, 1.5);
+  const hemi = new HemisphereLight(0xfff1dc, 0x4a3828, 1.5);
   const key = new DirectionalLight(0xffffff, 2.2);
   key.position.set(-4, 6, 5);
-  scene.add(hemi, key);
+  const rim = new DirectionalLight(0xdfe8ff, 1.1);
+  rim.position.set(5, 3, -6);
+  scene.add(hemi, key, rim);
+
+  // Borrow the readymade stage's small studio reflection so enamel and steel catch light instead of falling black.
+  const pmrem = new PMREMGenerator(renderer);
+  const room = new RoomEnvironment();
+  const environment = pmrem.fromScene(room, 0.04).texture;
+  scene.environment = environment;
+  scene.environmentIntensity = 0.55;
+  room.traverse((object) => {
+    const mesh = object as Mesh;
+    mesh.geometry?.dispose();
+    const materials = ([] as (Material | undefined)[]).concat(mesh.material as Material | Material[] | undefined);
+    for (const material of materials) material?.dispose();
+  });
+  pmrem.dispose();
 
   const edges = new LineBasicMaterial({ color: '#17120f', transparent: true, opacity: 0.85 });
   const spread = tall ? 0.5 : 1;
@@ -219,6 +238,7 @@ export function buildPoly(
           m.geometry?.dispose();
           for (const mat of ([] as (Material | undefined)[]).concat(m.material as Material | Material[] | undefined)) mat?.dispose();
         });
+        environment.dispose();
         renderer.dispose();
       },
     };

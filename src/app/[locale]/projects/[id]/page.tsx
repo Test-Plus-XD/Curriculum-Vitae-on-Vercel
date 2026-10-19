@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
-import { ArrowLeft, ArrowUpRight, Github, Radio } from 'lucide-react';
-import { PROJECT_IDS, buildTimeline, getProject } from '@/lib/projects';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Github, Radio } from 'lucide-react';
+import { PROJECTS, PROJECT_IDS, buildTimeline, getProject, videosNewestFirst } from '@/lib/projects';
 import { getCourse } from '@/lib/education';
-import { pick } from '@/lib/i18n-text';
+import { formatDate, pick } from '@/lib/i18n-text';
 import { alternates } from '@/lib/seo';
 import DadaTypography from '@/components/fx/DadaTypography';
+import HeroWedge from '@/components/fx/HeroWedge';
+import ReadingRule from '@/components/fx/ReadingRule';
 import RevealHeading from '@/components/fx/RevealHeading';
 import Scatter from '@/components/fx/Scatter';
 import Counter from '@/components/fx/Counter';
@@ -15,6 +17,8 @@ import Magnetic from '@/components/fx/Magnetic';
 import Scramble from '@/components/fx/Scramble';
 import TransitionLink from '@/components/transition/TransitionLink';
 import DevTimeline from '@/components/DevTimeline';
+import DetailPhoto from '@/components/DetailPhoto';
+import KeepCompounds from '@/components/KeepCompounds';
 import OrbitDiagram from '@/components/OrbitDiagram';
 
 export const dynamicParams = false;
@@ -49,16 +53,24 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const timeline = buildTimeline(project);
   let section = 0;
   const index = () => `§ ${String(++section).padStart(2, '0')}`;
+  // The latest reel's still is pasted into the hero as a press photograph (Pour Rice shows its app icon).
+  const lead = id === 'pourrice' ? undefined : videosNewestFirst(project)[0];
+  // The neighbouring stories in the gazette's order, wrapping round at either end.
+  const at = PROJECT_IDS.indexOf(id);
+  const prev = PROJECTS[(at - 1 + PROJECTS.length) % PROJECTS.length];
+  const next = PROJECTS[(at + 1) % PROJECTS.length];
 
   return (
     <div className="page page-detail">
+      <ReadingRule />
       <TransitionLink href="/projects" label={tn('projects')} className="back-link">
         <ArrowLeft size={16} aria-hidden="true" />
         <Scramble text={tc('back')} />
       </TransitionLink>
 
       <section className={`detail-hero ${id === 'pourrice' ? 'detail-hero-pour-rice' : ''}`}>
-        <div className="detail-hero-layout">
+        <HeroWedge />
+        <div className={`detail-hero-layout ${lead ? 'has-photo' : ''}`}>
           <div className="detail-hero-copy">
             <p className="eyebrow">
               <span className="eyebrow-dot" aria-hidden="true" />
@@ -117,6 +129,15 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 unoptimized
               />
             </figure>
+          )}
+          {lead && (
+            <Scatter as="div" className="detail-photo-wrap" variant="collage">
+              <DetailPhoto
+                video={lead}
+                caption={L(lead.title)}
+                credit={`${tp('gazette.credit', { count: project.videos.length })} · ${formatDate(lead.date, locale)}`}
+              />
+            </Scatter>
           )}
         </div>
       </section>
@@ -249,6 +270,31 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           </div>
         </aside>
       </div>
+
+      <nav className="story-nav-wrap" aria-label={t('moreStories')}>
+        <Scatter as="div" className="story-nav" variant="collage">
+          <TransitionLink href={`/projects/${prev.id}`} label={L(prev.title)} className="story-nav-link is-prev">
+            <span className="story-nav-kicker">
+              <ArrowLeft size={14} aria-hidden="true" />
+              {t('previousStory')}
+            </span>
+            <span className="story-nav-title font-title">
+              <KeepCompounds text={L(prev.title)} />
+            </span>
+            <span className="story-nav-deck">{L(prev.tagline)}</span>
+          </TransitionLink>
+          <TransitionLink href={`/projects/${next.id}`} label={L(next.title)} className="story-nav-link is-next">
+            <span className="story-nav-kicker">
+              {t('nextStory')}
+              <ArrowRight size={14} aria-hidden="true" />
+            </span>
+            <span className="story-nav-title font-title">
+              <KeepCompounds text={L(next.title)} />
+            </span>
+            <span className="story-nav-deck">{L(next.tagline)}</span>
+          </TransitionLink>
+        </Scatter>
+      </nav>
     </div>
   );
 }

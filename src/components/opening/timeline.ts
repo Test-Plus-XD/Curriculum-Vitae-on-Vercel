@@ -87,12 +87,13 @@ export function buildOpening(env: OpeningEnv): Opening {
   const plate = one<HTMLElement>('plate');
   const ringLayer = one<SVGSVGElement>('a-ring');
   const orbitLayer = one<SVGSVGElement>('a-orbits');
-  const orbits = q<SVGPathElement>('orbit');
+  const orbits = q<SVGGElement>('orbit');
+  const orbitPaths = orbits.map((orbit) => Array.from(orbit.querySelectorAll<SVGPathElement>('path')));
 
   // Initial states (before the first frame plays).
   gsap.set([camEl, sceneA], { transformOrigin: origin });
   gsap.set([ringLayer, orbitLayer], { transformOrigin: origin, transformPerspective: 900 });
-  gsap.set(orbits, { drawSVG: '0% 0%' });
+  gsap.set(orbitPaths.flat(), { drawSVG: '0% 0%' });
   gsap.set(letters, { opacity: 0, y: captionSize * 0.6 });
   gsap.set(caption, { rotation: -4, transformOrigin: '0% 100%' });
   gsap.set(one('m-ink'), { x: -14, y: 4 });
@@ -102,6 +103,12 @@ export function buildOpening(env: OpeningEnv): Opening {
   Object.entries(L).forEach(([name, at]) => master.addLabel(name, at));
   const show = (targets: gsap.TweenTarget, at: number | string) => master.set(targets, { autoAlpha: 1 }, at);
   const hide = (targets: gsap.TweenTarget, at: number | string) => master.set(targets, { autoAlpha: 0 }, at);
+  const revealOrbit = (index: number, at: number, duration: number) => {
+    const orbit = orbits[index];
+    if (!orbit) return;
+    show(orbit, at);
+    master.to(orbitPaths[index], { drawSVG: orbit.dataset.draw ?? '0% 100%', duration, ease: 'power2.inOut' }, at);
+  };
 
   // ---------------------------------------------------------------- the camera
   // One continuous move through scene A, so the cuts and snaps happen inside a moving shot: a slow dolly in
@@ -168,8 +175,7 @@ export function buildOpening(env: OpeningEnv): Opening {
   master.from(one('nucleus'), { scale: 1.7, transformOrigin: '50% 50%', duration: 0.2, ease: 'back.out(3)' }, b);
   show(one('ring'), b);
   master.from(one('ring'), { scale: 0.62, rotation: -40, svgOrigin: '0 0', duration: 0.26 }, b);
-  show(orbits[0], b);
-  master.to(orbits[0], { drawSVG: orbits[0].dataset.draw ?? '0% 100%', duration: 0.34, ease: 'power2.out' }, b);
+  revealOrbit(0, b, 0.34);
   show([one('bars'), one('triangle'), one('gold-disc'), one('stripes'), one('dials'), one('slug')], b);
   master
     .from(one('bars'), { x: -320, duration: 0.22, ease: 'expo.out' }, b)
@@ -187,15 +193,13 @@ export function buildOpening(env: OpeningEnv): Opening {
   // ---------------------------------------------------------------- breathe: the poster keeps moving
   const br = L.breathe;
   const breath = L.tilt - br;
+  // The shared relative turn preserves each ellipse's distinct angle from POSTER.orbits.
   master
     .to(one('wedge'), { rotation: -112, svgOrigin: '0 0', duration: L.scatter - br + 0.3, ease: 'sine.inOut' }, br)
-    .to(one('ring'), { rotation: 46, svgOrigin: '0 0', duration: breath, ease: 'none' }, br)
-    .to(orbits, { rotation: 30, svgOrigin: '0 0', duration: breath, ease: 'none' }, br)
+    .to(one('ring'), { rotation: 104, scale: 1.06, svgOrigin: '0 0', duration: breath, ease: 'sine.inOut' }, br)
+    .to(orbits, { rotation: '+=30', svgOrigin: '0 0', duration: breath, ease: 'none' }, br)
     .to(one('stripes'), { x: -26, y: -18, duration: breath, ease: 'none' }, br);
-  show(orbits[1], br + 0.3);
-  master.to(orbits[1], { drawSVG: '0% 100%', duration: 0.45, ease: 'power2.inOut' }, br + 0.3);
-  show(orbits[2], br + 0.5);
-  master.to(orbits[2], { drawSVG: '0% 100%', duration: 0.45, ease: 'power2.inOut' }, br + 0.5);
+  orbits.slice(1).forEach((_orbit, index) => revealOrbit(index + 1, br + 0.3 + index * 0.2, 0.45));
   // The gold disc and the red bar turn square (hard cuts).
   hide(one('gold-disc'), br + 0.7);
   show(one('gold-square'), br + 0.7);
@@ -246,6 +250,8 @@ export function buildOpening(env: OpeningEnv): Opening {
 
   // ---------------------------------------------------------------- tilt: the poster turns in depth
   const t = L.tilt;
+  // Send the C-band behind the orbits as its tilt reaches the horizontal pass.
+  master.set(ringLayer, { zIndex: 1 }, t + 0.2);
   master
     .to(ringLayer, { rotationX: 74, duration: 0.4, ease: 'power2.inOut' }, t)
     .to(orbitLayer, { rotationY: 52, rotationX: 22, duration: 0.4, ease: 'power2.inOut' }, t)

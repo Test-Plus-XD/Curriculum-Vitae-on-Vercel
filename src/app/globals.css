@@ -111,14 +111,14 @@
   --ray: rgba(255, 122, 26, 0.08);
   --ray-strong: rgba(255, 165, 0, 0.14);
   --orbit: rgba(255, 181, 46, 0.3);
-  --word-stroke: rgba(255, 138, 92, 0.22);
+  --word-stroke: rgba(255, 138, 92, 0.42);
   --field-opacity: 0.85;
   --canvas-opacity: 1;
-  --screen-ink: rgba(241, 236, 228, 0.54);
-  --screen-red: rgba(228, 64, 47, 0.64);
-  --screen-opacity: 0.055;
-  --reg-ink: rgba(241, 236, 228, 0.4);
-  --slug-ink: rgba(241, 236, 228, 0.42);
+  --screen-ink: rgba(241, 236, 228, 0.74);
+  --screen-red: rgba(240, 84, 60, 0.82);
+  --screen-opacity: 0.1;
+  --reg-ink: rgba(241, 236, 228, 0.56);
+  --slug-ink: rgba(241, 236, 228, 0.64);
   --lamp-core: rgba(255, 112, 32, 0.22);
   --lamp-opacity: 0.7;
 
@@ -556,7 +556,7 @@
   /* On the night sheet the cut-outs are paper-coloured, so they stay plain and dimmed. */
   .dark .wall-print img {
     mix-blend-mode: normal;
-    opacity: calc(var(--wall-opacity, 0.34) * 0.52);
+    opacity: calc(var(--wall-opacity, 0.34) * 0.78);
   }
 
   .wall-word {
@@ -609,11 +609,36 @@
     opacity: 0.2;
   }
 
+  /* At night the disc is lit red and its screen printed in light ink, strong enough to read on the dark sheet. */
+  .dark .wall-disc {
+    background: radial-gradient(circle at 42% 38%, rgba(227, 72, 43, 0.3), rgba(198, 42, 31, 0.1) 58%, transparent 72%);
+  }
+
+  .dark .wall-disc::after {
+    background-image: radial-gradient(circle, var(--screen-ink) 0 1.1px, transparent 1.35px);
+    opacity: 0.5;
+  }
+
   .wall-arc {
     aspect-ratio: 1;
     border-radius: 50%;
     border: 1px dashed var(--line-strong);
     opacity: 0.65;
+  }
+
+  /* On the night sheet the outlined words and arcs are printed in light ink (and the display words in the
+     red-orange of the field) heavily enough to be read, not just sensed. */
+  .dark .wall-word {
+    -webkit-text-stroke-color: rgba(241, 236, 228, 0.52);
+    opacity: 0.9;
+  }
+
+  .dark .wall-word-display {
+    -webkit-text-stroke-color: rgba(255, 138, 92, 0.62);
+  }
+
+  .dark .wall-arc {
+    border-color: rgba(241, 236, 228, 0.42);
   }
 
   .wall-reg svg {
@@ -651,7 +676,7 @@
   .cf-screen-dots { opacity: 0.5; }
 
   .dark .cf-screen-dots {
-    opacity: 0.36;
+    opacity: 0.62;
   }
   .cf-word {
     font-family: var(--font-title);
@@ -1840,13 +1865,13 @@
 
   /* At night the paper is a cool light grey, like newsprint under a desk lamp. */
   .dark .gazette {
-    --sheet: #d3d3d0;
-    --sheet-under: #a9a9a6;
-    --sheet-wash: rgba(214, 214, 211, 0.42);
-    --sheet-edge: rgba(40, 40, 38, 0.2);
-    --sheet-screen: rgba(214, 214, 211, 0.36);
-    --flap-hi: #ececea;
-    --flap-lo: #c2c2bf;
+    --sheet: #b8b7b2;
+    --sheet-under: #92918c;
+    --sheet-wash: rgba(178, 177, 173, 0.62);
+    --sheet-edge: rgba(24, 24, 23, 0.28);
+    --sheet-screen: rgba(214, 213, 208, 0.7);
+    --flap-hi: #cac9c3;
+    --flap-lo: #9d9c97;
   }
 
   .gazette-sections {
@@ -1856,6 +1881,14 @@
     margin-bottom: 30px;
     padding: 4px 0;
     border-block: 3px double var(--line-strong);
+    /* Each index tab is a strip of tracing paper: the screens and prints show through, softened. */
+    --tab-fill: rgba(255, 253, 248, 0.58);
+    --tab-fill-on: rgba(255, 253, 248, 0.84);
+  }
+
+  .dark .gazette-sections {
+    --tab-fill: rgba(10, 8, 7, 0.5);
+    --tab-fill-on: rgba(10, 8, 7, 0.72);
   }
 
   .gazette-section {
@@ -1864,13 +1897,15 @@
     align-items: baseline;
     gap: 8px;
     padding: 10px 16px;
+    background: var(--tab-fill);
+    backdrop-filter: blur(5px);
     color: var(--ink-2);
     font-family: var(--font-display);
     font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    transition: color 0.3s;
+    transition: color 0.3s, background-color 0.3s;
   }
 
   .gazette-section + .gazette-section {
@@ -1892,6 +1927,7 @@
 
   .gazette-section:hover,
   .gazette-section.is-active {
+    background: var(--tab-fill-on);
     color: var(--red);
   }
 
@@ -1995,35 +2031,86 @@
     justify-self: end;
   }
 
-  .mast-name {
-    position: relative;
-    padding: 0 0.08em;
-    color: var(--ink);
-    font-family: var(--font-title);
-    font-size: clamp(72px, 13vw, 176px);
-    font-weight: 900;
-    font-stretch: 62.5%;
-    line-height: 0.84;
-    letter-spacing: -0.015em;
-    text-transform: uppercase;
+  /* Ear ornaments: a constructivist star (stories) and a film reel (footage), printed in the second colour. */
+  .mast-ear::before {
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    margin: 0 auto 5px;
+    background: var(--red);
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   }
 
-  /* Lissitzky's red wedge driven through the nameplate, behind the letters. */
-  .mast-name::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -10%;
-    z-index: -1;
-    width: 120%;
-    height: 0.2em;
-    background: var(--red);
-    clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 56%);
-    rotate: -5deg;
+  .mast-ear-r::before {
+    clip-path: none;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, var(--sheet) 0 1.3px, transparent 1.6px),
+      radial-gradient(circle at 50% 22%, var(--sheet) 0 2px, transparent 2.4px),
+      radial-gradient(circle at 77% 60%, var(--sheet) 0 2px, transparent 2.4px),
+      radial-gradient(circle at 23% 60%, var(--sheet) 0 2px, transparent 2.4px),
+      var(--red);
+  }
+
+  .mast-name {
+    position: relative;
+    grid-column: 2;
+    justify-self: center;
+    width: min(58vw, 800px);
+    max-width: 100%;
+    margin: 0;
+    line-height: 0;
+  }
+
+  .mast-name-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .mast-name-svg-letter {
+    font-family: var(--font-title);
+    font-size: 176px;
+    font-weight: 900;
+    font-stretch: 62.5%;
+    text-anchor: middle;
+  }
+
+  .mast-ink {
+    fill: var(--ink);
+  }
+
+  /* The red plate and the wedge's shadow: a 15° halftone screen in the second colour. */
+  .mast-screen circle {
+    fill: var(--red);
+  }
+
+  .mast-wedge-shadow {
+    opacity: 0.5;
+  }
+
+  .mast-wedge-tip {
+    stop-color: var(--orange);
+  }
+
+  .mast-wedge-base {
+    stop-color: color-mix(in srgb, var(--orange) 45%, var(--red) 55%);
+  }
+
+  /* A 45° ink screen over the wedge, so it reads as screen-printed rather than flat. */
+  .mast-wedge-screen circle {
+    fill: var(--ink);
+  }
+
+  .mast-wedge-dots {
+    opacity: 0.16;
   }
 
   .mast-motto {
     grid-column: 1 / -1;
+    justify-self: center;
     margin-top: 4px;
     color: var(--ink-2);
     font-family: var(--font-title);
@@ -2077,6 +2164,7 @@
       grid-column: 1 / -1;
       grid-row: 1;
       justify-self: center;
+      width: min(100%, 800px);
     }
 
     .mast-ear {
@@ -2184,29 +2272,6 @@
     outline-offset: -3px;
   }
 
-  .press-thumb-play {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    z-index: 2;
-    display: grid;
-    place-items: center;
-    width: 38px;
-    height: 38px;
-    border: 2px solid #efe7d4;
-    border-radius: 50%;
-    background: var(--vermilion);
-    color: #efe7d4;
-    box-shadow: 0 2px 6px rgba(23, 18, 15, 0.45);
-    transition: scale 0.35s var(--ease-out), background-color 0.3s;
-  }
-
-  .press-thumb:hover .press-thumb-play,
-  .press-thumb:focus-visible .press-thumb-play {
-    scale: 1.14;
-    background: var(--red);
-  }
-
   .story-plate img {
     width: 100%;
     height: 100%;
@@ -2263,7 +2328,8 @@
     hyphens: auto;
   }
 
-  .story-body p::first-letter {
+  .story-lead .story-body p::first-letter,
+  .story-wide .story-body p::first-letter {
     float: left;
     padding: 0.08em 0.1em 0 0;
     color: var(--red);
@@ -2273,9 +2339,34 @@
     line-height: 0.8;
   }
 
-  .story-side .story-body p::first-letter,
-  .story-brief .story-body p::first-letter {
-    font-size: 2.5em;
+  /* News briefs open on a dateline ("HONG KONG —" / 【本報訊】) rather than a drop cap. */
+  .story-dateline {
+    font-family: var(--font-display);
+    font-size: 0.74em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .locale-zh .story-dateline {
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: 0;
+  }
+
+  /* The photo credit after a caption, set like a wire-service credit line. */
+  .story-credit {
+    font-family: var(--font-display);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .locale-zh .story-credit {
+    font-family: inherit;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
   }
 
   /* Chinese papers set no drop caps (and a large 一 reads as a stray rule). */
@@ -2335,6 +2426,15 @@
     padding-right: 20px;
     background: var(--red);
     outline: none;
+  }
+
+  .story-more svg {
+    transition: translate 0.35s var(--ease-out);
+  }
+
+  .story-more:hover svg,
+  .story-more:focus-visible svg {
+    translate: 4px 0;
   }
 
   .story-lead .story-head {
@@ -2579,6 +2679,55 @@
     opacity: 0;
     pointer-events: none;
     background: linear-gradient(90deg, rgba(23, 18, 15, 0.5), rgba(23, 18, 15, 0.14) 35%, transparent 70%);
+  }
+
+  /* The hand that turns the pages: the opening's halftone print of a hand, cut out and pasted over the paper,
+     posed frame by frame from the turning page (see gazetteHand.ts). Behind it, its red plate: the same
+     silhouette as a vermilion dot screen, slipping out of register as the hand moves. */
+  .gazette-hand,
+  .gazette-hand-plate {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 6;
+    width: 220px;
+    aspect-ratio: 907 / 1350;
+    transform-origin: 37% 41%;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  .gazette-hand {
+    filter: drop-shadow(0 16px 14px rgba(23, 18, 15, 0.32));
+  }
+
+  .gazette-hand-plate {
+    z-index: 5;
+    background: var(--vermilion);
+  }
+
+  /* The print is only fetched once the paper is in view ("inked" by the gazette's first-view entrance). */
+  .gazette-hand.is-inked {
+    background: url("/images/opening/hand.webp") center / 100% 100% no-repeat;
+  }
+
+  .gazette-hand-plate.is-inked {
+    mask:
+      url("/images/opening/hand.webp") center / 100% 100% no-repeat,
+      radial-gradient(circle, #000 0 1.25px, transparent 1.6px) 0 0 / 5px 5px;
+    mask-composite: intersect;
+  }
+
+  .dark .gazette-hand {
+    filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.55));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gazette-hand,
+    .gazette-hand-plate {
+      display: none;
+    }
   }
 
   /* A dog-eared corner: the flap folded back over the page beneath. Turns to the next page. */
@@ -2833,7 +2982,42 @@
   }
 
   .detail-hero {
+    position: relative;
+    isolation: isolate;
     padding: 32px 0 28px;
+  }
+
+  /* The gazette's wedge, driven into the hero from the right edge behind the copy. */
+  .hero-wedge {
+    position: absolute;
+    top: 12%;
+    right: -6vw;
+    z-index: -1;
+    width: min(78vw, 980px);
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .dark .hero-wedge {
+    opacity: 0.62;
+  }
+
+  .hero-wedge-shadow circle {
+    fill: var(--vermilion);
+  }
+
+  .hero-wedge-screen circle {
+    fill: var(--ink-black);
+  }
+
+  @media (max-width: 719px) {
+    .hero-wedge {
+      top: 4%;
+      width: 120vw;
+      opacity: 0.55;
+    }
   }
 
   .detail-hero-layout {
@@ -2893,6 +3077,298 @@
     .detail-hero-pour-rice .project-app-icon {
       width: 152px;
       padding: 14px;
+    }
+  }
+
+  /* The latest reel's still, pasted into the hero as a taped halftone press photograph (colour on hover). */
+  .detail-photo-wrap {
+    min-width: 0;
+  }
+
+  .detail-photo {
+    position: relative;
+    margin: 14px 0 0;
+    padding: 10px 10px 12px;
+    background: var(--scrap);
+    color: var(--ink-black);
+    box-shadow:
+      0 2px 4px rgba(23, 18, 15, 0.2),
+      0 26px 40px -24px rgba(23, 18, 15, 0.6);
+    rotate: 1.6deg;
+    transition: rotate 0.6s var(--ease-out);
+  }
+
+  .detail-photo:hover,
+  .detail-photo:focus-within {
+    rotate: 0deg;
+  }
+
+  .detail-photo::before,
+  .detail-photo::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    z-index: 1;
+    width: 86px;
+    height: 24px;
+    background: var(--tape);
+    box-shadow: 0 1px 2px rgba(23, 18, 15, 0.14);
+    pointer-events: none;
+  }
+
+  .detail-photo::before {
+    left: 12%;
+    rotate: -6deg;
+  }
+
+  .detail-photo::after {
+    right: 10%;
+    rotate: 5deg;
+  }
+
+  .detail-photo-plate {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--ink-black);
+    background: #2a2420;
+  }
+
+  /* The still is a little taller than its frame, so it can drift inside it as the hero scrolls. */
+  .detail-photo-plate .press-thumb {
+    position: absolute;
+    inset: -7% 0;
+    width: auto;
+    height: auto;
+  }
+
+  .detail-photo-plate img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) sepia(0.2) contrast(1.25) brightness(1.04);
+    transition: filter 0.6s, scale 0.9s var(--ease-out);
+  }
+
+  .detail-photo-plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, transparent 0.75px, rgba(246, 239, 226, 0.38) 1.5px) 0 0 / 4px 4px;
+    transition: opacity 0.6s;
+  }
+
+  .detail-photo:hover .detail-photo-plate img,
+  .detail-photo:focus-within .detail-photo-plate img {
+    filter: none;
+    scale: 1.04;
+  }
+
+  .detail-photo:hover .detail-photo-plate::after,
+  .detail-photo:focus-within .detail-photo-plate::after {
+    opacity: 0;
+  }
+
+  .detail-photo figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2px 12px;
+    margin-top: 8px;
+    color: #5f5446;
+    font-family: var(--font-type);
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .detail-photo-credit {
+    font-family: var(--font-display);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .locale-zh .detail-photo-credit {
+    font-family: inherit;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Special Elite has no Chinese: a 繁中 caption is set in the body face instead of a fallback. */
+  .locale-zh .detail-photo figcaption {
+    font-family: inherit;
+  }
+
+  @media (min-width: 1024px) {
+    .detail-hero-layout.has-photo {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.92fr);
+      align-items: center;
+      gap: 56px;
+    }
+  }
+
+  /* The overview opens like a feature story, on a drop cap (Chinese papers set none). */
+  .detail-description::first-letter {
+    float: left;
+    padding: 0.06em 0.1em 0 0;
+    color: var(--accent-text);
+    font-family: var(--font-title);
+    font-size: 3.4em;
+    font-weight: 900;
+    line-height: 0.8;
+  }
+
+  .locale-zh .detail-description::first-letter {
+    float: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+  }
+
+  /* The neighbouring stories, as two clippings torn from the gazette. */
+  .story-nav-wrap {
+    margin: 64px 0 8px;
+  }
+
+  /* The torn clip-path would cut off a box-shadow, so the clippings cast theirs from the row instead. */
+  .story-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    filter: drop-shadow(0 12px 14px rgba(23, 18, 15, 0.24));
+  }
+
+  .story-nav-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 20px 20px;
+    background: var(--newsprint);
+    color: var(--ink-black);
+    text-decoration: none;
+    clip-path: polygon(0 4%, 7% 0, 19% 3%, 32% 0, 47% 4%, 61% 0, 78% 3%, 91% 0, 100% 4%, 100% 96%, 93% 100%, 79% 97%, 65% 100%, 50% 96%, 34% 100%, 20% 97%, 8% 100%, 0 96%);
+    rotate: -0.8deg;
+    transition: rotate 0.45s var(--ease-out), translate 0.45s var(--ease-out), background-color 0.3s;
+  }
+
+  .story-nav-link.is-next {
+    align-items: flex-end;
+    text-align: right;
+    rotate: 0.9deg;
+  }
+
+  .story-nav-link:hover,
+  .story-nav-link:focus-visible {
+    background-color: var(--scrap);
+    rotate: 0deg;
+    translate: 0 -4px;
+    outline: none;
+  }
+
+  /* The torn edge clips any outline, so focus is printed inside the clipping. */
+  .story-nav-link:focus-visible {
+    box-shadow: inset 0 0 0 3px var(--vermilion);
+  }
+
+  .story-nav-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--vermilion);
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .story-nav-kicker svg {
+    transition: translate 0.35s var(--ease-out);
+  }
+
+  .story-nav-link.is-prev:hover .story-nav-kicker svg {
+    translate: -4px 0;
+  }
+
+  .story-nav-link.is-next:hover .story-nav-kicker svg {
+    translate: 4px 0;
+  }
+
+  .story-nav-title {
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 800;
+    font-stretch: 72%;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .story-nav-deck {
+    color: #5f5446;
+    font-family: var(--font-title);
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 639px) {
+    .story-nav {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* The reading rule along the top edge (over the header, which slides away while reading): red ink printed
+     across as the story is read, the black plate trailing behind. */
+  .reading-rule {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 61;
+    height: 18px;
+    pointer-events: none;
+  }
+
+  .reading-rule-red,
+  .reading-rule-ink {
+    position: absolute;
+    right: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .reading-rule-red {
+    top: 0;
+    height: 3px;
+    background: var(--red-bright);
+  }
+
+  .reading-rule-ink {
+    top: 2px;
+    height: 2px;
+    background: var(--ink);
+    opacity: 0.5;
+  }
+
+  .reading-rule-mark {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    translate: -50% 0;
+    color: var(--accent-text);
+    font-family: var(--font-type);
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reading-rule-ink,
+    .reading-rule-mark {
+      display: none;
     }
   }
 
@@ -2970,6 +3446,95 @@
     max-width: 70ch;
     margin-top: 20px;
     color: var(--ink-2);
+  }
+
+  /* ------------------------------------------------ typesetting: projects and case studies */
+  /* Running text sets a comfortable measure and a pretty rag (no last word left alone on a line), with
+     punctuation hung in the margin where the browser can; prose figures sit in the line like lower case. */
+  .hero-lede,
+  .detail-description,
+  .detail-points li,
+  .story-deck,
+  .story-nav-deck,
+  .story-body p {
+    text-wrap: pretty;
+    hanging-punctuation: first allow-end;
+  }
+
+  .detail-description {
+    max-width: 66ch;
+  }
+
+  .detail-description,
+  .detail-points li,
+  .story-body p {
+    font-variant-numeric: oldstyle-nums proportional-nums;
+  }
+
+  /* The justified newspaper columns hyphenate, but never short words or two-letter fragments. */
+  .story-body {
+    hyphenate-limit-chars: 7 3 3;
+  }
+
+  /* A hyphenated compound in a headline stays on one line (see KeepCompounds). */
+  .nobr {
+    white-space: nowrap;
+  }
+
+  /* Headlines (and the ears' two-line notices) break into balanced lines and are never hyphenated. */
+  .story-head,
+  .story-nav-title,
+  .mast-motto,
+  .mast-ear {
+    text-wrap: balance;
+    hyphens: manual;
+  }
+
+  /* The paper's furniture and the highlight figures line up in columns. */
+  .mast-line,
+  .gazette-folio,
+  .gazette-foot,
+  .gazette-section-count,
+  .pager-page,
+  .highlight-value,
+  .detail-photo-credit {
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Chinese: strict line breaking (no line opens on closing punctuation), full-width punctuation trimmed at
+     the start of a line, and justified character by character, as a Hong Kong paper is set. */
+  .locale-zh .hero-lede,
+  .locale-zh .detail-description,
+  .locale-zh .detail-points li,
+  .locale-zh .story-deck,
+  .locale-zh .story-nav-deck,
+  .locale-zh .story-body p {
+    line-break: strict;
+    text-spacing-trim: trim-start;
+    hanging-punctuation: none;
+  }
+
+  .locale-zh .detail-description,
+  .locale-zh .story-body {
+    text-align: justify;
+    text-justify: inter-character;
+  }
+
+  /* Chinese labels keep their own face and a tighter track than the spaced Latin capitals. */
+  .locale-zh .story-nav-kicker {
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .locale-zh .story-kicker,
+  .locale-zh .side-title {
+    letter-spacing: 0.1em;
+  }
+
+  /* The ears' short notices break only at their punctuation, never inside a word such as 另附. */
+  .locale-zh .mast-ear {
+    word-break: keep-all;
   }
 
   .side-panel {
@@ -3228,6 +3793,7 @@
     position: absolute;
     left: 50%;
     top: 50%;
+    z-index: 2;
     display: grid;
     place-items: center;
     width: 58px;
@@ -3239,7 +3805,9 @@
     transition: scale 0.4s var(--ease-out), background 0.3s;
   }
 
-  .video-thumb:hover .video-thumb-play {
+  .video-thumb:hover .video-thumb-play,
+  .press-thumb:hover .video-thumb-play,
+  .press-thumb:focus-visible .video-thumb-play {
     scale: 1.15;
     background: var(--red-bright);
   }
@@ -4728,6 +5296,95 @@
     }
   }
 
+  /* Compact the mobile hero illustrations so portfolio details appear sooner. */
+  @media (max-width: 767px) {
+    .page-education .page-hero.has-readymade > .readymade {
+      display: grid;
+      grid-template-columns: minmax(0, 0.74fr) minmax(0, 1fr);
+      align-items: center;
+      width: min(100%, 440px);
+      margin: 24px auto 0;
+    }
+
+    .page-education .readymade-stage {
+      aspect-ratio: 4 / 5;
+    }
+
+    .page-education .readymade-label {
+      width: calc(100% + 6px);
+      margin: 0 0 0 -12px;
+      padding: 12px 13px 11px;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .page-education .readymade-title {
+      font-size: 18px;
+    }
+
+    .page-education .readymade-note {
+      font-size: 10.5px;
+    }
+
+    .page-projects .page-hero.has-readymade {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      column-gap: 12px;
+    }
+
+    .page-projects .page-hero.has-readymade > :not(.objets):not(.readymade) {
+      grid-column: 1 / -1;
+    }
+
+    .page-projects .page-hero.has-readymade > .objets,
+    .page-projects .page-hero.has-readymade > .readymade {
+      width: 100%;
+      min-width: 0;
+      margin: 18px 0 0;
+    }
+
+    .page-projects .objets-stage,
+    .page-projects .readymade-stage {
+      aspect-ratio: 1 / 1;
+    }
+
+    .page-projects .objets-label {
+      width: 100%;
+      margin-top: -14px;
+      padding: 9px 10px 8px;
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .page-projects .objets-catalogue,
+    .page-projects .objets-hint {
+      font-size: 9px;
+    }
+
+    .page-projects .readymade-label {
+      width: 100%;
+      margin: -22px 0 0 auto;
+      padding: 9px 10px 8px;
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .page-projects .readymade-title {
+      font-size: 16px;
+    }
+
+    .page-projects .readymade-note {
+      font-size: 10.5px;
+    }
+
+    .page-projects .readymade-action {
+      margin-top: 5px;
+      padding: 4px 8px 3px;
+      font-size: 9.5px;
+    }
+  }
+
   /* ------------------------------------------------------------- opening sequence */
   /* The title sequence on a fresh visit (src/components/opening). The gate script sets
      html[data-opening="on"] before the first paint; without it the overlay never shows. Colours are
@@ -4808,6 +5465,13 @@
     overflow: visible;
   }
 
+  .op-a > .op-layer[data-op="a-back"] { z-index: 0; }
+  .op-a > .op-layer[data-op="a-slabs"] { z-index: 1; }
+  .op-a > .op-layer[data-op="a-orbits"] { z-index: 2; }
+  .op-a > .op-layer[data-op="a-ring"] { z-index: 3; }
+  .op-a > .op-layer[data-op="a-core"] { z-index: 4; }
+  .op-a > .op-layer[data-op="a-front"] { z-index: 5; }
+
   /* Lights up: the plate and the poster fade in from the black sheet. */
   .op-plate,
   .op-a {
@@ -4864,12 +5528,19 @@
   .op-dot-ink { fill: var(--op-ink); }
   .op-dot-red { fill: var(--op-deep); }
   .op-stripe { stroke: var(--op-gold); stroke-width: 6; }
-  .op-dial { fill: none; stroke: var(--op-ink); stroke-width: 2; }
-  .op-orbit { fill: none; stroke: var(--op-ink); stroke-width: 8; stroke-linecap: round; }
+  .op-dial { fill: none; stroke: url(#op-steel); stroke-width: 2.4; }
+  .op-ring-offset { fill: var(--op-red); opacity: 0.72; }
+  .op-ring-edge { fill: none; stroke: var(--op-ink); stroke-width: 3; opacity: 0.72; }
+  .op-ring-metal { fill: url(#op-steel); stroke: var(--op-ink); stroke-width: 1.4; }
+  .op-ring-grain { fill: url(#op-metal-brush); opacity: 0.24; }
+  .op-orbit-offset { fill: none; stroke: var(--op-red); stroke-width: 8; stroke-linecap: round; opacity: 0.62; }
+  .op-orbit-rail { fill: none; stroke: var(--op-ink); stroke-width: 6.5; stroke-linecap: round; opacity: 0.68; }
+  .op-orbit { fill: none; stroke: url(#op-steel); stroke-width: 4.4; stroke-linecap: round; }
+  .op-orbit-highlight { fill: none; stroke: #fff8e9; stroke-width: 0.8; stroke-linecap: round; opacity: 0.8; }
   .op-ghost { fill: none; stroke: rgba(23, 18, 15, 0.13); stroke-width: 26; }
-  .op-gear { fill: var(--op-red); opacity: 0.6; }
-  .op-tower { stroke: var(--op-ink); stroke-width: 1.4; }
-  .op-moon-orbit { fill: none; stroke: var(--op-paper); stroke-width: 2.5; }
+  .op-gear { fill: var(--op-red); stroke: url(#op-steel); stroke-width: 1.8; opacity: 0.82; }
+  .op-tower { stroke: url(#op-steel); stroke-width: 1.6; }
+  .op-moon-orbit { fill: none; stroke: url(#op-steel); stroke-width: 2.5; }
   .op-moon { fill: var(--op-newsprint); }
   .op-skyline { fill: var(--op-ink); opacity: 0.82; }
   .op-nib { stroke: var(--op-ink); stroke-width: 1.2; }
@@ -5081,7 +5752,7 @@
     overflow: visible;
   }
 
-  .op-antennas line { stroke: var(--op-ink); stroke-width: 2; stroke-linecap: round; }
+  .op-antennas line { stroke: url(#op-steel); stroke-width: 2.4; stroke-linecap: round; }
   .op-sputnik-ball { fill: #d8d2c6; stroke: var(--op-ink); stroke-width: 1.2; }
 
   .op-skip {

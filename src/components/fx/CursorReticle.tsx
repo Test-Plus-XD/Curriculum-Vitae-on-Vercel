@@ -4,6 +4,8 @@ import { useRef } from 'react';
 import { gsap, useGSAP, FULL_MOTION, FINE_POINTER } from '@/lib/gsap';
 
 const INTERACTIVE = 'a, button, [role="button"], input, select, textarea, [data-cursor]';
+// The negative stays held only while the pointer remains within this radius of its press point.
+const INVERT_HOLD_MOVE_THRESHOLD = 10;
 
 /**
  * A targeting reticle that trails the pointer and locks onto interactive elements (rotating 45° and
@@ -44,6 +46,7 @@ export default function CursorReticle() {
 
       const move = (e: PointerEvent) => {
         if (e.pointerType !== 'mouse') return;
+        if (held && Math.hypot(e.clientX - held.x, e.clientY - held.y) > INVERT_HOLD_MOVE_THRESHOLD) release();
         if (!shown) {
           shown = true;
           markCursor();

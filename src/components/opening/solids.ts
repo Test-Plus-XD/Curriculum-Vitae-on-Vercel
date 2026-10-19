@@ -41,7 +41,8 @@ const SLOTS: readonly [number, number, number][] = [
 ];
 
 const SHAPES: readonly SolidShape[] = ['icosahedron', 'tetrahedron', 'octahedron', 'box', 'dodecahedron', 'wedge'];
-const PAPERS: readonly SolidPaper[] = ['red', 'ink', 'kraft', 'paper'];
+// Keep ink for outlines and Sputnik's antennae; paper solids use the brighter poster colours.
+const PAPERS: readonly SolidPaper[] = ['red', 'kraft', 'paper'];
 
 const MIN_RADIUS = 0.36;
 const MAX_RADIUS = 0.78;

@@ -64,11 +64,19 @@ export default function OpeningStage({ copy, zh }: { copy: OpeningCopy; zh: bool
             <stop offset="100%" stopColor="#17120f" stopOpacity="0.7" />
           </radialGradient>
           <linearGradient id="op-steel" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#f2efe8" />
-            <stop offset="45%" stopColor="#9b968c" />
-            <stop offset="55%" stopColor="#5b564f" />
-            <stop offset="100%" stopColor="#d7d2c8" />
+            <stop offset="0%" stopColor="#fffdf7" />
+            <stop offset="12%" stopColor="#77736c" />
+            <stop offset="26%" stopColor="#f5f1e8" />
+            <stop offset="42%" stopColor="#89857e" />
+            <stop offset="56%" stopColor="#fffefa" />
+            <stop offset="72%" stopColor="#aaa49a" />
+            <stop offset="86%" stopColor="#625e58" />
+            <stop offset="100%" stopColor="#e5dfd3" />
           </linearGradient>
+          <pattern id="op-metal-brush" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+            <path d="M0 0.5H10 M0 4.5H10 M0 8.5H10" stroke="#fffaf0" strokeOpacity="0.34" strokeWidth="0.6" />
+            <path d="M0 2.5H10 M0 6.5H10" stroke="#17120f" strokeOpacity="0.16" strokeWidth="0.45" />
+          </pattern>
           <filter id="op-grey" colorInterpolationFilters="sRGB">
             <feColorMatrix type="matrix" values="0.3 0.59 0.11 0 0.04  0.3 0.59 0.11 0 0.03  0.3 0.59 0.11 0 0.02  0 0 0 1 0" />
           </filter>
@@ -151,8 +159,27 @@ export default function OpeningStage({ copy, zh }: { copy: OpeningCopy; zh: bool
           ))}
         </Layer>
 
+        <Layer name="a-orbits">
+          {POSTER.orbits.map((orbit, index) => {
+            const orbitPath = ellipse(orbit.rx, orbit.ry);
+            return (
+              <g key={index} data-op="orbit" data-draw={orbit.draw} data-hide="" transform={`rotate(${orbit.rotate})`}>
+                <path d={orbitPath} className="op-orbit-offset" transform="translate(3 4)" />
+                <path d={orbitPath} className="op-orbit-rail" />
+                <path d={orbitPath} className="op-orbit" />
+                <path d={orbitPath} className="op-orbit-highlight" />
+              </g>
+            );
+          })}
+        </Layer>
+
         <Layer name="a-ring">
-          <Scrap d={POSTER.ring} className="op-ink" data-op="ring" data-hide="" />
+          <g data-op="ring" data-hide="">
+            <path d={POSTER.ring} className="op-ring-offset" transform="translate(4 5)" />
+            <path d={POSTER.ring} className="op-ring-edge" transform="translate(1 1)" />
+            <path d={POSTER.ring} className="op-ring-metal" />
+            <path d={POSTER.ring} className="op-ring-grain" />
+          </g>
         </Layer>
 
         <Layer name="a-core">
@@ -175,14 +202,6 @@ export default function OpeningStage({ copy, zh }: { copy: OpeningCopy; zh: bool
           </g>
         </Layer>
 
-        <Layer name="a-orbits">
-          {POSTER.orbits.map((o, i) => (
-            <g key={i} transform={`rotate(${o.rotate})`}>
-              <path d={ellipse(o.rx, o.ry)} className="op-orbit" data-op="orbit" data-draw={o.draw} data-hide="" />
-            </g>
-          ))}
-        </Layer>
-
         <Layer name="a-front">
           <g data-op="wedge" data-hide="">
             <Scrap d={POSTER.wedge} className="op-ink" />
@@ -191,6 +210,7 @@ export default function OpeningStage({ copy, zh }: { copy: OpeningCopy; zh: bool
             <path d={POSTER.wedgeStrip} fill="url(#op-dots)" opacity="0.6" />
             <g transform={`translate(-8 -10) rotate(${NIB.angle})`} data-op="nib">
               <path d={NIB.body} fill="url(#op-steel)" className="op-nib" />
+              <path d={NIB.body} fill="url(#op-metal-brush)" opacity="0.22" />
               <path d={NIB.slit} className="op-nib-slit" />
               <circle {...NIB.hole} className="op-nib-hole" />
             </g>

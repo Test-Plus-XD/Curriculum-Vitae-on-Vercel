@@ -144,7 +144,7 @@ export default function InlineVideo({ video, variant = 'card' }: { video: Video;
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- YouTube CDN thumbnail */}
         <img src={thumbnailUrl(yt.id)} alt="" loading="lazy" decoding="async" />
-        <span className={variant === 'press' ? 'press-thumb-play' : 'video-thumb-play'} aria-hidden="true">
+        <span className="video-thumb-play" aria-hidden="true">
           <Play size={20} fill="currentColor" />
         </span>
         {variant === 'card' && (

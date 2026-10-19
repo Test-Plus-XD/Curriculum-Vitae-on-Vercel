@@ -96,21 +96,24 @@
     "contributions": "My contributions",
     "gazette": {
       "nameplate": "MERZ",
-      "motto": "All the projects fit to print",
-      "place": "Hong Kong SAR",
-      "edition": "Projects edition · {section}",
-      "latest": "Latest filing {date}",
-      "earStories": "{count, plural, one {# story} other {# stories}} in this edition",
-      "earReels": "{count, plural, =0 {No reels} one {# reel} other {# reels}} of footage",
+      "motto": "All the Code That’s Fit to Print",
+      "volume": "Vol. II · No. {count}",
+      "dateline": "Hong Kong, {weekday} {date}",
+      "price": "Price HK$0",
+      "edition": "{section, select, all {Complete edition} other {{name} edition}}",
+      "earStories": "Inside today: {count, plural, one {# story} other {# stories}}",
+      "earReels": "Weather: fair, with {count, plural, =0 {no film} one {# reel of film} other {# reels of film}}",
       "folio": "Page {page}",
       "pageOf": "Page {page} of {total}",
       "previous": "Previous page",
       "next": "Next page",
       "turn": "Turn the page",
-      "continued": "Continued on page {page}",
-      "fullStory": "Full story",
-      "builtWith": "Built with",
-      "filedUnder": "Filed under"
+      "continued": "Continued on Page {page}",
+      "fullStory": "Read the full report",
+      "builtWith": "Tools of the trade",
+      "filedUnder": "Filed under",
+      "place": "HONG KONG –",
+      "credit": "Still from the {count, plural, one {only reel} other {latest of # reels}}"
     }
   },
   "project": {
@@ -129,7 +132,10 @@
     "operation": "Operation",
     "demo": "Demonstration",
     "milestone": "Milestone",
-    "noVideos": "No recorded video for this project."
+    "noVideos": "No recorded video for this project.",
+    "moreStories": "More from the gazette",
+    "previousStory": "Previous story",
+    "nextStory": "Next story"
   },
   "footer": {
     "contact": "Contact",
@@ -143,7 +149,7 @@
   },
   "hero": {
     "label": "Collage introduction",
-    "kicker": "Merz portfolio · № 2026",
+    "kicker": "Merz portfolio · № {year}",
     "typed": "{descriptor} · HKCT · CGPA {cgpa}",
     "cue": "Read the CV",
     "drag": "Every scrap can be picked up and moved.",

@@ -14,6 +14,22 @@ import ProjectsGazette from '@/components/ProjectsGazette';
 import ReadymadeFigure from '@/components/readymade/ReadymadeFigure';
 import ObjetsFigure from '@/components/objets/ObjetsFigure';
 
+// Regenerate the issue date daily, following the CV page's date-sensitive content.
+export const revalidate = 86400;
+
+// Return yesterday in Hong Kong calendar time as an ISO date for the newspaper masthead.
+function getYesterdayDate(): string {
+  const todayParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Hong_Kong',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const dateParts = Object.fromEntries(todayParts.map(({ type, value }) => [type, value])) as Record<string, string>;
+  const yesterday = new Date(Date.UTC(Number(dateParts.year), Number(dateParts.month) - 1, Number(dateParts.day) - 1));
+  return `${yesterday.getUTCFullYear()}-${String(yesterday.getUTCMonth() + 1).padStart(2, '0')}-${String(yesterday.getUTCDate()).padStart(2, '0')}`;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'meta' });
@@ -25,6 +41,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   setRequestLocale(locale);
   const t = await getTranslations('projects');
   const L = (text: { en: string; zh: string }) => pick(text, locale);
+  const issueDate = getYesterdayDate();
 
   return (
     <div className="page page-projects">
@@ -39,7 +56,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
         <ReadymadeFigure work="duchamp" number={2} />
       </section>
 
-      <ProjectsGazette projects={PROJECTS} />
+      <ProjectsGazette projects={PROJECTS} issueDate={issueDate} />
 
       <section className="section" aria-labelledby="collab-heading">
         <RevealHeading id="collab-heading" text={t('collaborations')} index="§ 02" />
