@@ -50,6 +50,7 @@
     "labels": {
       "email": "Email",
       "phone": "Phone",
+      "discord": "Discord",
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "location": "Location",
@@ -153,7 +154,7 @@
     "typed": "{descriptor} · HKCT · CGPA {cgpa}",
     "cue": "Read the CV",
     "drag": "Every scrap can be picked up and moved.",
-    "stampRing": "HKCT ★ FINAL CGPA ★ 2026 ★ ",
+    "stampRing": "HKCT ★ FINAL CGPA ★ {year} ★ ",
     "stampSub": "Hong Kong",
     "numCgpa": "Final CGPA",
     "numTerm": "Final-term GPA",

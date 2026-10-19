@@ -50,6 +50,7 @@
     "labels": {
       "email": "電郵",
       "phone": "電話",
+      "discord": "Discord",
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "location": "所在地",
@@ -153,7 +154,7 @@
     "typed": "{descriptor} · 港專 · 累積平均績點 {cgpa}",
     "cue": "閱讀履歷",
     "drag": "每張紙片都可以拿起移動。",
-    "stampRing": "港專 ★ 累積平均績點 ★ 2026 ★ ",
+    "stampRing": "港專 ★ 累積平均績點 ★ {year} ★ ",
     "stampSub": "香港",
     "numCgpa": "最終累積平均績點",
     "numTerm": "最後學期平均績點",

@@ -42,6 +42,7 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
   const featured = FEATURED_IDS.map(getProject).filter(Boolean) as Project[];
   const finalSemester = SEMESTERS[SEMESTERS.length - 1];
   const printedContacts = CONTACTS.filter((c) => ['email', 'phone', 'github', 'linkedin'].includes(c.kind));
+  const discordContact = CONTACTS.find((c) => c.kind === 'discord');
 
   // The collage is cut from the CV itself: real codes, grades, projects and footage.
   const upper = (text: string) => (locale === 'zh-hk' ? text : text.toUpperCase());
@@ -63,7 +64,7 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
     dragHint: th('drag'),
     thumbs: heroThumbs,
     news: { headline: 'ДАДА', lines: [...graded, `CGPA ${PROGRAMME.cgpa} · GPA ${PROGRAMME.finalTermGpa}`] },
-    stamp: { ring: th('stampRing'), centre: PROGRAMME.cgpa.toFixed(1), sub: upper(th('stampSub')) },
+    stamp: { ring: th('stampRing', { year: currentYear }), centre: PROGRAMME.cgpa.toFixed(1), sub: upper(th('stampSub')) },
     merz: {
       snippets: [
         ...ALL_COURSES.map((c) => `${c.code} ${upper(L(c.name))}${c.grade ? ` ${c.grade}` : ''}`),
@@ -106,7 +107,7 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
             <span className="sheet-mark sheet-mark-bl no-print" aria-hidden="true" />
             <span className="sheet-mark sheet-mark-br no-print" aria-hidden="true" />
             <span className="sheet-stamp no-print" aria-hidden="true">
-              <Stamp ring={th('sheetRing')} centre="2026" sub={upper(th('numGrad'))} size={118} rotate={0} slam={false} />
+              <Stamp ring={th('sheetRing')} centre={currentYear} sub={upper(th('numGrad'))} size={118} rotate={0} slam={false} />
             </span>
 
             <header className="cv-head" data-sheet-part="">
@@ -122,19 +123,33 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
                 <p className="cv-descriptor">{L(PROFILE.descriptor)}</p>
               </div>
               <dl className="cv-contact">
-                {printedContacts.map((c) => (
-                  <div key={c.kind} className="cv-contact-row">
-                    <dt>
-                      <Scramble text={t(`labels.${c.kind as 'email' | 'phone' | 'github' | 'linkedin'}`)} delay={200} />
-                    </dt>
-                    <dd>
-                      <a href={c.href} {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-                        <span className="screen-only">{c.label}</span>
-                        <span className="print-only">{c.print}</span>
-                      </a>
-                    </dd>
-                  </div>
-                ))}
+                {printedContacts.map((c) => {
+                  const screenContact = c.kind === 'phone' && discordContact ? discordContact : c;
+                  return (
+                    <div key={c.kind} className="cv-contact-row">
+                      <dt>
+                        <span className="screen-only">
+                          <Scramble text={t(`labels.${screenContact.kind as 'email' | 'phone' | 'github' | 'linkedin' | 'discord'}`)} delay={200} />
+                        </span>
+                        <span className="print-only">
+                          <Scramble text={t(`labels.${c.kind as 'email' | 'phone' | 'github' | 'linkedin'}`)} delay={200} />
+                        </span>
+                      </dt>
+                      <dd>
+                        <a
+                          className="screen-only"
+                          href={screenContact.href}
+                          {...(screenContact.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        >
+                          {screenContact.label}
+                        </a>
+                        <a className="print-only" href={c.href}>
+                          {c.print}
+                        </a>
+                      </dd>
+                    </div>
+                  );
+                })}
                 <div className="cv-contact-row">
                   <dt>
                     <Scramble text={t('labels.location')} delay={260} />
