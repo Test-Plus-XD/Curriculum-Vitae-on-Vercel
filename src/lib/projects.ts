@@ -385,6 +385,22 @@ export function buildTimeline(project: Project): TimelineEntry[] {
   return entries.sort((a, b) => b.date.localeCompare(a.date) || rank(a) - rank(b));
 }
 
+/**
+ * Lay a list out as newspaper pages: the front page carries `front` stories (a lead and its sidebar), every
+ * page after it `inner`. Never returns an empty edition: no stories still makes one empty front page.
+ */
+export function paginateEdition<T>(items: T[], front = 3, inner = 4): T[][] {
+  const pages: T[][] = [items.slice(0, front)];
+  for (let i = front; i < items.length; i += inner) pages.push(items.slice(i, i + inner));
+  return pages;
+}
+
+/** The latest dated thing in a set of projects (a video or a milestone), as an ISO date. */
+export function latestFiling(projects: Project[]): string | undefined {
+  const dates = projects.flatMap((p) => [...p.videos.map((v) => v.date), ...p.milestones.map((m) => m.date)]);
+  return dates.sort().at(-1);
+}
+
 export interface Collaboration {
   id: string;
   title: Bilingual;

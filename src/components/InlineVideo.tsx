@@ -14,8 +14,9 @@ import Scramble from './fx/Scramble';
  * YouTube thumbnail that opens a player. The player frame grows out of the thumbnail (FLIP: measured from
  * the thumbnail's rectangle to its final one), the iframe loads only once the frame has landed, and closing
  * shrinks it back. Escape, the backdrop and the close button all close it; focus returns to the thumbnail.
+ * `press` is the bare thumbnail (picture and play mark only) for a newspaper photograph.
  */
-export default function InlineVideo({ video }: { video: Video }) {
+export default function InlineVideo({ video, variant = 'card' }: { video: Video; variant?: 'card' | 'press' }) {
   const locale = useLocale();
   const t = useTranslations('controls');
   const tp = useTranslations('project');
@@ -137,21 +138,23 @@ export default function InlineVideo({ video }: { video: Video }) {
       <button
         ref={thumbRef}
         type="button"
-        className={`video-thumb ${yt.isShort ? 'is-short' : ''}`}
+        className={variant === 'press' ? 'press-thumb' : `video-thumb ${yt.isShort ? 'is-short' : ''}`}
         onClick={() => setOpen(true)}
         aria-label={t('play', { title })}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- YouTube CDN thumbnail */}
         <img src={thumbnailUrl(yt.id)} alt="" loading="lazy" decoding="async" />
-        <span className="video-thumb-play" aria-hidden="true">
+        <span className={variant === 'press' ? 'press-thumb-play' : 'video-thumb-play'} aria-hidden="true">
           <Play size={20} fill="currentColor" />
         </span>
-        <span className="video-thumb-meta" aria-hidden="true">
-          <span className={`badge badge-kind-${video.kind}`}>
-            <Scramble text={tp(video.kind)} delay={200} />
+        {variant === 'card' && (
+          <span className="video-thumb-meta" aria-hidden="true">
+            <span className={`badge badge-kind-${video.kind}`}>
+              <Scramble text={tp(video.kind)} delay={200} />
+            </span>
+            <Scramble className="video-thumb-date" text={formatDate(video.date, locale)} delay={300} />
           </span>
-          <Scramble className="video-thumb-date" text={formatDate(video.date, locale)} delay={300} />
-        </span>
+        )}
       </button>
 
       {open &&

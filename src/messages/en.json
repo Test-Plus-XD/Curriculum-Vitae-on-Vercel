@@ -93,7 +93,25 @@
     "publicRepo": "Public repository",
     "privateRepo": "Private repository",
     "owner": "Owner: {owner}",
-    "contributions": "My contributions"
+    "contributions": "My contributions",
+    "gazette": {
+      "nameplate": "MERZ",
+      "motto": "All the projects fit to print",
+      "place": "Hong Kong SAR",
+      "edition": "Projects edition · {section}",
+      "latest": "Latest filing {date}",
+      "earStories": "{count, plural, one {# story} other {# stories}} in this edition",
+      "earReels": "{count, plural, =0 {No reels} one {# reel} other {# reels}} of footage",
+      "folio": "Page {page}",
+      "pageOf": "Page {page} of {total}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "turn": "Turn the page",
+      "continued": "Continued on page {page}",
+      "fullStory": "Full story",
+      "builtWith": "Built with",
+      "filedUnder": "Filed under"
+    }
   },
   "project": {
     "overview": "Overview",

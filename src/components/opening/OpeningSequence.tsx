@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { gsap, useGSAP, FULL_MOTION } from '@/lib/gsap';
-import { REVEAL_EVENT } from '@/lib/reveal';
+import { OPENING_END_EVENT, REVEAL_EVENT } from '@/lib/reveal';
 import type { Stage } from '../readymade/stage';
 import OpeningStage from './OpeningStage';
 import type { PolyPiece } from './poly';
@@ -16,13 +16,26 @@ const MODIFIERS = new Set(['Shift', 'Control', 'Alt', 'Meta', 'CapsLock']);
 /** Counts runs of the opening, so a revert can tell a Strict Mode remount from a real stop. */
 let runs = 0;
 
+type IdleWindow = Window & {
+  requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+};
+
+/** Run `fn` when the browser is next idle (or after `timeout` ms at the latest). */
+function whenIdle(fn: () => void, timeout: number) {
+  const w = window as IdleWindow;
+  if (w.requestIdleCallback) w.requestIdleCallback(fn, { timeout });
+  else window.setTimeout(fn, 60);
+}
+
 /**
  * The title sequence on a fresh visit. The markup is server-rendered (so the first paint is already the black
  * sheet) but only shown when the pre-paint gate set `html[data-opening="on"]`; otherwise this renders nothing.
  *
- * While it plays, `data-cover="on"` holds every entrance animation back. When Sputnik's ribbon starts to open
- * its window onto the page, the cover is lifted and `fx:reveal` is dispatched from a fresh task, so the page
- * starts its entrances inside the window. Any key, click, tap, wheel or touch scroll skips to the page.
+ * While it plays, `data-cover="on"` holds every entrance animation back. Just after Sputnik leaves the hand
+ * (the `reveal` beat) the cover is lifted and `fx:reveal` is dispatched from a fresh task, so the page does its
+ * entrance set-up while the ribbon is still a thin streak and is mid-entrance when the window widens. Heavy
+ * page work (WebGL scenes) waits for `fx:opening-end`, sent once the overlay has been taken down. Any key,
+ * click, tap, wheel or touch scroll skips to the page.
  *
  * Everything lives in one GSAP context: the master timeline, and the 3D hand's tweens (added to the master once
  * three.js and the model have loaded — or, if they are late, the baked print rises instead).
@@ -77,7 +90,8 @@ export default function OpeningSequence() {
           }, 0);
         };
 
-        const teardown = () => {
+        // Stop the loop, timers and listeners: cheap, done at once.
+        const stop = () => {
           disposed = true;
           window.clearTimeout(failsafe);
           window.clearInterval(poll);
@@ -88,21 +102,32 @@ export default function OpeningSequence() {
           window.removeEventListener('resize', onResize);
           document.removeEventListener('visibilitychange', onVisible);
           root.removeEventListener('pointerdown', skip);
+        };
+        // Free both WebGL contexts: the expensive part, kept off the frame that hands over to the page.
+        const disposeGl = () => {
           stage?.dispose();
           stage = null;
           poly?.dispose();
           poly = null;
         };
+        const ended = () => window.dispatchEvent(new Event(OPENING_END_EVENT));
 
         const finish = () => {
           if (finished) return;
           finished = true;
           release();
-          teardown();
+          stop();
           opening.master.kill();
+          // Hand over in one cheap frame: hide the overlay and give the page its scroll back. Unmounting the
+          // stage and disposing WebGL wait for the next idle moment, then heavy page work may start.
+          root.style.display = 'none';
           delete html.dataset.opening;
           html.style.removeProperty('animation');
-          setDone(true);
+          whenIdle(() => {
+            disposeGl();
+            setDone(true);
+            window.setTimeout(ended, 0);
+          }, 400);
         };
 
         const opening = buildOpening({
@@ -134,7 +159,10 @@ export default function OpeningSequence() {
             poly.update(time, dt);
             poly.render();
           }
-          if (piece && stage && opening.master.time() >= LABELS.hand - 0.1) {
+          // The hand only renders while it is the subject: once the window opens it keeps its last frame,
+          // and the print pass stops costing anything while the page's entrances play.
+          const now = opening.master.time();
+          if (piece && stage && now >= LABELS.hand - 0.1 && now < LABELS.window + 0.05) {
             piece.update(time, dt);
             stage.render();
           }
@@ -245,7 +273,8 @@ export default function OpeningSequence() {
         return () => {
           if (finished) return;
           finished = true;
-          teardown();
+          stop();
+          disposeGl();
           // Reverted: unmounted, or the motion preference changed — give the page back. In development, Strict
           // Mode reverts and re-runs at once; the new run then owns the opening, so leave the page covered.
           window.setTimeout(() => {
@@ -255,6 +284,7 @@ export default function OpeningSequence() {
             html.style.removeProperty('animation');
             root.style.clipPath = '';
             setDone(true);
+            ended();
           }, 0);
         };
       });

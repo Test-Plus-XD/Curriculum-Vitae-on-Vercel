@@ -19,7 +19,7 @@ export interface OpeningEnv {
   tall: boolean;
   zh: boolean;
   slug: [string, string];
-  /** Called once when the window starts to open: the page beneath may start its entrances. */
+  /** Called once, shortly before the window opens: the page beneath may start its entrances. */
   onReveal: () => void;
   /** Called when the window has covered the screen. */
   onEnd: () => void;
@@ -265,6 +265,14 @@ export function buildOpening(env: OpeningEnv): Opening {
   show(sceneB, w + 0.08);
   master.fromTo(sceneB, { xPercent: 118, rotation: -9 }, { xPercent: 0, rotation: -4, duration: 0.32, ease: 'whip' }, w + 0.08);
   hide([sceneA, band], L.collage + 0.1);
+  // Decode the page's on-screen images while the collage holds, so none of them decodes on the frame the
+  // window first shows it.
+  master.call(() => {
+    document.querySelectorAll<HTMLImageElement>('main img').forEach((img) => {
+      const r = img.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < window.innerHeight * 1.2 && img.complete) img.decode().catch(() => {});
+    });
+  }, undefined, L.collage + 0.2);
   master
     .fromTo(sceneB, { scale: 1 }, { scale: 1.07, duration: L.end - L.collage, ease: 'none', immediateRender: false }, 'collage')
     .from(root.querySelectorAll('.op-tower'), { drawSVG: '50% 50%', duration: 0.5, ease: 'power2.out', stagger: { amount: 0.25 } }, 'collage');
@@ -355,7 +363,7 @@ export function buildOpening(env: OpeningEnv): Opening {
   master
     .to(ribbon, { head: 0.6, duration: L.window - L.launch, ease: 'power1.in' }, 'launch')
     .to(ribbon, { phase: 2.4, duration: L.end - L.launch, ease: 'none' }, 'launch')
-    .call(env.onReveal, undefined, 'window')
+    .call(env.onReveal, undefined, 'reveal')
     .to(ribbon, { head: 1, duration: L.end - L.window, ease: 'power1.inOut' }, 'window')
     .to(ribbon, { open: 1, duration: L.end - L.window, ease: 'power1.in' }, 'window')
     // A last fade, in case a corner of the screen is still papered over.

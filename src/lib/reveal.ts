@@ -32,6 +32,35 @@ export function playOnReveal(contextSafe: ((fn: () => void) => unknown) | undefi
   return onPageReveal(safe);
 }
 
+/** Dispatched once the opening sequence has finished and been taken down (or skipped). */
+export const OPENING_END_EVENT = 'fx:opening-end';
+
+export function isOpening(): boolean {
+  return typeof document !== 'undefined' && document.documentElement.dataset.opening === 'on';
+}
+
+/**
+ * Run `callback` once the page is revealed and no opening sequence is playing. For heavy work — mounting a
+ * WebGL scene, painting canvas textures — that would otherwise compete with the opening's last frames, when
+ * its window onto the page is already showing the entrances. Returns a cleanup function.
+ */
+export function onPageSettled(callback: () => void): () => void {
+  let offEnd = () => {};
+  const offReveal = onPageReveal(() => {
+    if (!isOpening()) {
+      callback();
+      return;
+    }
+    const handler = () => callback();
+    window.addEventListener(OPENING_END_EVENT, handler, { once: true });
+    offEnd = () => window.removeEventListener(OPENING_END_EVENT, handler);
+  });
+  return () => {
+    offReveal();
+    offEnd();
+  };
+}
+
 /** Mark an element as initialised so the pre-hide CSS (`.js-fx [data-fx-hide]`) stops applying. */
 export function markReady(el: Element | null | undefined) {
   el?.classList.add('fx-ready');

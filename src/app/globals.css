@@ -671,7 +671,6 @@
     z-index: 60;
     background: var(--header-bg);
     backdrop-filter: blur(12px) saturate(1.2);
-    -webkit-backdrop-filter: blur(12px) saturate(1.2);
     border-bottom: 1px solid var(--line);
   }
 
@@ -1116,6 +1115,13 @@
     height: 34px;
     border: 1.5px solid var(--red-bright);
     border-radius: 50%;
+    will-change: transform;
+    /* Lifts the reticle off busy prints: a soft ink shadow on paper, a warm glow at night. */
+    filter: drop-shadow(0 1px 1.5px rgba(23, 18, 15, 0.45)) drop-shadow(0 0 3px rgba(23, 18, 15, 0.18));
+  }
+
+  .dark .cursor-ring {
+    filter: drop-shadow(0 0 3px rgba(255, 120, 70, 0.75)) drop-shadow(0 0 9px rgba(255, 90, 40, 0.35));
   }
 
   .cursor-ring::before,
@@ -1151,10 +1157,81 @@
     height: 5px;
     border-radius: 50%;
     background: var(--orange);
+    will-change: transform;
+    filter: drop-shadow(0 1px 1px rgba(23, 18, 15, 0.55));
+  }
+
+  .dark .cursor-dot {
+    filter: drop-shadow(0 0 3px rgba(255, 165, 0, 0.9)) drop-shadow(0 0 7px rgba(255, 120, 40, 0.45));
+  }
+
+  /* Click: a disc of the page printed in negative. It sits just under the reticle (z 100), so the pointer
+     itself is never inverted. Only ever a few small discs, so the backdrop filter stays cheap. */
+  .cursor-invert {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* The mask's alpha blends the inverted backdrop back into the page, so the negative is full strength at
+     the centre and fades out towards the rim. */
+  .cursor-invert-disc,
+  .cursor-invert-ring {
+    position: absolute;
+    border-radius: 50%;
+    backdrop-filter: invert(1);
+    will-change: transform, opacity;
+  }
+
+  /* Full strength right out to 95 % of the radius, then a short fade over the last 5 %. */
+  .cursor-invert-disc {
+    width: 200px;
+    height: 200px;
+    margin: -100px 0 0 -100px;
+    mask: radial-gradient(closest-side, #000 0%, #000 95%, transparent 100%);
+  }
+
+  /* The ripple: a soft band of negative that runs outwards from the click. */
+  .cursor-invert-ring {
+    width: 306px;
+    height: 306px;
+    margin: -153px 0 0 -153px;
+    mask: radial-gradient(
+      closest-side,
+      transparent 58%,
+      rgba(0, 0, 0, 0.22) 70%,
+      rgba(0, 0, 0, 0.45) 81%,
+      rgba(0, 0, 0, 0.22) 91%,
+      transparent 100%
+    );
+  }
+
+  /* The reticle is the pointer. cursor-fx is only set on <html> once a mouse has moved and the reticle is
+     actually on screen, so a coarse pointer, reduced motion, forced colours or a page without JavaScript all
+     keep the system cursor. !important beats the per-component cursors (pointer, grab, not-allowed) too. */
+  html.cursor-fx,
+  html.cursor-fx * {
+    cursor: none !important;
+  }
+
+  /* Forced colours repaint the reticle in the system palette, which can camouflage it against the page:
+     give the pointer back rather than leave the visitor with no visible cursor. */
+  @media (forced-colors: active) {
+    html.cursor-fx,
+    html.cursor-fx * {
+      cursor: auto !important;
+    }
+
+    .cursor-invert {
+      display: none;
+    }
   }
 
   @media (pointer: coarse) {
-    .cursor-reticle {
+    .cursor-reticle,
+    .cursor-invert {
       display: none;
     }
   }
@@ -1603,8 +1680,7 @@
     rotate: -1.2deg;
   }
 
-  .course-code,
-  .card-courses {
+  .course-code {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -1748,264 +1824,869 @@
     }
   }
 
-  /* -------------------------------------------------------- projects */
-  .projects-browser {
+  /* ------------------------------------------------ projects: the gazette */
+  /* The projects printed as a broadsheet. The paper stays newsprint in both themes, so the sheet re-scopes
+     the ink tokens like the other paper elements; the section index and the pager sit on the page itself. */
+  .gazette {
+    --sheet: #ede4d0;
+    --sheet-under: #ddd2ba;
+    --sheet-wash: rgba(237, 228, 208, 0.38);
+    --sheet-edge: rgba(130, 95, 40, 0.16);
+    --sheet-screen: rgba(237, 228, 208, 0.36);
+    --flap-hi: #f6efdf;
+    --flap-lo: #ddd1b5;
     margin-top: 8px;
   }
 
-  .filter-bar {
+  /* At night the paper is a cool light grey, like newsprint under a desk lamp. */
+  .dark .gazette {
+    --sheet: #d3d3d0;
+    --sheet-under: #a9a9a6;
+    --sheet-wash: rgba(214, 214, 211, 0.42);
+    --sheet-edge: rgba(40, 40, 38, 0.2);
+    --sheet-screen: rgba(214, 214, 211, 0.36);
+    --flap-hi: #ececea;
+    --flap-lo: #c2c2bf;
+  }
+
+  .gazette-sections {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 32px;
+    margin-bottom: 30px;
+    padding: 4px 0;
+    border-block: 3px double var(--line-strong);
   }
 
-  .filter-button {
+  .gazette-section {
     position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 16px;
+    color: var(--ink-2);
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .gazette-section + .gazette-section {
+    border-left: 1px solid var(--line);
+  }
+
+  .gazette-section::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    bottom: 3px;
+    left: 12px;
+    height: 3px;
+    background: var(--red);
+    scale: 0 1;
+    transform-origin: left;
+    transition: scale 0.45s var(--ease-out);
+  }
+
+  .gazette-section:hover,
+  .gazette-section.is-active {
+    color: var(--red);
+  }
+
+  .gazette-section.is-active::after {
+    scale: 1 1;
+  }
+
+  .gazette-section-count {
+    color: var(--muted);
+    font-family: var(--font-type);
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .gazette-status {
+    margin-left: auto;
+    padding: 0 4px;
+    color: var(--muted);
+    font-family: var(--font-type);
+    font-size: 13px;
+  }
+
+  /* The stage holds the top sheet, the rest of the paper under it and the turning leaves. */
+  .gazette-stage {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .gazette-stage::before,
+  .gazette-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--sheet-under);
+    box-shadow: 0 18px 40px -26px rgba(40, 20, 5, 0.5);
+  }
+
+  .gazette-stage::before {
+    translate: 7px 8px;
+    rotate: 0.7deg;
+  }
+
+  .gazette-stage::after {
+    translate: -5px 13px;
+    rotate: -0.6deg;
+    filter: brightness(0.93);
+  }
+
+  .gazette-sheet {
+    --ink: var(--ink-black);
+    --ink-2: #3d342c;
+    --muted: #5f5446;
+    --red: var(--vermilion);
+    --accent-text: var(--vermilion);
+    --line: rgba(23, 18, 15, 0.16);
+    --line-strong: rgba(23, 18, 15, 0.4);
+    --rule: rgba(23, 18, 15, 0.78);
+    position: relative;
+    z-index: 1;
+    padding: clamp(18px, 3vw, 40px) clamp(16px, 3.4vw, 48px) 20px;
+    color: var(--ink);
+    /* Newsprint: a light wash over the opening's crease layer (CC0, see CREDITS.txt), yellowed at the edges. */
+    background:
+      linear-gradient(var(--sheet-wash), var(--sheet-wash)),
+      url("/images/opening/paper-crease.webp") 0 0 / 720px 720px,
+      radial-gradient(130% 100% at 50% 30%, transparent 55%, var(--sheet-edge)),
+      var(--sheet);
+    box-shadow:
+      0 2px 5px rgba(40, 20, 5, 0.12),
+      0 34px 60px -38px rgba(40, 20, 5, 0.6);
+  }
+
+  .dark .gazette-sheet {
+    box-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.4),
+      0 34px 70px -30px rgba(0, 0, 0, 0.85);
+  }
+
+  /* --- masthead (front page) */
+  .gazette-mast {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 6px 18px;
+  }
+
+  .mast-ear {
+    justify-self: start;
+    max-width: 17ch;
+    padding: 7px 10px;
+    border: 1px solid var(--rule);
+    font-family: var(--font-type);
+    font-size: 12.5px;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .mast-ear-r {
+    justify-self: end;
+  }
+
+  .mast-name {
+    position: relative;
+    padding: 0 0.08em;
+    color: var(--ink);
+    font-family: var(--font-title);
+    font-size: clamp(72px, 13vw, 176px);
+    font-weight: 900;
+    font-stretch: 62.5%;
+    line-height: 0.84;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+  }
+
+  /* Lissitzky's red wedge driven through the nameplate, behind the letters. */
+  .mast-name::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    z-index: -1;
+    width: 120%;
+    height: 0.2em;
+    background: var(--red);
+    clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 56%);
+    rotate: -5deg;
+  }
+
+  .mast-motto {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    color: var(--ink-2);
+    font-family: var(--font-title);
+    font-size: 16px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .mast-line,
+  .gazette-folio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 16px;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .mast-line {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    padding: 7px 0 6px;
+    border-top: 3px double var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .gazette-folio {
+    padding-bottom: 8px;
+    border-bottom: 3px double var(--rule);
+  }
+
+  .folio-name {
+    font-family: var(--font-title);
+    font-size: 34px;
+    font-weight: 900;
+    font-stretch: 62.5%;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  @media (max-width: 719px) {
+    .gazette-mast {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .mast-name {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      justify-self: center;
+    }
+
+    .mast-ear {
+      justify-self: stretch;
+      max-width: none;
+      font-size: 11.5px;
+    }
+  }
+
+  /* --- stories */
+  .gazette-grid {
+    display: grid;
+    margin-top: 14px;
+  }
+
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+    padding: 18px 0;
+  }
+
+  .story + .story {
+    border-top: 1px solid var(--rule);
+  }
+
+  .story-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    color: var(--red);
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .story-kicker span + span::before {
+    content: "·";
+    margin-right: 10px;
+    color: var(--muted);
+  }
+
+  .story-head {
+    color: var(--ink);
+    font-family: var(--font-title);
+    font-size: clamp(25px, 2.3vw, 30px);
+    font-weight: 800;
+    font-stretch: 72%;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .story-link {
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(var(--red), var(--red)) 0 100% / 0 3px no-repeat;
+    box-decoration-break: clone;
+    transition: background-size 0.5s var(--ease-out);
+  }
+
+  .story-link:hover,
+  .story-link:focus-visible {
+    background-size: 100% 3px;
+  }
+
+  .story-link:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+
+  .story-deck {
+    color: var(--ink-2);
+    font-family: var(--font-title);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  .story-photo {
+    margin: 4px 0 2px;
+  }
+
+  .story-plate {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+    background: #2a2420;
+  }
+
+  /* The photograph is a button: it opens the player. */
+  .press-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .press-thumb:focus-visible {
+    outline: 3px solid var(--red);
+    outline-offset: -3px;
+  }
+
+  .press-thumb-play {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 2px solid #efe7d4;
+    border-radius: 50%;
+    background: var(--vermilion);
+    color: #efe7d4;
+    box-shadow: 0 2px 6px rgba(23, 18, 15, 0.45);
+    transition: scale 0.35s var(--ease-out), background-color 0.3s;
+  }
+
+  .press-thumb:hover .press-thumb-play,
+  .press-thumb:focus-visible .press-thumb-play {
+    scale: 1.14;
+    background: var(--red);
+  }
+
+  .story-plate img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) sepia(0.2) contrast(1.25) brightness(1.04);
+    transition: filter 0.6s, scale 0.9s var(--ease-out);
+  }
+
+  /* A coarse halftone screen over the photograph; it lifts to full colour when you look closer. */
+  .story-plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, transparent 0.75px, var(--sheet-screen) 1.5px) 0 0 / 4px 4px;
+    transition: opacity 0.6s;
+  }
+
+  .dark .story:not(:hover) .story-plate img {
+    filter: grayscale(1) contrast(1.25) brightness(1.04);
+  }
+
+  .story:hover .story-plate img {
+    filter: none;
+    scale: 1.04;
+  }
+
+  .story:hover .story-plate::after {
+    opacity: 0;
+  }
+
+  .story-photo figcaption {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 6px;
+    color: var(--muted);
+    font-family: var(--font-type);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .story-photo figcaption svg {
+    flex-shrink: 0;
+    color: var(--red);
+    translate: 0 2px;
+  }
+
+  .story-body {
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.62;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .story-body p::first-letter {
+    float: left;
+    padding: 0.08em 0.1em 0 0;
+    color: var(--red);
+    font-family: var(--font-title);
+    font-size: 3.1em;
+    font-weight: 900;
+    line-height: 0.8;
+  }
+
+  .story-side .story-body p::first-letter,
+  .story-brief .story-body p::first-letter {
+    font-size: 2.5em;
+  }
+
+  /* Chinese papers set no drop caps (and a large 一 reads as a stray rule). */
+  .locale-zh .story-body p::first-letter {
+    float: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+  }
+
+  /* Narrow columns set ragged: justified, they open rivers. */
+  .story-side .story-body,
+  .story-brief .story-body {
+    text-align: start;
+  }
+
+  .story-meta {
+    display: grid;
+    gap: 3px;
+    color: var(--ink-2);
+    font-family: var(--font-type);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  .story-meta div {
+    display: flex;
+    gap: 8px;
+  }
+
+  .story-meta dt {
+    flex-shrink: 0;
+    color: var(--red);
+  }
+
+  .story-more {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding: 6px 13px 5px 12px;
+    background: var(--ink);
+    color: #efe7d4;
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%, 6px 50%);
+    transition: background-color 0.3s, padding 0.35s var(--ease-out);
+  }
+
+  .story-more:hover,
+  .story-more:focus-visible {
+    padding-right: 20px;
+    background: var(--red);
+    outline: none;
+  }
+
+  .story-lead .story-head {
+    font-size: clamp(34px, 4.4vw, 62px);
+    font-weight: 900;
+    font-stretch: 66%;
+    line-height: 0.96;
+  }
+
+  .story-lead .story-deck {
+    font-size: clamp(17px, 1.5vw, 20px);
+  }
+
+  .story-wide .story-head {
+    font-size: clamp(30px, 3.4vw, 46px);
+  }
+
+  /* Side stories and briefs lead with their photograph. */
+  .story-side .story-photo,
+  .story-brief .story-photo {
+    order: -1;
+    margin-top: 0;
+  }
+
+  @media (min-width: 720px) {
+    .grid-front,
+    .grid-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .story-lead,
+    .story-wide {
+      grid-column: 1 / -1;
+    }
+
+    .story-lead .story-body {
+      columns: 2;
+      column-gap: 28px;
+      column-rule: 1px solid var(--line);
+    }
+
+    /* Pairs of side stories and briefs share a rule between them. */
+    .story-side,
+    .story-brief {
+      padding-inline: 0;
+    }
+
+    .story-side:nth-child(2),
+    .story-brief:nth-child(2),
+    .story-brief:nth-child(4) {
+      padding-right: 20px;
+    }
+
+    .story-side:nth-child(3),
+    .story-brief:nth-child(3) {
+      padding-left: 20px;
+      border-top: 0;
+      border-left: 1px solid var(--rule);
+    }
+
+    .story-side:nth-child(2) + .story-side,
+    .story-brief:nth-child(2) + .story-brief {
+      border-top: 0;
+    }
+
+    .story-brief:nth-child(3) {
+      border-top: 1px solid var(--rule);
+    }
+
+    .story-brief:nth-child(4) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    /* Front page: the lead in two thirds, the sidebar of two in the last third. */
+    .grid-front {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+
+    .grid-front .story-lead {
+      grid-column: 1;
+      grid-row: span 2;
+      padding-right: 30px;
+    }
+
+    .grid-front.has-1 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .grid-front.has-1 .story-lead {
+      padding-right: 0;
+    }
+
+    .grid-front .story-side,
+    .grid-front .story-side:nth-child(3) {
+      grid-column: 2;
+      padding: 18px 0 18px 30px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .grid-front .story-lead + .story-side {
+      border-top: 0;
+    }
+
+    .grid-front .story-side:nth-child(3) {
+      border-top: 1px solid var(--rule);
+    }
+
+    /* Inner pages: the wide story with its photograph beside the copy, three briefs beneath it. */
+    .grid-inner {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .story-wide {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      grid-auto-flow: dense;
+      align-content: start;
+      column-gap: 30px;
+      row-gap: 9px;
+    }
+
+    .story-wide > * {
+      grid-column: 2;
+    }
+
+    .story-wide .story-photo {
+      grid-column: 1;
+      grid-row: 1 / span 7;
+      margin: 0;
+    }
+
+    .story-wide .story-more {
+      margin-top: 4px;
+    }
+
+    .grid-inner .story-brief,
+    .grid-inner .story-brief:nth-child(n) {
+      grid-column: auto;
+      padding: 18px 20px;
+      border-top: 1px solid var(--rule);
+      border-left: 1px solid var(--rule);
+    }
+
+    .grid-inner .story-brief:nth-child(2) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .grid-inner .story-brief:nth-child(4) {
+      padding-right: 0;
+    }
+  }
+
+  .gazette-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin-top: 10px;
+    padding: 8px 64px 0 0;
+    border-top: 3px double var(--rule);
+    color: var(--muted);
+    font-family: var(--font-type);
+    font-size: 12.5px;
+  }
+
+  .foot-continued {
+    color: var(--red);
+  }
+
+  /* --- the page turn */
+  .gazette-leaves {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .gazette-leaves[data-mode="over"] {
+    z-index: 3;
+  }
+
+  .gazette-leaf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .gazette-leaf-front {
+    backface-visibility: hidden;
+  }
+
+  .gazette-leaf-shade {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(23, 18, 15, 0.45), rgba(23, 18, 15, 0.1) 40%, rgba(255, 248, 230, 0.22) 78%, rgba(23, 18, 15, 0.28));
+  }
+
+  /* The back of the leaf: plain newsprint with the front showing through, mirrored. */
+  .gazette-leaf-back {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    background:
+      linear-gradient(90deg, rgba(23, 18, 15, 0.18), transparent 30%, rgba(23, 18, 15, 0.08)),
+      url("/images/opening/paper-crease.webp") 0 0 / 720px 720px,
+      var(--sheet-under);
+  }
+
+  .gazette-leaf-back .gazette-leaf-ghost {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    opacity: 0.08;
+    scale: -1 1;
+  }
+
+  .gazette-under {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* The shadow the turning page throws on the one beneath, darkest at the spine. */
+  .gazette-cast {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(23, 18, 15, 0.5), rgba(23, 18, 15, 0.14) 35%, transparent 70%);
+  }
+
+  /* A dog-eared corner: the flap folded back over the page beneath. Turns to the next page. */
+  .gazette-corner {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--flap-hi) 0%, var(--flap-lo) 48%, rgba(23, 18, 15, 0.35) 50%, var(--sheet-under) 52%, var(--sheet-under) 100%);
+    filter: drop-shadow(-2px -2px 3px rgba(23, 18, 15, 0.22));
+    cursor: grab;
+    touch-action: none;
+    transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out), opacity 0.2s;
+  }
+
+  .gazette-corner.is-off {
+    visibility: hidden;
+  }
+
+  /* While a page is turning the leaf carries its own corner. */
+  .gazette-stage.is-turning .gazette-corner {
+    opacity: 0;
+  }
+
+  .gazette-corner:hover,
+  .gazette-corner:focus-visible {
+    width: 78px;
+    height: 78px;
+    outline: none;
+  }
+
+  .gazette-corner:focus-visible {
+    filter: drop-shadow(0 0 0 var(--red)) drop-shadow(-2px -2px 0 var(--red));
+  }
+
+  /* --- pager */
+  .gazette-pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .pager-step {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 16px;
+    padding: 9px 14px;
     border: 1px solid var(--line-strong);
     background: var(--surface);
     color: var(--ink);
-    font-size: 12.5px;
+    font-family: var(--font-display);
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     transition: border-color 0.3s, color 0.3s;
   }
 
-  .filter-button:hover {
+  .pager-step:hover:not(:disabled) {
     border-color: var(--red);
+    color: var(--red);
   }
 
-  .filter-button.is-active {
-    border-color: var(--red);
-    color: var(--cream);
+  .pager-step:disabled {
+    opacity: 0.35;
   }
 
-  .filter-pill {
-    position: absolute;
-    inset: -1px;
-    z-index: 0;
-    background: var(--red);
-  }
-
-  .filter-label,
-  .filter-count {
-    position: relative;
-    z-index: 1;
-  }
-
-  .filter-count {
-    font-size: 11px;
-    opacity: 0.7;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .filter-status {
-    margin-left: auto;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-
-  .project-grid {
-    display: grid;
-    gap: 28px;
-  }
-
-  @media (min-width: 720px) {
-    .project-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 1180px) {
-    .project-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  .project-cell.is-hidden {
-    display: none;
-  }
-
-  .project-card {
+  .pager-pages {
     display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    transition: border-color 0.35s;
-  }
-
-  .project-card:hover {
-    border-color: var(--red);
-  }
-
-  .card-media {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: #141210;
-  }
-
-  .card-thumb {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: url(#fx-duotone-soft);
-    transition: transform 0.9s var(--ease-out);
-  }
-
-  .card-media.is-split .card-thumb-0 {
-    clip-path: polygon(0 0, 62% 0, 38% 100%, 0 100%);
-  }
-
-  .card-media.is-split .card-thumb-1 {
-    clip-path: polygon(62% 0, 100% 0, 100% 100%, 38% 100%);
-  }
-
-  .card-media.is-split::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--red);
-    clip-path: polygon(61.3% 0, 62.7% 0, 38.7% 100%, 37.3% 100%);
-  }
-
-  /* A light red-and-black print until you look closer. */
-  .project-card:hover .card-thumb {
-    transform: scale(1.06);
-    filter: none;
-  }
-
-  .card-scan {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(180deg, transparent 0%, rgba(255, 165, 0, 0) 42%, rgba(255, 165, 0, 0.35) 50%, rgba(255, 165, 0, 0) 58%, transparent 100%);
-    transform: translateY(-100%);
-    pointer-events: none;
-  }
-
-  .project-card:hover .card-scan {
-    animation: scan-sweep 1.1s var(--ease-in-out);
-  }
-
-  @keyframes scan-sweep {
-    to {
-      transform: translateY(100%);
-    }
-  }
-
-  .card-video-count {
-    position: absolute;
-    left: 12px;
-    bottom: 12px;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
     gap: 6px;
-    padding: 4px 8px;
-    background: rgba(20, 18, 16, 0.8);
-    color: #f1ece4;
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .project-card > .card-body {
-    position: static;
+  .pager-page {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink-2);
+    font-family: var(--font-title);
+    font-size: 16px;
+    font-weight: 800;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s;
   }
 
-  .card-body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px 20px 18px;
+  .pager-page:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .pager-page[aria-current="page"] {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--cream);
   }
 
   .card-cats {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-  }
-
-  .card-title {
-    font-size: 27px;
-    line-height: 1.12;
-  }
-
-  .card-link {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .card-link::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-  }
-
-  .card-link:focus-visible {
-    outline: none;
-  }
-
-  .card-link:focus-visible::after {
-    outline: 2px solid var(--orange);
-    outline-offset: 4px;
-  }
-
-  .card-tagline {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent-text);
-  }
-
-  .card-summary {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ink-2);
-  }
-
-  .card-foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px dashed var(--line-strong);
-    font-size: 11px;
-  }
-
-  .card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--red);
-  }
-
-  .card-cta svg {
-    transition: transform 0.35s var(--ease-out);
-  }
-
-  .project-card:hover .card-cta svg {
-    transform: translateX(5px);
   }
 
   .poster-art {
@@ -3974,15 +4655,18 @@
       margin-inline: auto;
     }
 
+    /* Phones and zoomed pages: a taller stage, so the prints hang on longer strings and fill the mobile
+       instead of huddling under the wire. The scene.ts phone composition is framed for this box. */
     .objets-stage {
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 5 / 4;
     }
 
     .objets-label {
       width: min(100%, 400px);
       padding: 11px 14px 10px;
       font-size: 11.5px;
-      margin-top: -26px;
+      /* Just kiss the bottom of the stage, rather than covering the lower prints. */
+      margin-top: -14px;
     }
 
     .objets-catalogue {
@@ -4364,6 +5048,15 @@
     pointer-events: none;
   }
 
+  /* While the ribbon's clip-path changes every frame, these keep their own compositor layers, so only the
+     clip is redrawn — not the collage, the two WebGL canvases and the rim underneath it. */
+  .op-b,
+  .op-hand,
+  .op-poly,
+  .op-rim {
+    will-change: transform;
+  }
+
   .op-poly canvas {
     display: block;
     width: 100%;
@@ -4705,7 +5398,7 @@
   }
 
   .semester-panel,
-  .project-card,
+  .gazette-sheet,
   .collab-card,
   .stat-card,
   .course-card {
@@ -4713,5 +5406,15 @@
     border: 1px solid #bbb !important;
     background: #fff !important;
     color: #000 !important;
+  }
+
+  .gazette-sheet::before,
+  .story-plate::after,
+  .story-more {
+    display: none !important;
+  }
+
+  .story-plate img {
+    filter: grayscale(1) !important;
   }
 }

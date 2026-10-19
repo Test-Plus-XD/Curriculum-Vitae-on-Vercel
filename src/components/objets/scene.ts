@@ -9,12 +9,14 @@ interface Spot {
   x: number;
   y: number;
   z: number;
-  /** Scale multiplier on the object's catalogue size (smaller on phones). */
+  /** Scale multiplier on the object's catalogue size. */
   scale: number;
 }
 
-// Wide composition: four objects spread along the wire with staggered heights and depths, so the
-// mobile reads as a mobile rather than a row of specimens.
+/**
+ * The wide composition: four objects spread along the wire with staggered heights and depths, so the mobile
+ * reads as a mobile rather than a row of specimens.
+ */
 const WIDE: Spot[] = [
   { x: -3.15, y: 1.15, z: 0.35, scale: 0.95 },
   { x: -1.05, y: 0.35, z: -0.6, scale: 1 },
@@ -22,20 +24,69 @@ const WIDE: Spot[] = [
   { x: 3.05, y: 0.3, z: -0.3, scale: 1 },
 ];
 
-// Phones and narrow columns: a tighter, smaller arrangement of the same objects.
+/**
+ * Phones and zoomed pages: the stage is taller and narrower, so the prints hang deeper — long strings, four
+ * different heights — and run a little larger. They fill the mobile stage instead of huddling under the wire.
+ */
 const NARROW: Spot[] = [
-  { x: -2.1, y: 1.15, z: 0.2, scale: 0.82 },
-  { x: -0.7, y: 0.25, z: -0.5, scale: 0.86 },
-  { x: 0.75, y: 0.95, z: 0.3, scale: 0.86 },
-  { x: 2.1, y: 0.15, z: -0.2, scale: 0.82 },
+  { x: -1.95, y: 0.75, z: 0.3, scale: 1.02 },
+  { x: -0.65, y: -0.35, z: -0.45, scale: 1.08 },
+  { x: 0.7, y: 0.55, z: 0.35, scale: 1.04 },
+  { x: 2, y: -0.5, z: -0.25, scale: 1 },
 ];
+
+/** Stage widths below this (CSS px) use the phone composition; wider stages use the spread one. */
+const NARROW_STAGE = 640;
+
+function spotsFor(width: number): readonly Spot[] {
+  return width < NARROW_STAGE ? NARROW : WIDE;
+}
+
+/** Camera distance and focus height that frame the chosen composition in the current stage box. */
+interface Framing {
+  z: number;
+  lookY: number;
+}
+
+function frameFor(stage: Stage, spots: readonly Spot[]): Framing {
+  const tan = Math.tan((stage.camera.fov * Math.PI) / 360);
+  const aspect = Math.max(0.25, stage.width / stage.height);
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  let nearZ = -Infinity;
+  spots.forEach((spot, i) => {
+    const half = ((FOUND_OBJECTS[i]?.size ?? 1.8) * spot.scale) / 2;
+    minX = Math.min(minX, spot.x - half);
+    maxX = Math.max(maxX, spot.x + half);
+    minY = Math.min(minY, spot.y - half);
+    maxY = Math.max(maxY, spot.y + half);
+    nearZ = Math.max(nearZ, spot.z);
+  });
+  // Fill the width; use most of the height, keeping a little headroom for the wire and its tags.
+  const z = Math.max((maxX - minX) / (2 * tan * aspect) + nearZ, (maxY - minY) / (2 * tan * 0.82) + nearZ, 3.4);
+  // Aim a touch under the centre, so the prints sit slightly above the middle and the label card can overlap
+  // the stage's bottom edge without covering an object.
+  const lookY = (minY + maxY) / 2 - 0.1 * (z * tan);
+  return { z, lookY };
+}
 
 interface Hung {
   spec: FoundObject;
+  /** Index in FOUND_OBJECTS, so each composition picks the right spot even if a model failed to load. */
+  index: number;
   /** At the string: pendulum swing. */
   hang: Group;
   /** Inside the hang: the idle spin. */
   spin: Group;
+  /** The print itself, scaled from the object's measured bounds. */
+  body: Group;
+  /** Catalogue size divided by the object's longest measured side (scale before the spot multiplier). */
+  unit: number;
+  /** Offset that puts the measured top centre on the hanging point, before scaling. */
+  pivot: { x: number; y: number; z: number };
+  spot: Spot;
   phase: number;
   /** World y of the hanging point, before the entrance offset. */
   baseY: number;
@@ -54,6 +105,8 @@ export interface ObjetsPiece {
   intro: gsap.core.Timeline;
   /** Number of objects actually hung (a failed model is left out). */
   count: number;
+  /** Re-frame the mobile after the stage resizes (browser zoom, rotation); re-hangs on a composition change. */
+  layout(): void;
   update(time: number, dt: number): void;
   /** Pointer position over the stage, -1…1 on both axes (mouse and pen only). */
   look(x: number, y: number): void;
@@ -71,18 +124,27 @@ const V = new Vector3();
  * Objets trouvés: four everyday objects hung from a wire, printed through the readymade halftone pass so
  * they arrive as cut-out newspaper photographs rather than as 3D renders. They turn idly, swing on their
  * strings, and settle when the pointer moves across the stage.
+ *
+ * Two compositions share the same prints: a wide one for the hero's left column, and a deeper phone one for
+ * small screens and zoomed pages. The camera frames whichever composition is in use from the measured stage
+ * box, and the prints are re-hung when a resize crosses the breakpoint, so browser zoom behaves like a phone.
  */
-export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean }): Promise<() => ObjetsPiece> {
-  const spots = narrow ? NARROW : WIDE;
+export async function buildObjets(stage: Stage): Promise<() => ObjetsPiece> {
+  let currentSpots = spotsFor(stage.width);
   const settled = await Promise.allSettled(
-    FOUND_OBJECTS.map(async (spec, i) => ({ spec, spot: spots[i] ?? spots[spots.length - 1], object: await loadModel(spec.model) })),
+    FOUND_OBJECTS.map(async (spec, index) => ({
+      spec,
+      index,
+      spot: currentSpots[index] ?? currentSpots[currentSpots.length - 1],
+      object: await loadModel(spec.model),
+    })),
   );
   const loaded = settled.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []));
   // One missing asset is survivable (its string is hidden); an empty mobile is not.
   if (loaded.length < 2) throw new Error('objets: no models could be loaded');
 
   const hung: Hung[] = [];
-  for (const [i, { spec, spot, object }] of loaded.entries()) {
+  for (const { spec, index, spot, object } of loaded) {
     eachMaterial(object, (m) => {
       m.envMapIntensity = 0.62;
       // Pull the warm cast of old wood and brass towards newsprint: less of the red plate, more of the
@@ -93,7 +155,8 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
     object.rotation.set(...spec.turn);
     object.updateMatrixWorld(true);
     const { box, size, centre } = measure(object);
-    const s = (spec.size * spot.scale) / Math.max(size.x, size.y, size.z, 0.001);
+    const unit = spec.size / Math.max(size.x, size.y, size.z, 0.001);
+    const s = unit * spot.scale;
     const hang = new Group();
     hang.position.set(spot.x, spot.y, spot.z);
     const spin = new Group();
@@ -107,24 +170,42 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
     stage.root.add(hang);
     hung.push({
       spec,
+      index,
       hang,
       spin,
-      phase: i * 1.73,
+      body,
+      unit,
+      pivot: { x: centre.x, y: box.max.y, z: centre.z },
+      spot,
+      phase: index * 1.73,
       baseY: spot.y,
       push: { angle: 0, vel: 0 },
       spinKick: 0,
       fall: { y: 0 },
       swing: { z: 0, x: 0 },
       twirl: { y: 0 },
-      spinAngle: i * 0.6,
+      spinAngle: index * 0.6,
     });
   }
 
-  // On phones the frame is smaller, so the camera comes in close instead of shrinking the objects again.
-  stage.camera.fov = narrow ? 36 : 32;
-  stage.camera.position.set(0, 0.1, narrow ? 6.4 : 8.6);
-  stage.camera.updateProjectionMatrix();
-  stage.camera.lookAt(0, -0.05, 0);
+  let framing = frameFor(stage, currentSpots);
+
+  const applyCamera = () => {
+    stage.camera.position.set(0, framing.lookY + 0.15, framing.z);
+    stage.camera.lookAt(0, framing.lookY, 0);
+    stage.camera.updateMatrixWorld();
+  };
+  applyCamera();
+
+  /** Re-hang one print on a spot: position, scale and the offset the string holds it by. */
+  const place = (h: Hung, spot: Spot) => {
+    h.spot = spot;
+    h.baseY = spot.y;
+    h.hang.position.set(spot.x, spot.y, spot.z);
+    const s = h.unit * spot.scale;
+    h.body.scale.setScalar(s);
+    h.body.position.set(-h.pivot.x * s, -h.pivot.y * s, -h.pivot.z * s);
+  };
 
   // Everything animated is created inside this factory, which the canvas calls inside its useGSAP
   // context: reverting that context clears every tween without leaving the scene mid-gesture.
@@ -145,11 +226,23 @@ export async function buildObjets(stage: Stage, { narrow }: { narrow: boolean })
     const piece: ObjetsPiece = {
       intro,
       count: hung.length,
+      layout() {
+        // The stage has already been resized: re-frame, and re-hang only if the composition itself changed.
+        const next = spotsFor(stage.width);
+        if (next !== currentSpots) {
+          currentSpots = next;
+          hung.forEach((h) => place(h, next[h.index] ?? next[next.length - 1]));
+        }
+        framing = frameFor(stage, currentSpots);
+        applyCamera();
+      },
       update(time, dt) {
         const sway = (scrolled.p - 0.5) * 0.5;
-        stage.camera.position.x = look.x * 0.55 + sway;
-        stage.camera.position.y = 0.1 + look.y * 0.3;
-        stage.camera.lookAt(0, -0.05, 0);
+        // Keep the pointer parallax and scroll sway feeling the same at every camera distance.
+        const depth = framing.z / 8.6;
+        stage.camera.position.x = look.x * 0.55 * depth + sway;
+        stage.camera.position.y = framing.lookY + 0.15 + look.y * 0.3 * depth;
+        stage.camera.lookAt(0, framing.lookY, 0);
         stage.camera.updateMatrixWorld();
         for (const h of hung) {
           // A tap arrives as a damped spring: the print swings, and its turn gets a shove that decays.

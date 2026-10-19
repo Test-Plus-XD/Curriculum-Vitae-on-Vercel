@@ -12,5 +12,8 @@ describe('opening timeline', () => {
   it('opens the window onto the page before the end, with time to see it', () => {
     expect(LABELS.end - LABELS.window).toBeGreaterThanOrEqual(0.5);
     expect(LABELS.window - LABELS.launch).toBeGreaterThanOrEqual(0.4);
+    // The page starts its entrances before the window widens, not on the same frame.
+    expect(LABELS.reveal).toBeGreaterThan(LABELS.launch);
+    expect(LABELS.window - LABELS.reveal).toBeGreaterThanOrEqual(0.3);
   });
 });

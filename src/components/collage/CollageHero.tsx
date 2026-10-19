@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { gsap, useGSAP, ScrollTrigger, Draggable, FULL_MOTION, FINE_POINTER, prefersReducedMotion } from '@/lib/gsap';
-import { markReady, onPageReveal, playOnReveal } from '@/lib/reveal';
+import { isOpening, markReady, onPageSettled, playOnReveal } from '@/lib/reveal';
 import { thumbnailUrl } from '@/lib/youtube';
 import type { MerzbauContent } from './MerzbauScene';
 import RansomText from './RansomText';
@@ -11,7 +11,8 @@ import Stamp from './Stamp';
 import { LabelTape, NewsScrap, Seal, Tape, Torn } from './Paper';
 import Scramble from '../fx/Scramble';
 
-const MerzbauScene = dynamic(() => import('./MerzbauScene'), { ssr: false });
+const loadMerzbau = () => import('./MerzbauScene');
+const MerzbauScene = dynamic(loadMerzbau, { ssr: false });
 
 export interface CollageHeroProps {
   label: string;
@@ -49,8 +50,10 @@ export default function CollageHero(props: CollageHeroProps) {
   const merz = useMemo(() => props.merz, [props.merz]);
   const onFail = useCallback(() => setShowScene(false), []);
 
-  // Mount the WebGL scene once the page is revealed and idle, so it never competes with first paint or with
-  // the opening sequence's own WebGL hand.
+  // Mount the WebGL scene once the page is revealed and idle, so it never competes with first paint, and not
+  // until the opening sequence has finished: building it (canvas-painted scraps, shaders) during the opening's
+  // last frames would stall the hand-over. Its code is fetched and parsed while the opening plays, so the
+  // mount itself is quick.
   useEffect(() => {
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
@@ -58,13 +61,19 @@ export default function CollageHero(props: CollageHeroProps) {
     };
     let id = 0;
     let t = 0;
-    const offReveal = onPageReveal(() => {
+    let warm = 0;
+    if (isOpening()) {
+      if (w.requestIdleCallback) warm = w.requestIdleCallback(() => void loadMerzbau().catch(() => {}), { timeout: 2500 });
+      else void loadMerzbau().catch(() => {});
+    }
+    const offSettled = onPageSettled(() => {
       if (w.requestIdleCallback) id = w.requestIdleCallback(() => setShowScene(true), { timeout: 1500 });
       else t = window.setTimeout(() => setShowScene(true), 600);
     });
     return () => {
-      offReveal();
+      offSettled();
       if (id) w.cancelIdleCallback?.(id);
+      if (warm) w.cancelIdleCallback?.(warm);
       clearTimeout(t);
     };
   }, []);

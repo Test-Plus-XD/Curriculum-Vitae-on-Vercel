@@ -10,7 +10,7 @@ import Scatter from '@/components/fx/Scatter';
 import TiltCard from '@/components/fx/TiltCard';
 import Scramble from '@/components/fx/Scramble';
 import { Tape } from '@/components/collage/Paper';
-import ProjectsFilterGrid from '@/components/ProjectsFilterGrid';
+import ProjectsGazette from '@/components/ProjectsGazette';
 import ReadymadeFigure from '@/components/readymade/ReadymadeFigure';
 import ObjetsFigure from '@/components/objets/ObjetsFigure';
 
@@ -39,7 +39,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
         <ReadymadeFigure work="duchamp" number={2} />
       </section>
 
-      <ProjectsFilterGrid projects={PROJECTS} />
+      <ProjectsGazette projects={PROJECTS} />
 
       <section className="section" aria-labelledby="collab-heading">
         <RevealHeading id="collab-heading" text={t('collaborations')} index="§ 02" />

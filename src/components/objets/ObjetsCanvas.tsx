@@ -75,7 +75,8 @@ export default function ObjetsCanvas({ onReady, onFail }: Props) {
         const h = Math.max(1, stage.height);
         rig.setAttribute('viewBox', `0 0 ${w} ${h}`);
         const wireY = h * 0.06;
-        const tagScale = w < 560 ? 0.72 : w < 760 ? 0.86 : 1;
+        // The tag is drawn in the rig's own CSS pixels, so it can run at full size on phones and zoomed pages.
+        const tagScale = w < 480 ? 0.92 : w < 720 ? 0.96 : 1;
         arm?.setAttribute('d', `M -20 ${wireY} C ${w * 0.28} ${wireY - 6}, ${w * 0.66} ${wireY + 7}, ${w + 20} ${wireY - 2}`);
         tapes[0]?.setAttribute('y', String(wireY - 7));
         tapes[1]?.setAttribute('y', String(wireY - 8));
@@ -96,7 +97,8 @@ export default function ObjetsCanvas({ onReady, onFail }: Props) {
           clamp?.setAttribute('x', String(toCss.x - 4));
           clamp?.setAttribute('y', String(wireY - 5));
           if (tag) {
-            const tagY = wireY + (toCss.y - wireY) * (0.26 + (i % 3) * 0.08);
+            // Tags ride the upper half of the string, alternating heights so neighbours never crowd each other.
+            const tagY = wireY + (toCss.y - wireY) * (0.3 + (i % 2) * 0.2);
             tag.setAttribute('transform', `translate(${toCss.x} ${tagY}) rotate(-4) scale(${tagScale})`);
           }
         });
@@ -133,18 +135,22 @@ export default function ObjetsCanvas({ onReady, onFail }: Props) {
       });
       io.observe(host);
       const ro = new ResizeObserver(() => {
-        if (stage.resize()) {
-          syncRig();
-          draw();
-        }
+        if (!stage.resize()) return;
+        // Browser zoom and rotation change the stage box: re-frame the mobile, and re-hang it if the box
+        // crossed the phone/wide breakpoint.
+        piece?.layout();
+        syncRig();
+        draw();
       });
       ro.observe(host);
 
-      buildObjets(stage, { narrow: window.matchMedia('(max-width: 900px)').matches })
+      buildObjets(stage)
         .then((animate) => {
           if (disposed) return;
           const run = () => {
             piece = animate();
+            // The stage may have resized while the models were loading.
+            piece.layout();
 
             // Pointer: mouse and pen only, so a finger scrolling past never tilts the mobile.
             const onMove = (event: PointerEvent) => {

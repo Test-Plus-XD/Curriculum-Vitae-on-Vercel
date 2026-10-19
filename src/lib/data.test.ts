@@ -3,7 +3,16 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import en from '../messages/en.json';
 import zh from '../messages/zh-hk.json';
-import { PROJECTS, PROJECT_IDS, COLLABORATIONS, FEATURED_IDS, buildTimeline, getProject } from './projects';
+import {
+  PROJECTS,
+  PROJECT_IDS,
+  COLLABORATIONS,
+  FEATURED_IDS,
+  buildTimeline,
+  getProject,
+  latestFiling,
+  paginateEdition,
+} from './projects';
 import { ALL_COURSES, SEMESTERS, PROGRAMME, getCourse } from './education';
 import { SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS } from './cv';
 import { parseYouTube } from './youtube';
@@ -63,6 +72,22 @@ describe('projects', () => {
     const pourRice = buildTimeline(getProject('pourrice')!);
     expect(pourRice[0].date).toBe('2026-05-07');
     expect(pourRice.at(-1)?.type).toBe('milestone');
+  });
+
+  it('lays the projects out as newspaper pages: three on the front, four after', () => {
+    expect(paginateEdition(PROJECTS).map((page) => page.length)).toEqual([3, 4, 4]);
+    expect(paginateEdition(PROJECTS).flat()).toEqual(PROJECTS);
+    expect(paginateEdition([1, 2, 3, 4, 5])).toEqual([[1, 2, 3], [4, 5]]);
+    expect(paginateEdition([1])).toEqual([[1]]);
+    expect(paginateEdition([])).toEqual([[]]);
+  });
+
+  it('dates the edition by its latest filing', () => {
+    const dates = PROJECTS.flatMap((p) => [...p.videos, ...p.milestones].map((e) => e.date));
+    const latest = latestFiling(PROJECTS)!;
+    expect(dates).toContain(latest);
+    expect(dates.every((d) => d <= latest)).toBe(true);
+    expect(latestFiling([])).toBeUndefined();
   });
 
   it('never links a private collaboration', () => {

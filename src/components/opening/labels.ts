@@ -14,6 +14,9 @@ export const LABELS = {
   collage: 3.88,
   hand: 3.95,
   launch: 4.75,
+  /** The cover lifts while the ribbon is still a thin streak, so the page does its entrance set-up (text
+   *  splitting, scroll triggers, first paints) before the window widens, and is mid-entrance inside it. */
+  reveal: 4.85,
   window: 5.35,
   end: 6,
 } as const;

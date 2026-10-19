@@ -26,12 +26,14 @@ import {
   WebGLRenderer,
 } from 'three';
 import { gsap } from '@/lib/gsap';
+import { makeSolids, type SolidShape } from './solids';
 
 /**
  * The opening's low-poly layer: one full-screen, transparent Three.js canvas over the printed poster. It holds
- * a handful of flat-shaded solids — Platonic bodies and a five-sided wedge, cut from the poster's own papers and
+ * three to five flat-shaded solids — Platonic bodies and a five-sided wedge, cut from the poster's own papers and
  * outlined in ink — that tumble at different depths while the virtual camera moves, so the flat poster gains
- * parallax; and the low-poly Sputnik that flies the ribbon once it leaves the hand.
+ * parallax; and the low-poly Sputnik that flies the ribbon once it leaves the hand. Which bodies turn up, where
+ * they hang and how large they are is thrown fresh for every visit (see solids.ts).
  *
  * No halftone pass here (it would cost too much full-screen): flat shading in poster colours reads as printed
  * paper next to the SVG art. Built from primitives, so there is nothing to load.
@@ -62,6 +64,8 @@ export interface Camera2D {
 }
 
 export interface PolyPiece {
+  /** How many solids this visit's arrangement threw (three to five). */
+  count: number;
   /** Advance the solids and follow the virtual camera. */
   update(time: number, dt: number): void;
   /** Place the flying Sputnik at a screen point (px) heading along `angle` (radians, screen space). */
@@ -76,6 +80,25 @@ function outlined(geometry: BufferGeometry, color: string, edges: LineBasicMater
   group.add(new Mesh(geometry, new MeshStandardMaterial({ color, flatShading: true, roughness: 0.92, metalness: 0 })));
   group.add(new LineSegments(new EdgesGeometry(geometry, 1), edges));
   return group;
+}
+
+/** The body for one spec: the same primitives as before, sized from the spec's radius. */
+function solidGeometry(shape: SolidShape, radius: number): BufferGeometry {
+  switch (shape) {
+    case 'icosahedron':
+      return new IcosahedronGeometry(radius, 0);
+    case 'tetrahedron':
+      return new TetrahedronGeometry(radius * 1.1, 0);
+    case 'octahedron':
+      return new OctahedronGeometry(radius * 1.1, 0);
+    case 'box':
+      return new BoxGeometry(radius * 1.5, radius * 1.5, radius * 1.5);
+    case 'dodecahedron':
+      return new DodecahedronGeometry(radius * 0.85, 0);
+    case 'wedge':
+      // A five-sided wedge, like a folded paper cone.
+      return new ConeGeometry(radius * 0.62, radius * 2.4, 5);
+  }
 }
 
 /** Creates the layer; returns a factory that adds its tweens to the master timeline. Throws without WebGL. */
@@ -101,21 +124,13 @@ export function buildPoly(
   const spread = tall ? 0.5 : 1;
   const solidsGroup = new Group();
   scene.add(solidsGroup);
-  const specs: { geometry: BufferGeometry; color: string; at: [number, number, number] }[] = [
-    { geometry: new IcosahedronGeometry(0.55, 0), color: PAPER.red, at: [-3.4, 1.7, 1.6] },
-    { geometry: new TetrahedronGeometry(0.85, 0), color: PAPER.ink, at: [3.5, -1.6, 2.3] },
-    { geometry: new OctahedronGeometry(0.62, 0), color: PAPER.kraft, at: [2.7, 2.1, -1.2] },
-    { geometry: new BoxGeometry(0.85, 0.85, 0.85), color: PAPER.paper, at: [-2.9, -1.9, 0.6] },
-    { geometry: new DodecahedronGeometry(0.46, 0), color: PAPER.red, at: [4.7, 0.5, -2.8] },
-    { geometry: new ConeGeometry(0.32, 1.3, 5), color: PAPER.ink, at: [-4.6, -0.3, -1.6] },
-    { geometry: new TetrahedronGeometry(0.38, 0), color: PAPER.kraft, at: [0.9, 2.7, 3.2] },
-  ];
-  const solids: Solid[] = specs.map((s, i) => {
-    const mesh = outlined(s.geometry, s.color, edges);
-    mesh.position.set(s.at[0] * spread, s.at[1] * (tall ? 1.5 : 1), s.at[2]);
+  // A fresh throw of three to five bodies for every visit: seeded from the moment the overlay is built.
+  const solids: Solid[] = makeSolids((Math.random() * 0xffffffff) >>> 0).map((spec, i) => {
+    const mesh = outlined(solidGeometry(spec.shape, spec.radius), PAPER[spec.paper], edges);
+    mesh.position.set(spec.at[0] * spread, spec.at[1] * (tall ? 1.5 : 1), spec.at[2]);
     mesh.rotation.set(i * 0.7, i * 1.3, i * 0.4);
     solidsGroup.add(mesh);
-    return { mesh, base: mesh.position.clone(), spin: new Vector3(0.35 + (i % 3) * 0.2, 0.5 - (i % 2) * 0.9, 0.2 + i * 0.05), phase: i * 1.37 };
+    return { mesh, base: mesh.position.clone(), spin: new Vector3(...spec.spin), phase: spec.phase };
   });
 
   // Sputnik: a low-poly ball with four swept-back antennas, pointing along +x (its direction of travel).
@@ -163,6 +178,7 @@ export function buildPoly(
       .set(state, { sputnik: 1 }, labels.launch);
 
     const piece: PolyPiece = {
+      count: solids.length,
       update(time, dt) {
         // Follow the poster's virtual camera: pan (px → world at the poster's depth), roll and zoom.
         const unit = (2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z) / size.h;
