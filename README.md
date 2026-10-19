@@ -68,4 +68,6 @@ MIT
 
 ---
 
-[![](https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://github.com/deepseek-ai/deepseek-harness)
+[![Assisted by Claude Code](https://img.shields.io/badge/assisted_by-Claude-D97757?style=flat-square&logo=claude&logoColor=white)](https://claude.com/claude-code)
+[![Assisted by OpenAI Codex](https://img.shields.io/badge/assisted_by-Codex-412991?style=flat-square&logo=openai&logoColor=white)](https://openai.com/codex)
+[![Assisted by DeepSeek Harness](https://img.shields.io/badge/assisted_by-DSH-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://www.deepseek.com/harness)
