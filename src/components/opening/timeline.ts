@@ -250,8 +250,9 @@ export function buildOpening(env: OpeningEnv): Opening {
 
   // ---------------------------------------------------------------- tilt: the poster turns in depth
   const t = L.tilt;
-  // Send the C-band behind the orbits as its tilt reaches the horizontal pass.
-  master.set(ringLayer, { zIndex: 1 }, t + 0.2);
+  // The C-band stays over the orbits for the whole tilt and drops behind them only once it has gone horizontal
+  // (the tilt below lasts 0.4 s).
+  master.set(ringLayer, { zIndex: 1 }, t + 0.4);
   master
     .to(ringLayer, { rotationX: 74, duration: 0.4, ease: 'power2.inOut' }, t)
     .to(orbitLayer, { rotationY: 52, rotationX: 22, duration: 0.4, ease: 'power2.inOut' }, t)

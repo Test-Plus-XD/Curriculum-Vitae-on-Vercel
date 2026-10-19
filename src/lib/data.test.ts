@@ -149,6 +149,20 @@ describe('bilingual content', () => {
     expect(keys(zh).sort()).toEqual(keys(en).sort());
   });
 
+  it('uses the same placeholders in both locales', () => {
+    const entries = (o: object, prefix = ''): [string, string][] =>
+      Object.entries(o).flatMap(([k, v]) =>
+        v && typeof v === 'object' ? entries(v, `${prefix}${k}.`) : [[`${prefix}${k}`, String(v)] as [string, string]],
+      );
+    const zhText = new Map(entries(zh));
+    // The names inside braces: {year}, {count, plural, …} and {section, select, …} all count.
+    const placeholders = (text: string) =>
+      Array.from(new Set(Array.from(text.matchAll(/\{\s*([A-Za-z_]\w*)\s*[,}]/g), (m) => m[1]))).sort();
+    for (const [key, text] of entries(en)) {
+      expect(placeholders(zhText.get(key) ?? ''), key).toEqual(placeholders(text));
+    }
+  });
+
   it('labels every readymade in both languages', () => {
     for (const work of ['hausmann', 'duchamp', 'manray'] as const) {
       for (const messages of [en, zh]) {

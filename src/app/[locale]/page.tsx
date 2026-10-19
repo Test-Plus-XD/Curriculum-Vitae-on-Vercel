@@ -92,7 +92,7 @@ export default async function CvPage({ params }: { params: Promise<{ locale: str
         <div className="cv-toolbar no-print">
           <p className="eyebrow">
             <span className="eyebrow-dot" aria-hidden="true" />
-            <Scramble text={`${t('document')} · 2026`} />
+            <Scramble text={`${t('document')} · ${currentYear}`} />
           </p>
           <PrintButton />
         </div>

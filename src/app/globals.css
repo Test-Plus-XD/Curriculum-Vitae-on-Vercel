@@ -5471,6 +5471,8 @@
   .op-a > .op-layer[data-op="a-ring"] { z-index: 3; }
   .op-a > .op-layer[data-op="a-core"] { z-index: 4; }
   .op-a > .op-layer[data-op="a-front"] { z-index: 5; }
+  /* The name sits over the orbits, the ring and the nucleus; only the wedge crosses it. */
+  .op-a > .op-caption { z-index: 4; }
 
   /* Lights up: the plate and the poster fade in from the black sheet. */
   .op-plate,
