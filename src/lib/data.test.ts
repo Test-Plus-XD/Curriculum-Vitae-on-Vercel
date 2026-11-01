@@ -100,6 +100,29 @@ describe('projects', () => {
   });
 });
 
+describe('animated abstracts', () => {
+  const ABSTRACTS = join(process.cwd(), 'src', 'components', 'abstracts');
+  const workPath = (id: string) => join(ABSTRACTS, 'works', `${id}.tsx`);
+
+  // A page ships only its own drawing, so a project missing from the index would simply lose its abstract.
+  it('has a work for every project, listed in the index', () => {
+    const index = readFileSync(join(ABSTRACTS, 'index.tsx'), 'utf8');
+    for (const id of PROJECT_IDS) {
+      expect(existsSync(workPath(id)), id).toBe(true);
+      expect(index, id).toContain(`./works/${id}'`);
+    }
+  });
+
+  // Several works can share a page, and the server must render the same frame as the client: ids and defs would
+  // collide across them, while randomness and timers would make the loop differ from its markup.
+  it('keeps every work free of ids, defs, url(), randomness and timers', () => {
+    for (const id of PROJECT_IDS) {
+      const source = readFileSync(workPath(id), 'utf8');
+      expect(source, id).not.toMatch(/\bid=|<defs|url\(|Math\.random|setTimeout/);
+    }
+  });
+});
+
 describe('readymade models', () => {
   // The CC0 models the readymades load from /public/models (see CREDITS.txt there).
   const MODELS = [

@@ -3254,6 +3254,76 @@
     color: var(--ink-2);
   }
 
+  /* Animated abstracts: a taped print of one looping SVG, paper in both themes. */
+  .abstract-figure {
+    position: relative;
+    padding: 10px 10px 12px;
+    background: var(--scrap);
+    color: var(--ink-black);
+    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+    rotate: -0.5deg;
+  }
+
+  .abstract-plate {
+    position: relative;
+    border: 1px solid var(--ink-black);
+  }
+
+  .abstract-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .abstract-svg .poster-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .abstract-svg .poster-type {
+    font-family: var(--font-type);
+  }
+
+  .locale-zh .abstract-svg .poster-type,
+  .locale-zh .abstract-svg .poster-display {
+    font-family: var(--font-zh);
+  }
+
+  .abstract-toggle {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    background: var(--ink-black);
+    color: var(--scrap);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .abstract-toggle:hover {
+    background: var(--vermilion);
+  }
+
+  .abstract-toggle:focus-visible {
+    outline: 2px solid var(--vermilion);
+    outline-offset: 2px;
+  }
+
+  .abstract-figure figcaption {
+    margin-top: 8px;
+    font-family: var(--font-type);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #3d342c;
+  }
+
+  .locale-zh .abstract-figure figcaption {
+    font-family: inherit;
+  }
+
   /* Exhibits sit askew, with their captions typed on. */
   .exhibit:nth-child(odd) {
     rotate: -0.9deg;

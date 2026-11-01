@@ -20,6 +20,7 @@ import DetailPhoto from '@/components/DetailPhoto';
 import FactSheet from '@/components/FactSheet';
 import { CaseDispatches, CaseExcerpts, CaseExhibits, CaseFlow, CaseHeading } from '@/components/CaseSections';
 import { Tape } from '@/components/collage/Paper';
+import ProjectAbstract from '@/components/abstracts';
 import { REPO_POSTERS } from '@/components/posters';
 import KeepCompounds from '@/components/KeepCompounds';
 import OrbitDiagram from '@/components/OrbitDiagram';
@@ -181,6 +182,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 ))}
               </Scatter>
             )}
+          </section>
+
+          <section className="section" aria-labelledby="abstract-heading">
+            <CaseHeading id="abstract-heading" text={t('abstract')} index={index()} />
+            <ProjectAbstract id={id} locale={locale} />
           </section>
 
           {caseFile?.contributions && (
