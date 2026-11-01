@@ -3312,6 +3312,18 @@
     outline-offset: 2px;
   }
 
+  /* On a phone the drawing is too small to give up a corner, so the button hangs off the plate into the caption's row. */
+  @media (max-width: 640px) {
+    .abstract-toggle {
+      right: -2px;
+      bottom: -36px;
+    }
+
+    .abstract-figure figcaption {
+      padding-right: 38px;
+    }
+  }
+
   .abstract-figure figcaption {
     margin-top: 8px;
     font-family: var(--font-type);
