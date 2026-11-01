@@ -2896,7 +2896,9 @@
   .dispatch,
   .exhibit,
   .excerpt,
-  .fact-ledger {
+  .fact-ledger,
+  .flow-card,
+  .page-detail .side-panel {
     --ink: var(--ink-black);
     --ink-2: #3d342c;
     --muted: #5f5446;
@@ -2907,43 +2909,81 @@
     box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
   }
 
-  /* How it works: a numbered wiring sheet, one rule running down through every stage. */
+  /* Section headings are cut out as ransom notes, with the section number typed beside them. */
+  .case-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 4px 14px;
+    margin-bottom: 26px;
+  }
+
+  .case-heading h2 {
+    min-width: 0;
+    font-size: clamp(23px, 3.4vw, 38px);
+  }
+
+  .case-heading-index {
+    font-family: var(--font-type);
+    font-size: 14px;
+    color: var(--accent-text);
+    rotate: -5deg;
+  }
+
+  /* How it works: scraps of three papers pasted in a zigzag, joined by strips of label tape. */
   .case-flow {
     display: grid;
-    max-width: 66ch;
   }
 
   .flow-step {
     position: relative;
-    display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
-    column-gap: 14px;
+    width: min(calc(100% - 16px), 35rem);
   }
 
-  .flow-step:not(:last-child)::before {
-    content: "";
-    position: absolute;
-    left: 16px;
-    top: 34px;
-    bottom: 0;
-    width: 2px;
-    background: var(--red);
+  .flow-step:nth-child(even) {
+    margin-left: auto;
   }
 
   .flow-number {
+    position: absolute;
+    z-index: 2;
+    top: -9px;
+    left: -7px;
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    background: var(--red);
+    width: 36px;
+    height: 36px;
+    background: var(--vermilion);
     color: var(--scrap);
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 700;
     font-variant-numeric: lining-nums;
+    rotate: -7deg;
+  }
+
+  .flow-step:nth-child(even) .flow-number {
+    rotate: 6deg;
   }
 
   .flow-card {
-    padding: 4px 0 8px;
+    padding: 13px 18px 14px 40px;
+    background: var(--scrap);
+    rotate: -0.7deg;
+  }
+
+  .flow-step:nth-child(even) .flow-card {
+    rotate: 0.8deg;
+  }
+
+  .flow-step:nth-child(3n + 2) .flow-card {
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
+      var(--newsprint);
+  }
+
+  .flow-step:nth-child(3n) .flow-card {
+    --ink-2: #2b2118;
+    background: var(--kraft);
   }
 
   .flow-name {
@@ -2958,14 +2998,24 @@
   }
 
   .flow-link {
-    grid-column: 2;
+    position: relative;
+    z-index: 3;
     display: flex;
     gap: 6px;
     align-items: baseline;
-    padding-bottom: 14px;
+    width: fit-content;
+    max-width: calc(100% - 44px);
+    margin: -7px 0 -3px 34px;
+    padding: 3px 10px;
+    background: var(--ink-black);
+    color: var(--scrap);
     font-family: var(--font-type);
     font-size: 13px;
-    color: var(--accent-text);
+    rotate: -1.3deg;
+  }
+
+  .flow-step:nth-child(even) .flow-link {
+    rotate: 1.4deg;
   }
 
   .flow-link svg {
@@ -2973,14 +3023,39 @@
     translate: 0 2px;
   }
 
-  /* Engineering notes: clippings, each cut into problem, decision and result. */
+  .locale-zh .flow-link {
+    font-family: inherit;
+  }
+
+  /* Engineering notes: torn clippings pasted out of line, stamped once across the first corner. */
+  .case-dispatch-wall {
+    position: relative;
+  }
+
+  .case-dispatch-wall .dispatch-stamp {
+    position: absolute;
+    z-index: 4;
+    top: -34px;
+    right: -6px;
+    pointer-events: none;
+  }
+
   .case-dispatches {
     display: grid;
-    gap: 26px;
+    gap: 12px;
   }
 
   .dispatch {
-    padding: 24px 24px 22px;
+    box-shadow: none;
+    rotate: -0.5deg;
+  }
+
+  .dispatch:nth-child(even) {
+    rotate: 0.6deg;
+  }
+
+  .dispatch-sheet {
+    padding: 26px 24px 28px;
     background:
       repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
       var(--newsprint);
@@ -2988,22 +3063,17 @@
     line-height: 1.6;
   }
 
-  .dispatch:nth-child(odd) {
-    rotate: -0.25deg;
-  }
-
-  .dispatch:nth-child(even) {
-    rotate: 0.2deg;
+  .dispatch:nth-child(even) .dispatch-sheet {
+    background: var(--scrap);
   }
 
   .dispatch-kicker {
-    font-family: var(--font-type);
-    font-size: 13px;
-    color: var(--accent-text);
+    font-size: 11px;
+    rotate: -1.4deg;
   }
 
   .dispatch-title {
-    margin: 4px 0 14px;
+    margin: 10px 0 14px;
     padding-bottom: 10px;
     border-bottom: 3px double var(--line);
     font-family: var(--font-title);
@@ -3011,6 +3081,10 @@
     font-weight: 700;
     line-height: 1.2;
     text-wrap: balance;
+  }
+
+  .dispatch:first-child .dispatch-title {
+    padding-right: 82px;
   }
 
   .locale-zh .dispatch-title {
@@ -3023,6 +3097,14 @@
   }
 
   @media (min-width: 760px) {
+    .dispatch:nth-child(odd) {
+      margin-right: 5%;
+    }
+
+    .dispatch:nth-child(even) {
+      margin-left: 5%;
+    }
+
     .dispatch-body {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 22px;
@@ -3091,15 +3173,40 @@
   /* Source excerpts: verbatim code on paper; the block scrolls by itself rather than the page. */
   .case-excerpts {
     display: grid;
-    gap: 26px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .excerpt-wrap {
+    position: relative;
+    min-width: 0;
+    rotate: -0.3deg;
+  }
+
+  .excerpt-wrap:nth-child(even) {
+    rotate: 0.35deg;
+  }
+
+  @media (min-width: 760px) {
+    .excerpt-wrap:nth-child(odd) {
+      margin-right: 4%;
+    }
+
+    .excerpt-wrap:nth-child(even) {
+      margin-left: 4%;
+    }
+  }
+
+  .excerpt-sheet {
+    padding: 20px 18px 30px;
+    background: var(--scrap);
   }
 
   .excerpt {
     /* Paper in both themes, so the code block's scrollbar stays a light one at night. */
     color-scheme: light;
     min-width: 0;
-    padding: 16px 18px;
-    background: var(--scrap);
+    box-shadow: none;
   }
 
   .excerpt-head {
@@ -3145,6 +3252,91 @@
     font-size: 14px;
     line-height: 1.5;
     color: var(--ink-2);
+  }
+
+  /* Exhibits sit askew, with their captions typed on. */
+  .exhibit:nth-child(odd) {
+    rotate: -0.9deg;
+  }
+
+  .exhibit:nth-child(even) {
+    rotate: 1.1deg;
+  }
+
+  .exhibit:first-child {
+    rotate: 0.4deg;
+  }
+
+  .exhibit figcaption {
+    font-family: var(--font-type);
+  }
+
+  .locale-zh .exhibit figcaption {
+    font-family: inherit;
+  }
+
+  /* The sidebar is a case folder taped to the wall: Dymo labels over chips cut from odd papers. */
+  .page-detail .side-panel {
+    --surface-2: #ddd0b8;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.04) 0 1px, transparent 1px 5px),
+      var(--scrap);
+    border: 0;
+    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+    rotate: -0.8deg;
+  }
+
+  .page-detail .side-title {
+    display: inline-block;
+    padding: 0.4em 0.85em 0.34em;
+    background: var(--ink-black);
+    color: var(--scrap);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    rotate: -1.2deg;
+  }
+
+  .page-detail .side-block:nth-child(odd) .side-title {
+    rotate: 1deg;
+  }
+
+  .locale-zh .page-detail .side-title {
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .page-detail .side-panel .tech-chip {
+    background: var(--newsprint);
+    border: 0;
+    box-shadow: 1px 1px 0 rgba(23, 18, 15, 0.3);
+    color: var(--ink-black);
+    rotate: -1.6deg;
+  }
+
+  .page-detail .side-panel .tech-chip:nth-child(3n + 2) {
+    background: var(--kraft);
+    rotate: 1.3deg;
+  }
+
+  .page-detail .side-panel .tech-chip:nth-child(3n) {
+    background: #fff8e9;
+    rotate: -0.6deg;
+  }
+
+  /* The overview's drop cap is a cut-out block, like one ransom letter. Chinese sets no drop cap. */
+  .detail-description::first-letter {
+    margin-right: 0.1em;
+    padding: 0.09em 0.13em 0.03em;
+    background: var(--vermilion);
+    color: var(--scrap);
+  }
+
+  .locale-zh .detail-description::first-letter {
+    margin-right: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
   }
 
   .side-role {
@@ -6399,6 +6591,39 @@
     border: 1px solid #000;
     background: none;
     color: #000;
+  }
+
+  /* The collage comes unstuck for print: straight, on white, with black type in place of tape. */
+  .dispatch-sheet,
+  .excerpt-sheet,
+  .flow-card,
+  .page-detail .side-panel {
+    background: #fff !important;
+    box-shadow: none !important;
+    rotate: 0deg !important;
+  }
+
+  .dispatch,
+  .excerpt-wrap,
+  .exhibit,
+  .flow-step {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    rotate: 0deg !important;
+  }
+
+  .flow-link,
+  .dispatch-kicker,
+  .page-detail .side-title {
+    background: none !important;
+    color: #000 !important;
+    rotate: 0deg !important;
+  }
+
+  .page-detail .side-panel .tech-chip {
+    background: none !important;
+    box-shadow: none !important;
+    rotate: 0deg !important;
   }
 
   /* The fact sheet prints as ruled black type, with no slab or screen. */

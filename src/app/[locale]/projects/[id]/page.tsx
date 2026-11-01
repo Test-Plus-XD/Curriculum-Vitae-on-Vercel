@@ -11,7 +11,6 @@ import { alternates } from '@/lib/seo';
 import DadaTypography from '@/components/fx/DadaTypography';
 import HeroWedge from '@/components/fx/HeroWedge';
 import ReadingRule from '@/components/fx/ReadingRule';
-import RevealHeading from '@/components/fx/RevealHeading';
 import Scatter from '@/components/fx/Scatter';
 import Magnetic from '@/components/fx/Magnetic';
 import Scramble from '@/components/fx/Scramble';
@@ -19,7 +18,8 @@ import TransitionLink from '@/components/transition/TransitionLink';
 import DevTimeline from '@/components/DevTimeline';
 import DetailPhoto from '@/components/DetailPhoto';
 import FactSheet from '@/components/FactSheet';
-import { CaseDispatches, CaseExcerpts, CaseExhibits, CaseFlow } from '@/components/CaseSections';
+import { CaseDispatches, CaseExcerpts, CaseExhibits, CaseFlow, CaseHeading } from '@/components/CaseSections';
+import { Tape } from '@/components/collage/Paper';
 import { REPO_POSTERS } from '@/components/posters';
 import KeepCompounds from '@/components/KeepCompounds';
 import OrbitDiagram from '@/components/OrbitDiagram';
@@ -172,7 +172,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       <div className="detail-grid">
         <div className="detail-main">
           <section className="section" aria-labelledby="overview-heading">
-            <RevealHeading id="overview-heading" text={t('overview')} index={index()} />
+            <CaseHeading id="overview-heading" text={t('overview')} index={index()} />
             <p className="detail-description">{L(project.description)}</p>
             {project.details && (
               <Scatter as="ul" className="detail-points" variant="rise">
@@ -185,7 +185,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
           {caseFile?.contributions && (
             <section className="section" aria-labelledby="contributions-heading">
-              <RevealHeading id="contributions-heading" text={tp('contributions')} index={index()} />
+              <CaseHeading id="contributions-heading" text={tp('contributions')} index={index()} />
               <Scatter as="ul" className="detail-points" variant="rise">
                 {caseFile.contributions.map((c) => (
                   <li key={c.en}>{L(c)}</li>
@@ -196,7 +196,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
           {project.platforms && (
             <section className="section" aria-labelledby="platforms-heading">
-              <RevealHeading id="platforms-heading" text={t('platforms')} index={index()} />
+              <CaseHeading id="platforms-heading" text={t('platforms')} index={index()} />
               <div className="platforms-layout">
                 <OrbitDiagram
                   core="Firebase"
@@ -238,34 +238,34 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
           {caseFile?.flow && (
             <section className="section" aria-labelledby="flow-heading">
-              <RevealHeading id="flow-heading" text={t('howItWorks')} index={index()} />
+              <CaseHeading id="flow-heading" text={t('howItWorks')} index={index()} />
               <CaseFlow steps={caseFile.flow} />
             </section>
           )}
 
           {caseFile?.exhibits && (
             <section className="section" aria-labelledby="exhibits-heading">
-              <RevealHeading id="exhibits-heading" text={t('exhibits')} index={index()} />
+              <CaseHeading id="exhibits-heading" text={t('exhibits')} index={index()} />
               <CaseExhibits exhibits={caseFile.exhibits} />
             </section>
           )}
 
           {caseFile && caseFile.dispatches.length > 0 && (
             <section className="section" aria-labelledby="dispatches-heading">
-              <RevealHeading id="dispatches-heading" text={t('dispatches')} index={index()} />
+              <CaseHeading id="dispatches-heading" text={t('dispatches')} index={index()} />
               <CaseDispatches dispatches={caseFile.dispatches} />
             </section>
           )}
 
           {caseFile?.excerpts && (
             <section className="section" aria-labelledby="excerpts-heading">
-              <RevealHeading id="excerpts-heading" text={t('excerpts')} index={index()} />
+              <CaseHeading id="excerpts-heading" text={t('excerpts')} index={index()} />
               <CaseExcerpts excerpts={caseFile.excerpts} />
             </section>
           )}
 
           <section className="section" aria-labelledby="timeline-heading">
-            <RevealHeading id="timeline-heading" text={t('timeline')} index={index()} />
+            <CaseHeading id="timeline-heading" text={t('timeline')} index={index()} />
             {project.videos.length === 0 && <p className="footnote">{t('noVideos')}</p>}
             <DevTimeline entries={timeline} />
           </section>
@@ -273,6 +273,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
         <aside className="detail-side">
           <div className="side-panel">
+            <Tape className="tape-top no-print" />
             {caseFile && (
               <div className="side-block">
                 <h2 className="side-title">
