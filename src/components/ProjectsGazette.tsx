@@ -26,6 +26,7 @@ import { parseYouTube } from '@/lib/youtube';
 import InlineVideo from './InlineVideo';
 import TransitionLink from './transition/TransitionLink';
 import PosterArt from './PosterArt';
+import { REPO_POSTERS } from './posters';
 import Scramble from './fx/Scramble';
 import KeepCompounds from './KeepCompounds';
 import { TURN_PERSPECTIVE, dropHand, poseHand, takeHand, type HandRig, type Hold } from './gazetteHand';
@@ -133,10 +134,12 @@ function Story({ project, role }: { project: Project; role: Role }) {
   const feature = role === 'lead' || role === 'wide';
   const body = feature ? project.description : project.summary;
   const href = `/projects/${project.id}`;
+  const Poster = REPO_POSTERS[project.id];
 
   return (
     <article className={`story story-${role}`} data-story="">
       <p className="story-kicker">
+        {project.coauthored && <span>{t('coauthored')}</span>}
         {project.categories.map((c) => (
           <span key={c}>{t(c)}</span>
         ))}
@@ -149,8 +152,15 @@ function Story({ project, role }: { project: Project; role: Role }) {
       <p className="story-deck">{pick(project.tagline, locale)}</p>
       <figure className="story-photo">
         <div className="story-plate">
-          {video && yt ? <InlineVideo video={video} variant="press" /> : <PosterArt seed={project.id} label="" />}
+          {video && yt ? (
+            <InlineVideo video={video} variant="press" />
+          ) : Poster ? (
+            <Poster locale={locale} />
+          ) : (
+            <PosterArt seed={project.id} label="" />
+          )}
         </div>
+        {!video && Poster && <figcaption>{t('gazette.poster')}</figcaption>}
         {video && (
           <figcaption>
             <PlayCircle size={12} aria-hidden="true" />

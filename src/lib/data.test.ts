@@ -6,13 +6,14 @@ import zh from '../messages/zh-hk.json';
 import {
   PROJECTS,
   PROJECT_IDS,
-  COLLABORATIONS,
   FEATURED_IDS,
   buildTimeline,
   getProject,
   latestFiling,
   paginateEdition,
 } from './projects';
+import { CASE_FILES, getCaseFile } from './casefiles';
+import { REPO_POSTERS } from '../components/posters';
 import { ALL_COURSES, SEMESTERS, PROGRAMME, getCourse } from './education';
 import { SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS } from './cv';
 import { parseYouTube } from './youtube';
@@ -29,8 +30,8 @@ function bilinguals(value: unknown, out: Bilingual[] = []): Bilingual[] {
 }
 
 describe('projects', () => {
-  it('has eleven projects with unique ids', () => {
-    expect(PROJECTS).toHaveLength(11);
+  it('has fourteen projects with unique ids', () => {
+    expect(PROJECTS).toHaveLength(14);
     expect(new Set(PROJECT_IDS).size).toBe(PROJECT_IDS.length);
   });
 
@@ -75,7 +76,7 @@ describe('projects', () => {
   });
 
   it('lays the projects out as newspaper pages: three on the front, four after', () => {
-    expect(paginateEdition(PROJECTS).map((page) => page.length)).toEqual([3, 4, 4]);
+    expect(paginateEdition(PROJECTS).map((page) => page.length)).toEqual([3, 4, 4, 3]);
     expect(paginateEdition(PROJECTS).flat()).toEqual(PROJECTS);
     expect(paginateEdition([1, 2, 3, 4, 5])).toEqual([[1, 2, 3], [4, 5]]);
     expect(paginateEdition([1])).toEqual([[1]]);
@@ -91,7 +92,11 @@ describe('projects', () => {
   });
 
   it('never links a private collaboration', () => {
-    expect(COLLABORATIONS.filter((c) => c.visibility === 'private').every((c) => !c.url)).toBe(true);
+    for (const project of PROJECTS.filter((p) => p.coauthored?.visibility === 'private')) {
+      expect(project.repos).toHaveLength(0);
+      expect(getCaseFile(project.id)?.excerpts ?? []).toHaveLength(0);
+      expect(getCaseFile(project.id)?.exhibits ?? []).toHaveLength(0);
+    }
   });
 });
 
@@ -135,7 +140,7 @@ describe('education', () => {
 
 describe('bilingual content', () => {
   it('fills both languages everywhere', () => {
-    const all = bilinguals([PROJECTS, COLLABORATIONS, SEMESTERS, PROGRAMME, SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS]);
+    const all = bilinguals([PROJECTS, CASE_FILES, SEMESTERS, PROGRAMME, SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS]);
     expect(all.length).toBeGreaterThan(100);
     for (const b of all) {
       expect(b.en.trim(), JSON.stringify(b)).not.toBe('');
@@ -179,7 +184,29 @@ describe('bilingual content', () => {
   });
 
   it('uses British spelling in English copy', () => {
-    const english = [JSON.stringify(en), ...bilinguals([PROJECTS, COLLABORATIONS, SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS]).map((b) => b.en)].join(' ');
+    const english = [JSON.stringify(en), ...bilinguals([PROJECTS, CASE_FILES, SKILL_GROUPS, EXPERIENCE, ACHIEVEMENTS]).map((b) => b.en)].join(' ');
     expect(english).not.toMatch(/\b(color|center|organization|organize|program\b|behavior|labeled|labeling|modeled|enrollment|optimize|analyze)\b/i);
+  });
+});
+
+describe('case files', () => {
+  it('belong to real projects', () => {
+    for (const id of Object.keys(CASE_FILES)) expect(getProject(id), id).toBeDefined();
+  });
+
+  it('only show exhibits that exist on disk', () => {
+    for (const file of Object.values(CASE_FILES)) {
+      for (const exhibit of file.exhibits ?? []) expect(existsSync(join(process.cwd(), 'public', exhibit.src)), exhibit.src).toBe(true);
+    }
+  });
+
+  it('pin every excerpt to a commit', () => {
+    for (const file of Object.values(CASE_FILES)) {
+      for (const excerpt of file.excerpts ?? []) expect(excerpt.url).toMatch(/^https:\/\/github\.com\/.+\/blob\/[0-9a-f]{40}\//);
+    }
+  });
+
+  it('give every project without a video a repository poster', () => {
+    for (const project of PROJECTS.filter((p) => p.videos.length === 0)) expect(REPO_POSTERS[project.id], project.id).toBeDefined();
   });
 });

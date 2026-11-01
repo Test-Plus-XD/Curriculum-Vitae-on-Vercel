@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Github, Radio } from 'lucide-react';
 import { PROJECTS, PROJECT_IDS, buildTimeline, getProject, videosNewestFirst } from '@/lib/projects';
+import { getCaseFile } from '@/lib/casefiles';
 import { getCourse } from '@/lib/education';
 import { formatDate, pick } from '@/lib/i18n-text';
 import { alternates } from '@/lib/seo';
@@ -12,12 +13,14 @@ import HeroWedge from '@/components/fx/HeroWedge';
 import ReadingRule from '@/components/fx/ReadingRule';
 import RevealHeading from '@/components/fx/RevealHeading';
 import Scatter from '@/components/fx/Scatter';
-import Counter from '@/components/fx/Counter';
 import Magnetic from '@/components/fx/Magnetic';
 import Scramble from '@/components/fx/Scramble';
 import TransitionLink from '@/components/transition/TransitionLink';
 import DevTimeline from '@/components/DevTimeline';
 import DetailPhoto from '@/components/DetailPhoto';
+import FactSheet from '@/components/FactSheet';
+import { CaseDispatches, CaseExcerpts, CaseExhibits, CaseFlow } from '@/components/CaseSections';
+import { REPO_POSTERS } from '@/components/posters';
 import KeepCompounds from '@/components/KeepCompounds';
 import OrbitDiagram from '@/components/OrbitDiagram';
 
@@ -51,10 +54,15 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const L = (text: { en: string; zh: string }) => pick(text, locale);
   const title = L(project.title);
   const timeline = buildTimeline(project);
+  const caseFile = getCaseFile(id);
+  // Measured facts from the case file replace the record's older highlights where both exist.
+  const facts = caseFile?.facts ?? project.highlights;
   let section = 0;
   const index = () => `§ ${String(++section).padStart(2, '0')}`;
   // The latest reel's still is pasted into the hero as a press photograph (Pour Rice shows its app icon).
   const lead = id === 'pourrice' ? undefined : videosNewestFirst(project)[0];
+  // With no reel to show, a hand-drawn poster of the repository takes the photograph's place.
+  const Poster = !lead && id !== 'pourrice' ? REPO_POSTERS[id] : undefined;
   // The neighbouring stories in the gazette's order, wrapping round at either end.
   const at = PROJECT_IDS.indexOf(id);
   const prev = PROJECTS[(at - 1 + PROJECTS.length) % PROJECTS.length];
@@ -70,15 +78,20 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
       <section className={`detail-hero ${id === 'pourrice' ? 'detail-hero-pour-rice' : ''}`}>
         <HeroWedge />
-        <div className={`detail-hero-layout ${lead ? 'has-photo' : ''}`}>
+        <div className={`detail-hero-layout ${lead || Poster ? 'has-photo' : ''}`}>
           <div className="detail-hero-copy">
             <p className="eyebrow">
               <span className="eyebrow-dot" aria-hidden="true" />
               <Scramble text={L(project.tagline)} />
             </p>
             <DadaTypography as="h1" text={title} className="hero-title detail-title font-title" colorShift intensity={0.9} />
-            {project.categories.length > 0 && (
+            {(project.coauthored || project.categories.length > 0) && (
               <ul className="card-cats">
+                {project.coauthored && (
+                  <li className="badge badge-coauthored">
+                    <Scramble text={tp('coauthored')} delay={150} />
+                  </li>
+                )}
                 {project.categories.map((c) => (
                   <li key={c} className={`badge badge-${c}`}>
                     <Scramble text={tp(c)} delay={150} />
@@ -139,19 +152,22 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               />
             </Scatter>
           )}
+          {Poster && (
+            <Scatter as="div" className="detail-photo-wrap" variant="collage">
+              <figure className="detail-photo">
+                <div className="detail-photo-plate">
+                  <Poster locale={locale} />
+                </div>
+                <figcaption>
+                  <span>{tp('gazette.poster')}</span>
+                </figcaption>
+              </figure>
+            </Scatter>
+          )}
         </div>
       </section>
 
-      {project.highlights && (
-        <Scatter as="ul" className="highlight-strip" variant="collage">
-          {project.highlights.map((h) => (
-            <li key={h.label.en} className="highlight">
-              <Counter value={h.value} suffix={h.suffix} className="highlight-value font-title" />
-              <Scramble className="highlight-label" text={L(h.label)} delay={300} />
-            </li>
-          ))}
-        </Scatter>
-      )}
+      {facts && facts.length > 0 && <FactSheet facts={facts} />}
 
       <div className="detail-grid">
         <div className="detail-main">
@@ -166,6 +182,17 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               </Scatter>
             )}
           </section>
+
+          {caseFile?.contributions && (
+            <section className="section" aria-labelledby="contributions-heading">
+              <RevealHeading id="contributions-heading" text={tp('contributions')} index={index()} />
+              <Scatter as="ul" className="detail-points" variant="rise">
+                {caseFile.contributions.map((c) => (
+                  <li key={c.en}>{L(c)}</li>
+                ))}
+              </Scatter>
+            </section>
+          )}
 
           {project.platforms && (
             <section className="section" aria-labelledby="platforms-heading">
@@ -209,6 +236,34 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </section>
           )}
 
+          {caseFile?.flow && (
+            <section className="section" aria-labelledby="flow-heading">
+              <RevealHeading id="flow-heading" text={t('howItWorks')} index={index()} />
+              <CaseFlow steps={caseFile.flow} />
+            </section>
+          )}
+
+          {caseFile?.exhibits && (
+            <section className="section" aria-labelledby="exhibits-heading">
+              <RevealHeading id="exhibits-heading" text={t('exhibits')} index={index()} />
+              <CaseExhibits exhibits={caseFile.exhibits} />
+            </section>
+          )}
+
+          {caseFile && caseFile.dispatches.length > 0 && (
+            <section className="section" aria-labelledby="dispatches-heading">
+              <RevealHeading id="dispatches-heading" text={t('dispatches')} index={index()} />
+              <CaseDispatches dispatches={caseFile.dispatches} />
+            </section>
+          )}
+
+          {caseFile?.excerpts && (
+            <section className="section" aria-labelledby="excerpts-heading">
+              <RevealHeading id="excerpts-heading" text={t('excerpts')} index={index()} />
+              <CaseExcerpts excerpts={caseFile.excerpts} />
+            </section>
+          )}
+
           <section className="section" aria-labelledby="timeline-heading">
             <RevealHeading id="timeline-heading" text={t('timeline')} index={index()} />
             {project.videos.length === 0 && <p className="footnote">{t('noVideos')}</p>}
@@ -218,6 +273,14 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
         <aside className="detail-side">
           <div className="side-panel">
+            {caseFile && (
+              <div className="side-block">
+                <h2 className="side-title">
+                  <Scramble text={t('role')} />
+                </h2>
+                <p className="side-role">{L(caseFile.role)}</p>
+              </div>
+            )}
             {project.tech.length > 0 && (
               <div className="side-block">
                 <h2 className="side-title">
@@ -232,27 +295,32 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 </ul>
               </div>
             )}
-            <div className="side-block">
-              <h2 className="side-title">
-                <Scramble text={t('courses')} />
-              </h2>
-              <ul className="side-courses">
-                {project.courses.map((code) => {
-                  const course = getCourse(code);
-                  return (
-                    <li key={code}>
-                      <Scramble className="course-code" text={code} />
-                      <Scramble text={course ? L(course.name) : code} delay={120} />
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            {project.courses.length > 0 && (
+              <div className="side-block">
+                <h2 className="side-title">
+                  <Scramble text={t('courses')} />
+                </h2>
+                <ul className="side-courses">
+                  {project.courses.map((code) => {
+                    const course = getCourse(code);
+                    return (
+                      <li key={code}>
+                        <Scramble className="course-code" text={code} />
+                        <Scramble text={course ? L(course.name) : code} delay={120} />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
             <div className="side-block">
               <h2 className="side-title">
                 <Scramble text={t('repos')} />
               </h2>
-              {project.repos.length > 0 ? (
+              {project.coauthored && <p className="side-muted">{tp('owner', { owner: project.coauthored.owner })}</p>}
+              {project.coauthored?.visibility === 'private' ? (
+                <p className="side-muted">{tp('privateRepo')}</p>
+              ) : project.repos.length > 0 ? (
                 <ul className="side-links">
                   {project.repos.map((r) => (
                     <li key={r.url}>

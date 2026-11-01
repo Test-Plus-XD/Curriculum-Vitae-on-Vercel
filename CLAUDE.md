@@ -45,6 +45,8 @@ src/
 │   ├── CvSection · SheetIntro                 # CV sheet building blocks
 │   ├── SemesterTrack                          # Education: pinned horizontal track
 │   ├── ProjectsGazette · PosterArt              # Projects: newspaper pages with a GSAP page turn
+│   ├── CaseSections · FactSheet               # Case-study evidence: how it works, exhibits, dispatches, source excerpts, measured facts
+│   ├── posters/                               # Constructivist SVG posters for projects with no video (press.tsx: shared sheet)
 │   ├── DevTimeline · InlineVideo · OrbitDiagram
 │   ├── collage/                               # Dada collage system (see below)
 │   ├── readymade/                             # Three.js readymades: figure, canvas, stage, print pass, works/
@@ -57,7 +59,9 @@ src/
 │   ├── profile.ts     # Name, title, contacts, summary, getAge()
 │   ├── education.ts   # Programme, 4 semesters / 19 courses, grades
 │   ├── cv.ts          # Skill groups, experience, languages, IELTS, achievements
-│   ├── projects.ts    # 11 projects, 30 videos, milestones, collaborations, buildTimeline()
+│   ├── projects.ts    # 14 projects (co-authored ones included), 30 videos, milestones, buildTimeline()
+│   ├── casefile.ts    # CaseFile types: role, facts, contributions, flow, dispatches, exhibits, excerpts
+│   ├── casefiles/     # One evidence file per project, keyed by route id in index.ts
 │   ├── collage.ts     # Seeded generators: torn clip-paths, torn slabs, ransom glyphs, cut-up, shuffle (tested)
 │   ├── youtube.ts     # URL parsing, thumbnails, nocookie embeds
 │   ├── i18n-text.ts   # Bilingual type, pick(), date formatting
@@ -67,7 +71,7 @@ src/
 │   └── seo.ts         # canonical + hreflang alternates
 ├── messages/ en.json · zh-hk.json
 └── proxy.ts
-public/images/        # Header monogram, Pour Rice icons, press/ halftone prints for the scroll wall
+public/images/        # Header monogram, Pour Rice icons, press/ halftone prints for the scroll wall, projects/<id>/ exhibits
 public/models/        # CC0 glTF models for the readymades and the mobile (textures shrunk for the web) + CREDITS.txt
 ```
 
@@ -75,7 +79,9 @@ public/models/        # CC0 glTF models for the readymades and the mobile (textu
 - **Personal details / summary** → `src/lib/profile.ts`
 - **Courses, grades, GPA** → `src/lib/education.ts`
 - **Skills, jobs, languages, achievements** → `src/lib/cv.ts`
-- **Projects, videos, milestones, collaborations** → `src/lib/projects.ts` (ids are route slugs; `FEATURED_IDS` picks the three on the CV; dates are ISO `YYYY-MM-DD`; `approximate: true` shows a milestone as "approx. Month Year")
+- **Case-study evidence** → `src/lib/casefiles/<id>.ts`, registered in `casefiles/index.ts`. Every figure must be measured from the repository, never estimated; claim tests only as "written" unless a pass is recorded. Excerpts are verbatim, public repositories only, with full-SHA permalinks (tested). A private repository contributes prose and counts only: no links, paths, hashes, excerpts or exhibits (tested).
+- **Repository posters** → `src/components/posters/<id>.tsx`, registered in `posters/index.ts`; every project with no video needs one (tested). No `id`, `<defs>`, patterns, gradients or `url()`, because the gazette's page turn copies pages with their ids dropped.
+- **Projects, videos, milestones** → `src/lib/projects.ts` (ids are route slugs; `coauthored` marks work in someone else's repository, and the page then shows its owner and visibility; `FEATURED_IDS` picks the three on the CV; dates are ISO `YYYY-MM-DD`; `approximate: true` shows a milestone as "approx. Month Year")
 - **UI labels** → `src/messages/*.json` (keep keys identical in both files — tested)
 - **Scroll wall** — the ghosted prints are `public/images/press/*.webp` (regenerate them from the live print pass if a model changes); the furniture and their positions are `PATTERNS` / `PRINTS` in `src/components/fx/ScrollWall.tsx`.
 - **Opening sequence** — copy is the `opening` namespace in `src/messages/*.json`; timing is `src/components/opening/labels.ts`; the hand's pose is `POSE` in `opening/scene.ts`.
@@ -83,7 +89,7 @@ public/models/        # CC0 glTF models for the readymades and the mobile (textu
 - **Pour Rice** includes its native Swift iOS app (12 videos, platforms list, iOS start milestone). The old `/projects/pourrice-ios` URL permanently redirects to `/projects/pourrice` (`next.config.mjs`).
 - Development timelines are rendered **newest first** (`buildTimeline`); a same-day milestone sits below that day's videos.
 - The collage hero is assembled in `[locale]/page.tsx` from real data — change the data and the collage follows.
-- Missing information gets a JSX comment: `{/* PLACEHOLDER: … */}`. Not supplied so far: profile photo, academic awards, earlier-semester grades, exact start dates for Computer Ethics, Data Communication and Networking and the Swift iOS app (marked `approximate`).
+- Missing information gets a JSX comment: `{/* PLACEHOLDER: … */}`. Not supplied so far: profile photo, academic awards, earlier-semester grades, exact start dates for Computer Ethics and Data Communication and Networking (marked `approximate`).
 
 ## Personal Information
 | Field | Value |
@@ -113,17 +119,18 @@ Education: HKCT Higher Diploma in Computer Studies (Mobile Applications and Game
 | 2D-Puzzle-Game | https://github.com/Test-Plus-XD/2D-Puzzle-Game-Assignment |
 | AI Annotation Tool v2 | https://github.com/Test-Plus-XD/Software-Engineering-Git-Assignment/tree/main/AI%20Annotation%20Tool%20v2 |
 | Card-Game | https://github.com/Test-Plus-XD/NetBeans-Projects/tree/main/CardMatchingGame |
-| Collaboration (public) | https://github.com/keithku321/object-detection |
-| Collaboration (private, never linked) | keithku321/gaming-ai-companion |
+| Co-authored (public) | https://github.com/keithku321/object-detection |
+| Co-authored (private, never linked) | keithku321/gaming-ai-companion |
+| DSH-Discord-AutoReply | https://github.com/Test-Plus-XD/DSH-Discord-AutoReply |
 
-**Videos**: 30 distinct YouTube links across the 11 projects (tested).
+**Videos**: 30 distinct YouTube links across the 14 projects (tested).
 
 ## Pages
 - **`/` CV** — (1) **collage hero** (screen only): ransom-note name, label-maker title, typewritten descriptor, vermilion name chop, ink stamp, newsprint scrap and draggable duotone scraps of project footage over the Three.js Merzbau; scrolling scatters it. (2) **CV sheet**: taped paper sheet with registration marks and an inked stamp; header (DadaTypography name, contacts, age), profile, education with final-semester grades, three featured projects, experience, skills, languages, IELTS, achievements. Feeds out like printer paper (`SheetIntro`). (3) **Cut-up poem** (screen only): Tzara-style "shake the bag" toy over the profile text.
 - **`/education`** — hero with GlitchRevealText institution, programme facts and **Readymade № 1** (Hausmann's head, beside the text from 1024 px, below it on phones), counter stat cards, **pinned horizontal semester track** (≥ 1024 px with full motion; stacked otherwise) of taped sheets holding **ticket-stub** courses.
-- **`/projects`** — hero with the **found-object mobile** (four everyday scans hung from a wire, below the lede and beside Readymade № 2 from 1024 px) and **Readymade № 2** (Duchamp's bicycle wheel: drag across it to spin); the projects printed as a **broadsheet** (`ProjectsGazette`): a "MERZ" masthead with ears, motto and dateline, the category filter as a section index, a front page (lead story with its description in two columns plus a sidebar of two) and inner pages (a wide story over three briefs) cut by `paginateEdition` (3 on the front, 4 after); halftone grey photographs (full colour on hover; each is a button that opens the latest video in the FLIP player of `InlineVideo`, `variant="press"`) with a wire-style credit line, drop caps on the feature stories (not in 繁中) and datelines ("HONG KONG –" / 【本報訊】) on the briefs, typewritten filing lines. The copy reads as a real paper in both languages (`projects.gazette` messages: volume and number, dateline with the weekday, edition, price, ears, jump lines). The pager, numbered pages and a dog-eared corner (click, or **drag it** to turn the page by hand: the leaf follows the pointer round the spine and finishes or falls back on release) **turn the page** in 3D, held by a **Dada hand** (`gazetteHand.ts`): the opening's halftone hand print, cut out and posed frame by frame on the leaf's free edge with the turn's 2600 px perspective (it grows as the page lifts). It is placed by the view: the broadsheet is taller than the window, so the hand holds the edge at a fixed height on screen (where the dog-ear was clicked, or 56 % down for the pager; a left hand, mirrored, for turning back), and sits under the pointer while the corner is dragged. It boils like stop-motion collage, a red halftone plate of its silhouette slips out of register behind it, hovering the dog-ear makes it peek in (fine pointers), and it is absent under reduced motion. The turn itself: the old page is copied into a leaf with a newsprint back that swings over the spine while it shadows the page beneath (backwards, the earlier page swings back in); reduced motion cross-fades. The sheet stays paper in both themes (warm newsprint by day, light grey at night); collaborations as newspaper clippings (body copy at the card size, 15 px).
+- **`/projects`** — hero with the **found-object mobile** (four everyday scans hung from a wire, below the lede and beside Readymade № 2 from 1024 px) and **Readymade № 2** (Duchamp's bicycle wheel: drag across it to spin); the projects printed as a **broadsheet** (`ProjectsGazette`): a "MERZ" masthead with ears, motto and dateline, the category filter as a section index, a front page (lead story with its description in two columns plus a sidebar of two) and inner pages (a wide story over three briefs) cut by `paginateEdition` (3 on the front, 4 after); halftone grey photographs (full colour on hover; each is a button that opens the latest video in the FLIP player of `InlineVideo`, `variant="press"`) with a wire-style credit line, drop caps on the feature stories (not in 繁中) and datelines ("HONG KONG –" / 【本報訊】) on the briefs, typewritten filing lines. The copy reads as a real paper in both languages (`projects.gazette` messages: volume and number, dateline with the weekday, edition, price, ears, jump lines). The pager, numbered pages and a dog-eared corner (click, or **drag it** to turn the page by hand: the leaf follows the pointer round the spine and finishes or falls back on release) **turn the page** in 3D, held by a **Dada hand** (`gazetteHand.ts`): the opening's halftone hand print, cut out and posed frame by frame on the leaf's free edge with the turn's 2600 px perspective (it grows as the page lifts). It is placed by the view: the broadsheet is taller than the window, so the hand holds the edge at a fixed height on screen (where the dog-ear was clicked, or 56 % down for the pager; a left hand, mirrored, for turning back), and sits under the pointer while the corner is dragged. It boils like stop-motion collage, a red halftone plate of its silhouette slips out of register behind it, hovering the dog-ear makes it peek in (fine pointers), and it is absent under reduced motion. The turn itself: the old page is copied into a leaf with a newsprint back that swings over the spine while it shadows the page beneath (backwards, the earlier page swings back in); reduced motion cross-fades. The sheet stays paper in both themes (warm newsprint by day, light grey at night). Co-authored projects run as ordinary stories under a Co-authored kicker, and a project with no video prints its repository poster in place of the photograph.
 - **404** — ransom-note "Signal lost" beside **Readymade № 3** (Man Ray's tack-studded iron).
-- **`/projects/[id]`** — a red **reading rule** along the top edge (`ReadingRule`), hero with the gazette's wedge driven in behind the copy (`HeroWedge`) + live/repo actions and, except on Pour Rice (app icon), the latest reel's still taped on as a halftone **press photograph** that drifts in its frame and opens the reel (`DetailPhoto`), highlight counters, overview opening on a drop cap (not in 繁中), Pour Rice **orbit diagram** of its platforms, newest-first timeline (kraft-paper milestone notes, video thumbnails opening a FLIP modal), sticky sidebar (tech, courses, repos), and torn **previous / next story** clippings in the gazette's order (wrapping round). Headlines keep hyphenated compounds whole (`KeepCompounds`).
+- **`/projects/[id]`** — a red **reading rule** along the top edge (`ReadingRule`), hero with the gazette's wedge driven in behind the copy (`HeroWedge`) + live/repo actions and, except on Pour Rice (app icon), the latest reel's still taped on as a halftone **press photograph** that drifts in its frame and opens the reel (`DetailPhoto`), a **fact sheet** (`FactSheet`: the first fact struck large in a red diagonal slab, the rest a box score with dot leaders, so each case file leads with its strongest figure), overview opening on a drop cap (not in 繁中), "My contributions" on co-authored work, Pour Rice **orbit diagram** of its platforms, **How it works** (numbered wiring sheet), **Exhibits**, **Engineering notes** (clippings cut into problem, decision and result), **From the source** (verbatim code on commit permalinks), newest-first timeline (kraft-paper milestone notes, video thumbnails opening a FLIP modal), sticky sidebar (role, tech, courses, repos), and torn **previous / next story** clippings in the gazette's order (wrapping round). Headlines keep hyphenated compounds whole (`KeepCompounds`).
 
 ## GSAP effects system
 **Rules (important):**
