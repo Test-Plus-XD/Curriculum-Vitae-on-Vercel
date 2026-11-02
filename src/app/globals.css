@@ -6648,11 +6648,15 @@
     color: #000 !important;
   }
 
-  /* The case-study papers re-scope their inks for dark mode, which would otherwise keep them vermilion here. */
+  /* The case-study papers re-scope their inks for dark mode, which would otherwise keep them vermilion here.
+     The kraft flow card sets its own --ink-2 at higher specificity, so it is named to win back the black. */
   .dispatch,
   .exhibit,
   .excerpt,
-  .fact-ledger {
+  .fact-ledger,
+  .flow-card,
+  .flow-step:nth-child(3n) .flow-card,
+  .page-detail .side-panel {
     --ink: #000;
     --ink-2: #1a1a1a;
     --muted: #4d4d4d;

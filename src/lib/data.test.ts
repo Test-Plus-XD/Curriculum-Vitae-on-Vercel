@@ -91,11 +91,29 @@ describe('projects', () => {
     expect(latestFiling([])).toBeUndefined();
   });
 
+  // The real repository of each private project, kept apart from its route id: the two need not match.
+  const PRIVATE_REPOSITORIES: Record<string, string> = { 'gaming-ai-companion': 'keithku321/gaming-ai-companion' };
+
   it('never links a private collaboration', () => {
     for (const project of PROJECTS.filter((p) => p.coauthored?.visibility === 'private')) {
+      const repository = PRIVATE_REPOSITORIES[project.id];
+      expect(repository, `${project.id}: list its private repository`).toBeDefined();
       expect(project.repos).toHaveLength(0);
-      expect(getCaseFile(project.id)?.excerpts ?? []).toHaveLength(0);
-      expect(getCaseFile(project.id)?.exhibits ?? []).toHaveLength(0);
+      expect(project.live).toBeUndefined();
+      const file = getCaseFile(project.id);
+      expect(file?.excerpts ?? []).toHaveLength(0);
+      expect(file?.exhibits ?? []).toHaveLength(0);
+      // The prose may describe the work, but never point into the repository: no links, no file paths, no
+      // commit hashes (hexadecimal runs that contain a letter and a digit, so plain counts still pass) and no slug.
+      const prose = bilinguals(file ? [file.role, file.contributions, file.flow, file.dispatches] : []).flatMap((b) => [b.en, b.zh]);
+      const slug = repository.split('/')[1];
+      for (const text of prose) {
+        expect(text, project.id).not.toMatch(/https?:\/\/|www\./i);
+        expect(text, project.id).not.toMatch(/(?:^|[\s(])(?:[\w.-]+\/)+[\w.-]+\.(?:py|ts|tsx|js|jsx|json|ya?ml|toml|md|txt|cfg|ini|env)\b|\b[A-Za-z]:\x5c/);
+        expect(text, project.id).not.toMatch(/\b(?=[0-9a-f]*[a-f])(?=[0-9a-f]*\d)[0-9a-f]{7,40}\b/);
+        expect(text.toLowerCase(), project.id).not.toContain(repository.toLowerCase());
+        expect(text.toLowerCase(), project.id).not.toContain(slug.toLowerCase());
+      }
     }
   });
 });
