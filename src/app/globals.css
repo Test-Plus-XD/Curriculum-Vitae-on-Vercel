@@ -2838,6 +2838,22 @@
     gap: 6px;
   }
 
+  /* Repository posters: paper prints that stand in for a missing reel. */
+  .repo-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .poster-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .poster-type {
+    font-family: var(--font-type);
+  }
+
   .poster-art {
     width: 100%;
     height: 100%;
@@ -2851,97 +2867,18 @@
   .poster-tick { stroke: var(--ink); stroke-width: 2; }
   .poster-text { font-size: 12px; font-weight: 700; letter-spacing: 0.3em; fill: var(--ink); }
 
-  .collab-grid {
-    display: grid;
-    gap: 28px;
-  }
-
-  @media (min-width: 1024px) {
-    .collab-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  /* Collaborations are newspaper clippings pasted to the wall: paper in both themes. */
-  .collab-card {
-    --ink: var(--ink-black);
-    --ink-2: #3d342c;
-    --muted: #5f5446;
-    --red: var(--vermilion);
-    --accent-text: var(--vermilion);
-    --surface-2: #ddd0b8;
-    --line: rgba(23, 18, 15, 0.16);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 30px 28px 28px;
-    background:
-      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
-      var(--newsprint);
-    color: var(--ink-black);
-    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
-    /* Body copy at the same size as the project cards' summaries. */
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  .collab-card:nth-child(odd) {
-    rotate: -0.6deg;
-  }
-
-  .collab-card:nth-child(even) {
-    rotate: 0.5deg;
-  }
-
-  .collab-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .collab-title {
-    font-family: var(--font-display);
-    font-size: clamp(18px, 1.7vw, 22px);
-    font-weight: 800;
-    line-height: 1.15;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-  }
-
-  .locale-zh .collab-title {
-    font-family: var(--font-zh);
-  }
-
-  .collab-sub {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent-text);
-  }
-
-  .collab-summary {
-    color: var(--ink-2);
-  }
-
-  .collab-points,
   .detail-points,
   .cv-bullets {
     display: grid;
     gap: 6px;
   }
 
-  .collab-points li,
   .detail-points li,
   .cv-bullets li {
     position: relative;
     padding-left: 18px;
   }
 
-  .collab-points li::before,
   .detail-points li::before,
   .cv-bullets li::before {
     content: "";
@@ -2953,6 +2890,545 @@
     background: var(--red);
     transform: rotate(45deg);
   }
+
+  /* -------------------------------------------------- case studies: the evidence sections */
+  /* Dispatches, exhibits and excerpts are paper in both themes, so they re-scope the ink tokens. */
+  .dispatch,
+  .exhibit,
+  .excerpt,
+  .fact-ledger,
+  .flow-card,
+  .page-detail .side-panel {
+    --ink: var(--ink-black);
+    --ink-2: #3d342c;
+    --muted: #5f5446;
+    --red: var(--vermilion);
+    --accent-text: var(--vermilion);
+    --line: rgba(23, 18, 15, 0.16);
+    color: var(--ink-black);
+    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+  }
+
+  /* Section headings are cut out as ransom notes, with the section number typed beside them. */
+  .case-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 4px 14px;
+    margin-bottom: 26px;
+  }
+
+  .case-heading h2 {
+    min-width: 0;
+    font-size: clamp(23px, 3.4vw, 38px);
+  }
+
+  .case-heading-index {
+    font-family: var(--font-type);
+    font-size: 14px;
+    color: var(--accent-text);
+    rotate: -5deg;
+  }
+
+  /* How it works: scraps of three papers pasted in a zigzag, joined by strips of label tape. */
+  .case-flow {
+    display: grid;
+  }
+
+  .flow-step {
+    position: relative;
+    width: min(calc(100% - 16px), 35rem);
+  }
+
+  .flow-step:nth-child(even) {
+    margin-left: auto;
+  }
+
+  .flow-number {
+    position: absolute;
+    z-index: 2;
+    top: -9px;
+    left: -7px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: var(--vermilion);
+    color: var(--scrap);
+    font-size: 19px;
+    font-weight: 700;
+    font-variant-numeric: lining-nums;
+    rotate: -7deg;
+  }
+
+  .flow-step:nth-child(even) .flow-number {
+    rotate: 6deg;
+  }
+
+  .flow-card {
+    padding: 13px 18px 14px 40px;
+    background: var(--scrap);
+    rotate: -0.7deg;
+  }
+
+  .flow-step:nth-child(even) .flow-card {
+    rotate: 0.8deg;
+  }
+
+  .flow-step:nth-child(3n + 2) .flow-card {
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
+      var(--newsprint);
+  }
+
+  .flow-step:nth-child(3n) .flow-card {
+    --ink-2: #2b2118;
+    background: var(--kraft);
+  }
+
+  .flow-name {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .flow-note {
+    margin-top: 2px;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  .flow-link {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    width: fit-content;
+    max-width: calc(100% - 44px);
+    margin: -7px 0 -3px 34px;
+    padding: 3px 10px;
+    background: var(--ink-black);
+    color: var(--scrap);
+    font-family: var(--font-type);
+    font-size: 13px;
+    rotate: -1.3deg;
+  }
+
+  .flow-step:nth-child(even) .flow-link {
+    rotate: 1.4deg;
+  }
+
+  .flow-link svg {
+    flex: none;
+    translate: 0 2px;
+  }
+
+  .locale-zh .flow-link {
+    font-family: inherit;
+  }
+
+  /* Engineering notes: torn clippings pasted out of line, stamped once across the first corner. */
+  .case-dispatch-wall {
+    position: relative;
+  }
+
+  .case-dispatch-wall .dispatch-stamp {
+    position: absolute;
+    z-index: 4;
+    top: -34px;
+    right: -6px;
+    pointer-events: none;
+  }
+
+  .case-dispatches {
+    display: grid;
+    gap: 12px;
+  }
+
+  .dispatch {
+    box-shadow: none;
+    rotate: -0.5deg;
+  }
+
+  .dispatch:nth-child(even) {
+    rotate: 0.6deg;
+  }
+
+  .dispatch-sheet {
+    padding: 26px 24px 28px;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
+      var(--newsprint);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .dispatch:nth-child(even) .dispatch-sheet {
+    background: var(--scrap);
+  }
+
+  .dispatch-kicker {
+    font-size: 11px;
+    rotate: -1.4deg;
+  }
+
+  .dispatch-title {
+    margin: 10px 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 3px double var(--line);
+    font-family: var(--font-title);
+    font-size: clamp(21px, 2.2vw, 26px);
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .dispatch:first-child .dispatch-title {
+    padding-right: 82px;
+  }
+
+  .locale-zh .dispatch-title {
+    font-family: var(--font-zh);
+  }
+
+  .dispatch-body {
+    display: grid;
+    gap: 14px;
+  }
+
+  @media (min-width: 760px) {
+    .dispatch:nth-child(odd) {
+      margin-right: 5%;
+    }
+
+    .dispatch:nth-child(even) {
+      margin-left: 5%;
+    }
+
+    .dispatch-body {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .dispatch-body > div + div {
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+    }
+  }
+
+  .dispatch-body dt {
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+
+  .dispatch-body dd {
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  .locale-zh .dispatch-body dd {
+    line-break: strict;
+    text-spacing-trim: trim-start;
+  }
+
+  /* Exhibits: pictures taped down at their true proportions, kept in colour so they stay legible. */
+  .case-exhibits {
+    display: grid;
+    gap: 26px;
+  }
+
+  @media (min-width: 760px) {
+    .case-exhibits {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .exhibit:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .exhibit {
+    position: relative;
+    padding: 10px 10px 12px;
+    background: var(--scrap);
+  }
+
+  .exhibit img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .exhibit figcaption {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  /* Source excerpts: verbatim code on paper; the block scrolls by itself rather than the page. */
+  .case-excerpts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .excerpt-wrap {
+    position: relative;
+    min-width: 0;
+    rotate: -0.3deg;
+  }
+
+  .excerpt-wrap:nth-child(even) {
+    rotate: 0.35deg;
+  }
+
+  @media (min-width: 760px) {
+    .excerpt-wrap:nth-child(odd) {
+      margin-right: 4%;
+    }
+
+    .excerpt-wrap:nth-child(even) {
+      margin-left: 4%;
+    }
+  }
+
+  .excerpt-sheet {
+    padding: 20px 18px 30px;
+    background: var(--scrap);
+  }
+
+  .excerpt {
+    /* Paper in both themes, so the code block's scrollbar stays a light one at night. */
+    color-scheme: light;
+    min-width: 0;
+    box-shadow: none;
+  }
+
+  .excerpt-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+    margin-bottom: 10px;
+  }
+
+  .excerpt-title {
+    font-weight: 700;
+  }
+
+  .excerpt-path {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    min-width: 0;
+    font-family: var(--font-type);
+    font-size: 13px;
+    color: var(--accent-text);
+    overflow-wrap: anywhere;
+  }
+
+  .excerpt pre {
+    overflow-x: auto;
+    padding: 12px 14px;
+    background: rgba(23, 18, 15, 0.06);
+    border-left: 3px solid var(--red);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .excerpt pre:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+  }
+
+  .excerpt-note {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  /* Animated abstracts: a taped print of one looping SVG, paper in both themes. */
+  .abstract-figure {
+    position: relative;
+    padding: 10px 10px 12px;
+    background: var(--scrap);
+    color: var(--ink-black);
+    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+    rotate: -0.5deg;
+  }
+
+  .abstract-plate {
+    position: relative;
+    border: 1px solid var(--ink-black);
+  }
+
+  .abstract-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .abstract-svg .poster-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .abstract-svg .poster-type {
+    font-family: var(--font-type);
+  }
+
+  .locale-zh .abstract-svg .poster-type,
+  .locale-zh .abstract-svg .poster-display {
+    font-family: var(--font-zh);
+  }
+
+  .abstract-toggle {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    background: var(--ink-black);
+    color: var(--scrap);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .abstract-toggle:hover {
+    background: var(--vermilion);
+  }
+
+  .abstract-toggle:focus-visible {
+    outline: 2px solid var(--vermilion);
+    outline-offset: 2px;
+  }
+
+  /* On a phone the drawing is too small to give up a corner, so the button hangs off the plate into the caption's row. */
+  @media (max-width: 640px) {
+    .abstract-toggle {
+      right: -2px;
+      bottom: -36px;
+    }
+
+    .abstract-figure figcaption {
+      padding-right: 38px;
+    }
+  }
+
+  .abstract-figure figcaption {
+    margin-top: 8px;
+    font-family: var(--font-type);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #3d342c;
+  }
+
+  .locale-zh .abstract-figure figcaption {
+    font-family: inherit;
+  }
+
+  /* Exhibits sit askew, with their captions typed on. */
+  .exhibit:nth-child(odd) {
+    rotate: -0.9deg;
+  }
+
+  .exhibit:nth-child(even) {
+    rotate: 1.1deg;
+  }
+
+  .exhibit:first-child {
+    rotate: 0.4deg;
+  }
+
+  .exhibit figcaption {
+    font-family: var(--font-type);
+  }
+
+  .locale-zh .exhibit figcaption {
+    font-family: inherit;
+  }
+
+  /* The sidebar is a case folder taped to the wall: Dymo labels over chips cut from odd papers. */
+  .page-detail .side-panel {
+    --surface-2: #ddd0b8;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.04) 0 1px, transparent 1px 5px),
+      var(--scrap);
+    border: 0;
+    box-shadow: 0 22px 34px -22px rgba(23, 18, 15, 0.55);
+    rotate: -0.8deg;
+  }
+
+  .page-detail .side-title {
+    display: inline-block;
+    padding: 0.4em 0.85em 0.34em;
+    background: var(--ink-black);
+    color: var(--scrap);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    rotate: -1.2deg;
+  }
+
+  .page-detail .side-block:nth-child(odd) .side-title {
+    rotate: 1deg;
+  }
+
+  .locale-zh .page-detail .side-title {
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .page-detail .side-panel .tech-chip {
+    background: var(--newsprint);
+    border: 0;
+    box-shadow: 1px 1px 0 rgba(23, 18, 15, 0.3);
+    color: var(--ink-black);
+    rotate: -1.6deg;
+  }
+
+  .page-detail .side-panel .tech-chip:nth-child(3n + 2) {
+    background: var(--kraft);
+    rotate: 1.3deg;
+  }
+
+  .page-detail .side-panel .tech-chip:nth-child(3n) {
+    background: #fff8e9;
+    rotate: -0.6deg;
+  }
+
+  /* The overview's drop cap is a cut-out block, like one ransom letter. Chinese sets no drop cap. */
+  .detail-description::first-letter {
+    margin-right: 0.1em;
+    padding: 0.09em 0.13em 0.03em;
+    background: var(--vermilion);
+    color: var(--scrap);
+  }
+
+  .locale-zh .detail-description::first-letter {
+    margin-right: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+  }
+
+  .side-role {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .badge-ai { color: var(--accent-text); }
+  .badge-coauthored { color: var(--ink); }
 
   /* ---------------------------------------------------------- detail */
   .back-link {
@@ -3383,44 +3859,132 @@
     margin-top: 28px;
   }
 
-  .highlight-strip {
+  /* The fact sheet: a red Lissitzky slab cut on the diagonal for the lead figure, with the rest set as a
+     newspaper box score that runs out from under it. Both stay print colours in either theme. */
+  .fact-sheet {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    margin: 16px 0 8px;
-    background: var(--line);
-    border: 1px solid var(--line);
+    margin: 24px 0 8px;
   }
 
-  @media (min-width: 768px) {
-    .highlight-strip {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+  .fact-lead {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 22px 24px 52px;
+    background: var(--vermilion);
+    color: var(--scrap);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 34px), 0 100%);
   }
 
-  @media (min-width: 1180px) {
-    .highlight-strip {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
+  /* A halftone screen fading out of the slab's top corner. */
+  .fact-lead::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(23, 18, 15, 0.34) 1.5px, transparent 1.9px) 0 0 / 8px 8px;
+    mask-image: linear-gradient(215deg, #000, transparent 46%);
+    pointer-events: none;
   }
 
-  .highlight {
-    padding: 20px;
-    background: var(--surface);
+  .fact-kicker {
+    position: relative;
+    margin-bottom: auto;
+    padding-bottom: 18px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
 
-  .highlight-value {
-    font-size: clamp(38px, 4.6vw, 58px);
-    line-height: 1;
+  .locale-zh .fact-kicker {
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+  }
+
+  .fact-lead-value {
+    position: relative;
+    font-size: clamp(66px, 9vw, 116px);
     font-stretch: 72%;
+    line-height: 0.92;
+    white-space: nowrap;
+  }
+
+  .fact-lead-label {
+    position: relative;
+    display: block;
+    max-width: 30ch;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .fact-ledger {
+    display: grid;
+    align-content: center;
+    margin-top: -34px;
+    padding: 46px 22px 16px;
+    background:
+      repeating-linear-gradient(0deg, rgba(23, 18, 15, 0.045) 0 1px, transparent 1px 5px),
+      var(--newsprint);
+  }
+
+  .fact-ledger li {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fact-ledger li:last-child {
+    border-bottom: 0;
+  }
+
+  .fact-label {
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+
+  .fact-leader {
+    flex: 1 1 18px;
+    min-width: 18px;
+    margin-bottom: 0.4em;
+    border-bottom: 2px dotted rgba(23, 18, 15, 0.38);
+  }
+
+  .fact-figure {
+    flex: none;
+    font-size: clamp(25px, 2.6vw, 32px);
+    font-stretch: 72%;
+    line-height: 1;
     color: var(--red);
   }
 
-  .highlight-label {
-    display: block;
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--ink-2);
+  @media (min-width: 760px) {
+    .fact-sheet {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+
+    .fact-sheet.is-single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fact-lead {
+      padding: 24px 92px 26px 26px;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 68px) 100%, 0 100%);
+    }
+
+    .fact-ledger {
+      margin: 18px 0 -18px -68px;
+      padding: 14px 26px 14px 92px;
+    }
   }
 
   .detail-grid {
@@ -3490,13 +4054,14 @@
     hyphens: manual;
   }
 
-  /* The paper's furniture and the highlight figures line up in columns. */
+  /* The paper's furniture and the fact figures line up in columns. */
   .mast-line,
   .gazette-folio,
   .gazette-foot,
   .gazette-section-count,
   .pager-page,
-  .highlight-value,
+  .fact-lead-value,
+  .fact-figure,
   .detail-photo-credit {
     font-variant-numeric: lining-nums tabular-nums;
   }
@@ -6072,13 +6637,102 @@
 
   .semester-panel,
   .gazette-sheet,
-  .collab-card,
+  .dispatch,
+  .exhibit,
+  .excerpt,
   .stat-card,
   .course-card {
     break-inside: avoid;
     border: 1px solid #bbb !important;
     background: #fff !important;
     color: #000 !important;
+  }
+
+  /* The case-study papers re-scope their inks for dark mode, which would otherwise keep them vermilion here.
+     The kraft flow card sets its own --ink-2 at higher specificity, so it is named to win back the black. */
+  .dispatch,
+  .exhibit,
+  .excerpt,
+  .fact-ledger,
+  .flow-card,
+  .flow-step:nth-child(3n) .flow-card,
+  .page-detail .side-panel {
+    --ink: #000;
+    --ink-2: #1a1a1a;
+    --muted: #4d4d4d;
+    --red: #000;
+    --accent-text: #000;
+    --line: #c8c8c8;
+  }
+
+  /* Paper cannot scroll: long source lines wrap instead of being cut off at the margin. */
+  .excerpt pre {
+    overflow: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* Backgrounds usually do not print, which would leave a paper-coloured numeral on white. */
+  .flow-number {
+    border: 1px solid #000;
+    background: none;
+    color: #000;
+  }
+
+  /* The collage comes unstuck for print: straight, on white, with black type in place of tape. */
+  .dispatch-sheet,
+  .excerpt-sheet,
+  .flow-card,
+  .page-detail .side-panel {
+    background: #fff !important;
+    box-shadow: none !important;
+    rotate: 0deg !important;
+  }
+
+  .dispatch,
+  .excerpt-wrap,
+  .exhibit,
+  .flow-step {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    rotate: 0deg !important;
+  }
+
+  .flow-link,
+  .dispatch-kicker,
+  .page-detail .side-title {
+    background: none !important;
+    color: #000 !important;
+    rotate: 0deg !important;
+  }
+
+  .page-detail .side-panel .tech-chip {
+    background: none !important;
+    box-shadow: none !important;
+    rotate: 0deg !important;
+  }
+
+  /* The fact sheet prints as ruled black type, with no slab or screen. */
+  .fact-lead,
+  .fact-ledger {
+    margin: 0 !important;
+    background: none !important;
+    color: #000 !important;
+    clip-path: none !important;
+    border: 1px solid #000;
+  }
+
+  .fact-lead::before,
+  .fact-leader {
+    display: none;
+  }
+
+  .fact-figure {
+    color: #000 !important;
+  }
+
+  .repo-poster {
+    filter: grayscale(1) !important;
   }
 
   .gazette-sheet::before,
